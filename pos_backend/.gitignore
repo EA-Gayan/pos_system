@@ -1,0 +1,30 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables file
+# .env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore editor config or backup files
+.vscode/
+*.swp
+*.swo
+
+# Dependency lock files (optional, based on your team's workflow)
+# Uncomment if you don't want to commit lock files
+# package-lock.json
+# yarn.lock
+
+# Build output (if any)
+dist/
+build/
