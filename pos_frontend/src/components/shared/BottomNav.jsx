@@ -4,12 +4,14 @@ import { CiCircleMore } from "react-icons/ci";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
+import Modal from "./Modal";
 
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [guestCount, setGuestCount] = useState(0);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -53,6 +55,64 @@ const BottomNav = () => {
       >
         <BiSolidDish size={40} />
       </button>
+      <Modal isOpen={isModalOpen} onClose={closeModal} title="Craete Order">
+        <div>
+          <label className="block text-[#ababab] mb-2 text-sm font-medium">
+            Customer Name
+          </label>
+          <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
+            <input
+              type="text"
+              name=""
+              placeholder="Customer Name"
+              id=""
+              className="bg-transparent flex-1 text-white foucus:outline-none"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+            Customer Phone
+          </label>
+          <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
+            <input
+              type="text"
+              name=""
+              placeholder="+94 77 123 4567"
+              id=""
+              className="bg-transparent flex-1 text-white foucus:outline-none"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+            Guest
+          </label>
+          <div className="flex items-center justify-between bg-[#1f1f1f] rounded-lg py-3 px-4">
+            <button
+              onClick={() => setGuestCount((pre) => pre - 1)}
+              className="text-yellow-500 text-2xl"
+            >
+              &minus;
+            </button>
+            <span className="text-white">{guestCount} Person</span>
+            <button
+              onClick={() => setGuestCount((pre) => pre + 1)}
+              className="text-yellow-500 text-2xl"
+            >
+              &#43;
+            </button>
+          </div>
+        </div>
+        <button
+          onClick={() => {
+            navigate("/tables");
+          }}
+          className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#f5f5f5] hover:text-yellow-700"
+        >
+          Create orders
+        </button>
+      </Modal>
     </div>
   );
 };
