@@ -4,6 +4,7 @@ const config = Object.freeze({
   port: process.env.PORT || 3000,
   databaseURI: process.env.MONGODB_URI || "mongodb://localhost:27017",
   nodeEnv: process.env.NODE_ENV || "development",
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 });
 
 module.exports = config;
