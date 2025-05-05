@@ -55,6 +55,7 @@ const BottomNav = () => {
       >
         <BiSolidDish size={40} />
       </button>
+      {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={closeModal} title="Craete Order">
         <div>
           <label className="block text-[#ababab] mb-2 text-sm font-medium">

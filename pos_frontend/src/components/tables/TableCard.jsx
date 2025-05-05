@@ -7,7 +7,6 @@ const TableCard = ({ id, name, status, initials, seats }) => {
   const navigate = useNavigate();
   const handleClick = (name) => {
     if (status === "Booked") return;
-
     navigate(`/menu`);
   };
 
