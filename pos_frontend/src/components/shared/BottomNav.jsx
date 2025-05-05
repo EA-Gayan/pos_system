@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BiSolidDish } from "react-icons/bi";
 import { CiCircleMore } from "react-icons/ci";
 import { FaHome } from "react-icons/fa";
@@ -8,6 +8,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
