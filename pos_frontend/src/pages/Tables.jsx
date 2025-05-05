@@ -35,7 +35,7 @@ const Tables = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-wrap gap-5 p-10">
+      <div className="flex flex-wrap gap-5 px-10 py-5">
         {tables.map((table) => (
           <TableCard
             key={table.id}

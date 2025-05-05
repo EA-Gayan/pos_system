@@ -31,7 +31,7 @@ const TableCard = ({ id, name, status, initials, seats }) => {
           {status}
         </p>
       </div>
-      <div className="flex items-center justify-center mt-5 mb-8">
+      <div className="flex items-center justify-center mt-5 mb-5">
         <h1
           className={`text-white rounded-full p-5 text-xl`}
           style={{ backgroundColor: initials ? getBgColor() : "#1f1f1f" }}

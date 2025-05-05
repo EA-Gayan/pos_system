@@ -44,8 +44,11 @@ const BottomNav = () => {
       >
         <MdTableBar className="inline mr-2" size={20} /> <p>Tables</p>
       </button>
-      <button className="flex items-center justify-center font-bold text-[#ababab] w-[300px]">
-        <CiCircleMore className="inline mr-2" size={20} /> <p>More</p>
+      <button
+        onClick={() => navigate("/menu")}
+        className="flex items-center justify-center font-bold text-[#ababab] w-[300px]"
+      >
+        <CiCircleMore className="inline mr-2" size={20} /> <p>Menu</p>
       </button>
 
       <button
@@ -56,7 +59,7 @@ const BottomNav = () => {
         <BiSolidDish size={40} />
       </button>
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="Craete Order">
+      <Modal isOpen={isModalOpen} onClose={closeModal} title="Create Order">
         <div>
           <label className="block text-[#ababab] mb-2 text-sm font-medium">
             Customer Name
