@@ -4,7 +4,7 @@ const Bill = () => {
   return (
     <>
       <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">Items(4)</p>
+        <p className="text-xs text-[#ababab] font-medium mt-2">Items(4) </p>
         <h1 className="text-[#f5f5f5] text-md font-bold">Rs 123</h1>
       </div>
       <div className="flex items-center justify-between px-5 mt-2">
