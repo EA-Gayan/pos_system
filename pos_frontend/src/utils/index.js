@@ -17,18 +17,34 @@ export const getBgColor = () => {
 };
 
 export const getAvatarName = (name) => {
-  if(!name) return "";
+  if (!name) return "";
 
-  return name.split(" ").map(word => word[0]).join("").toUpperCase();
-
-}
+  return name
+    .split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+};
 
 export const formatDate = (date) => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
-  return `${months[date.getMonth()]} ${String(date.getDate()).padStart(2, '0')}, ${date.getFullYear()}`;
+  return `${months[date.getMonth()]} ${String(date.getDate()).padStart(
+    2,
+    "0"
+  )}, ${date.getFullYear()}`;
 };
 
 export const formatDateAndTime = (date) => {
@@ -40,8 +56,18 @@ export const formatDateAndTime = (date) => {
     minute: "2-digit",
     second: "2-digit",
     hour12: true,
-    timeZone: "Asia/Kolkata"
-  })
+    timeZone: "Asia/Kolkata",
+  });
 
   return dateAndTime;
-}
+};
+
+//to generate order id
+export const formatTime = () => {
+  const now = new Date();
+  const timeString = `${now.getHours().toString().padStart(2, "0")}:${now
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}`;
+  return timeString;
+};

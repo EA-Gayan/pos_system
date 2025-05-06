@@ -5,18 +5,28 @@ import { FaHome } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
+import { useDispatch } from "react-redux";
+import { setCustomer } from "../../redux/slices/customerSlice";
 
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [guestCount, setGuestCount] = useState(0);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const isActive = (path) => location.pathname === path;
+
+  const handleCreateOrder = () => {
+    dispatch(setCustomer({ name, phone, guests: guestCount }));
+    navigate("/tables");
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#262626] p-2 h-16 flex justify-around">
@@ -27,6 +37,14 @@ const BottomNav = () => {
         } w-[300px] rounded-[20px]`}
       >
         <FaHome className="inline mr-2" size={20} /> <p>Home</p>
+      </button>
+      <button
+        onClick={() => navigate("/menu")}
+        className={`flex items-center justify-center font-bold ${
+          isActive("/menu") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"
+        } w-[300px] rounded-[20px]`}
+      >
+        <CiCircleMore className="inline mr-2" size={20} /> <p>Menu</p>
       </button>
       <button
         onClick={() => navigate("/orders")}
@@ -44,15 +62,9 @@ const BottomNav = () => {
       >
         <MdTableBar className="inline mr-2" size={20} /> <p>Tables</p>
       </button>
-      <button
-        onClick={() => navigate("/menu")}
-        className="flex items-center justify-center font-bold text-[#ababab] w-[300px]"
-      >
-        <CiCircleMore className="inline mr-2" size={20} /> <p>Menu</p>
-      </button>
 
       <button
-        disabled={isActive("/tables") || isActive("/menu")}
+        disabled={isActive("/tables") || isActive("/menu")} // Disable button on menu and tables page
         onClick={openModal}
         className="absolute bottom-6 bg-[#F6B100] text-[#f5f5f5] rounded-full p-4 items-center"
       >
@@ -67,7 +79,7 @@ const BottomNav = () => {
           <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
             <input
               type="text"
-              name=""
+              onChange={(e) => setName(e.target.value)}
               placeholder="Customer Name"
               id=""
               className="bg-transparent flex-1 text-white foucus:outline-none"
@@ -81,9 +93,14 @@ const BottomNav = () => {
           <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
             <input
               type="text"
-              name=""
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={10}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "");
+                setPhone(value);
+              }}
               placeholder="+94 77 123 4567"
-              id=""
               className="bg-transparent flex-1 text-white foucus:outline-none"
             />
           </div>
@@ -109,9 +126,7 @@ const BottomNav = () => {
           </div>
         </div>
         <button
-          onClick={() => {
-            navigate("/tables");
-          }}
+          onClick={handleCreateOrder}
           className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#f5f5f5] hover:text-yellow-700"
         >
           Create orders
