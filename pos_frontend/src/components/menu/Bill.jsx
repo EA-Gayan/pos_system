@@ -1,15 +1,26 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { getTotalPrice } from "../../redux/slices/cartSlice";
 
 const Bill = () => {
+  const cartData = useSelector((state) => state.cart);
+  const total = useSelector(getTotalPrice);
+  const taxRate = 0;
+  const tax = total * taxRate;
+  const grandTotal = total + tax;
+  console.log("cartData", total);
+
   return (
     <>
       <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">Items(4) </p>
-        <h1 className="text-[#f5f5f5] text-md font-bold">Rs 123</h1>
+        <p className="text-xs text-[#ababab] font-medium mt-2">
+          Items({cartData.length}){" "}
+        </p>
+        <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
       </div>
       <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">Tax(5.25%)</p>
-        <h1 className="text-[#f5f5f5] text-md font-bold">Rs 24</h1>
+        <p className="text-xs text-[#ababab] font-medium mt-2">Tax(taxRate)</p>
+        <h1 className="text-[#f5f5f5] text-md font-bold">Rs 0</h1>
       </div>
       <div className="flex items-center gap-3 px-5 mt-4">
         <button className="bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab]">
