@@ -42,6 +42,7 @@ const Tables = () => {
             status={table.status}
             name={table.name}
             initials={table.initial}
+            seats={table.seats}
           />
         ))}
       </div>

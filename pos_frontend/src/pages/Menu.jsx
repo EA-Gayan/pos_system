@@ -5,8 +5,13 @@ import BottomNav from "../components/shared/BottomNav";
 import MenuContainer from "../components/menu/MenuContainer";
 import CartInfo from "../components/menu/CartInfo";
 import Bill from "../components/menu/Bill";
+import { useSelector } from "react-redux";
+import CustomerInfo from "../components/menu/CustomerInfo";
 
 const Menu = () => {
+  // Redux state to get customer data
+  const customerData = useSelector((state) => state.customer);
+
   return (
     <section className="bg-[#1f1f1f] h-[calc(100vh-5rem)] overflow-hidden flex gap-3">
       {/* left side */}
@@ -24,10 +29,10 @@ const Menu = () => {
               <FaUserCircle className="text-[#f5f5f5] text-4xl" />
               <div className="flex flex-col items-start">
                 <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-                  Customer Name
+                  {customerData.customerName}
                 </h1>
                 <p className="text-xs text-[#ababab] font-medium">
-                  Table No: 02
+                  {customerData.tableNo}
                 </p>
               </div>
             </div>
@@ -38,22 +43,7 @@ const Menu = () => {
       {/* Right side */}
       <div className="flex-[1] bg-[#1a1a1a] mt-4 mr-3 h-[780px] rounded-lg pt-2">
         {/* customer Info */}
-        <div className="flex  items-center justify-between px-4 py-3">
-          <div className="flex flex-col items-start">
-            <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-              Customer Name
-            </h1>
-            <p className="text-xs text-[#ababab] font-medium mt-1">
-              #101/Dine in
-            </p>
-            <p className="text-xs text-[#ababab] font-medium mt-2">
-              January 19,2025 05:34 PM
-            </p>
-          </div>
-          <button className="bg-[#F6B100] font-bold rounded-lg p-3 text-xl">
-            cn
-          </button>
-        </div>
+        <CustomerInfo />
         <hr className="border-[#2a2a2a] border-t-2 " />
         {/* cart items */}
         <hr className="border-[#2a2a2a] border-t-2 " />
