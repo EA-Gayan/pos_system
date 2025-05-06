@@ -23,11 +23,10 @@ const MenuContainer = () => {
   };
 
   const handleAddToCart = (item) => {
-    console.log("hi");
     if (itemCount === 0) return;
     const { name, price } = item;
     const newObj = {
-      id: new Date(),
+      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name,
       pricePerQuantity: price,
       quantity: itemCount,
