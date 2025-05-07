@@ -10,13 +10,13 @@ const globalErrorHandler = require("./middleware/globalErrorHandler");
 
 const app = express();
 
-app.use(cors());
 app.use(bodyParser.json());
 
 const PORT = config.port;
 connectDB(); // Connect to the database
 
 // Middleware
+app.use(cors({ credentials: true, origin: ["http://localhost:5173"] })); // Enable CORS with credentials
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
 
