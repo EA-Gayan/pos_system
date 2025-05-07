@@ -33,7 +33,7 @@ const addCategory = async (req, res, next) => {
 
 const getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate("products");
 
     res.status(200).json({
       success: true,
