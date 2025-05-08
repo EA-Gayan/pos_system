@@ -32,7 +32,7 @@ const Menu = () => {
                   {customerData.customerName}
                 </h1>
                 <p className="text-xs text-[#ababab] font-medium">
-                  {customerData.tableNo}
+                  {customerData.table?.tableNo}
                 </p>
               </div>
             </div>
