@@ -1,7 +1,6 @@
 import React from "react";
 import { FaCheckDouble, FaLongArrowAltRight } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
-import { formatDateAndTime, getAvatarName } from "../../utils/index";
 
 const OrderCard = () => {
   return (

@@ -8,38 +8,39 @@ const Bill = () => {
   const taxRate = 0;
   const tax = total * taxRate;
   const grandTotal = total + tax;
-  console.log(total);
+
   return (
     <>
-      <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">
-          Items({cartData.length}){" "}
-        </p>
-        <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
+      <div className="space-y-2 px-4 sm:px-5 mt-2">
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-[#ababab] font-medium">
+            Items({cartData.length})
+          </p>
+          <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-[#ababab] font-medium">Tax {taxRate}%</p>
+          <h1 className="text-[#f5f5f5] text-md font-bold">Rs {tax}</h1>
+        </div>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-[#ababab] font-medium">Total</p>
+          <h1 className="text-[#f5f5f5] text-md font-bold">Rs {grandTotal}</h1>
+        </div>
       </div>
-      <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">
-          Tax {taxRate}%
-        </p>
-        <h1 className="text-[#f5f5f5] text-md font-bold">Rs {tax}</h1>
-      </div>
-      <div className="flex items-center justify-between px-5 mt-2">
-        <p className="text-xs text-[#ababab] font-medium mt-2">Total</p>
-        <h1 className="text-[#f5f5f5] text-md font-bold">Rs {grandTotal}</h1>
-      </div>
-      <div className="flex items-center gap-3 px-5 mt-4">
-        <button className="bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab]">
+      <div className="flex flex-col sm:flex-row items-center gap-3 px-4 sm:px-5 mt-4">
+        <button className="bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-base font-medium break-words">
           Cash
         </button>
-        <button className="bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab]">
+        <button className="bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-base font-medium break-words">
           Online
         </button>
       </div>
-      <div className="flex items-center gap-3 px-5 mt-4">
-        <button className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#ababab] font-semibold text-lg">
+
+      <div className="flex flex-col sm:flex-row items-center gap-3 px-4 sm:px-5 mt-4">
+        <button className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-lg font-semibold break-words">
           Print Receipt
         </button>
-        <button className="bg-[#f6b100] px-4 py-3 w-full rounded-lg text-[#1f1f1f] font-semibold text-lg">
+        <button className="bg-[#f6b100] px-4 py-3 w-full rounded-lg text-[#1f1f1f] text-sm sm:text-lg font-semibold break-words">
           Online
         </button>
       </div>

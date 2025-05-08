@@ -1,10 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getBgColor } from "../../utils";
+import { getBgColor, getAvatarName } from "../../utils";
 import { useDispatch } from "react-redux";
 import { updateTable } from "../../redux/slices/customerSlice";
 
-const TableCard = ({ key, name, status, initials, seats }) => {
+const TableCard = ({ id, name, status, initials, seats }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = (name) => {
@@ -16,12 +16,13 @@ const TableCard = ({ key, name, status, initials, seats }) => {
   return (
     <div
       onClick={() => handleClick(name)}
-      key={key}
-      className="w-[300px] hover:bg-[#2c2c2c] bg-[#262626] p-4 rounded-lg cursor-pointer"
+      key={id}
+      className="hover:bg-[#2c2c2c] bg-[#262626] p-4 rounded-lg cursor-pointer"
     >
       <div className="flex items-center justify-between px-1">
-        <h1 className="text-[#f5f5f5] text-xl font-semibold">{name} </h1>
-
+        <h1 className="text-[#f5f5f5] text-xl font-semibold">
+          <p className="text-[#ababab] ml-2 inline" /> {name}
+        </h1>
         <p
           className={`${
             status === "Booked"
@@ -32,12 +33,12 @@ const TableCard = ({ key, name, status, initials, seats }) => {
           {status}
         </p>
       </div>
-      <div className="flex items-center justify-center mt-5 mb-5">
+      <div className="flex items-center justify-center mt-5 mb-8">
         <h1
           className={`text-white rounded-full p-5 text-xl`}
-          style={{ backgroundColor: getBgColor() }}
+          style={{ backgroundColor: initials ? getBgColor() : "#1f1f1f" }}
         >
-          {initials}
+          {getAvatarName(initials) || "N/A"}
         </h1>
       </div>
       <p className="text-[#ababab] text-xs">

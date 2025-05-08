@@ -27,7 +27,7 @@ const Login = () => {
     mutationFn: (reqData) => login(reqData),
     onSuccess: (res) => {
       const { data } = res;
-      const { _id, name, email, phone, role } = data.data;
+      const { _id, name, email, phone, role } = data.data.user;
       dispatch(setUser({ _id, name, email, phone, role }));
       navigate("/");
     },
@@ -49,6 +49,7 @@ const Login = () => {
             <input
               type="email"
               name="email"
+              autoComplete="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter employee email"
@@ -65,9 +66,10 @@ const Login = () => {
             <input
               type="password"
               name="password"
+              autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
-              autoComplete="Enter password"
+              placeholder="Enter password"
               className="bg-transparent flex-1 text-white focus:outline-none"
               required
             />

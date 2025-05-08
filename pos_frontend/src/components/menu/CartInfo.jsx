@@ -27,11 +27,11 @@ const CartInfo = () => {
         Order Details
       </h1>
       <div
-        className="mt-4 overflow-y-scroll scrollbar-hide h-[380px]"
+        className="mt-4  min-h-[380px] overflow-y-auto bg-gray-800"
         ref={scrollRef}
       >
         {cartData.length === 0 ? (
-          <p className="text-[#ababab] text-sm flex justify-center items-center h-[380px]">
+          <p className="text-[#ababab] text-sm flex justify-center items-center">
             No item in cart
           </p>
         ) : (
@@ -53,10 +53,10 @@ const CartInfo = () => {
                     className="text-[#ababab] cursor-pointer"
                     size={20}
                   />
-                  <FaNotesMedical
+                  {/* <FaNotesMedical
                     className="text-[#ababab] cursor-pointer"
                     size={20}
-                  />
+                  /> */}
                 </div>
                 <p className="text-[#f5f5f5] text-md font-bold">
                   Rs {item.price}

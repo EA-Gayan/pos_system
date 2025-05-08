@@ -7,7 +7,7 @@ const Orders = () => {
   const [status, setStatus] = useState("all");
 
   return (
-    <section className="bg-[#1f1f1f]  h-[calc(100vh-5rem)] overflow-hidden">
+    <section className="bg-[#1f1f1f]">
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
           <BackButton />
@@ -51,7 +51,7 @@ const Orders = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-6 items-center justify-center px-16 py-4 overflow-y-scroll scrollbar-hide h-[calc(100vh-5rem-5rem)]">
+      <div className="flex flex-wrap gap-6 items-center justify-center px-16 py-4 pb-20 ">
         <OrderCard />;
         <OrderCard />;
         <OrderCard />;
