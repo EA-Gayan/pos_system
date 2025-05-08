@@ -17,3 +17,13 @@ export const login = (data) => api.post("/api/user/login", data);
 export const register = (data) => api.post("/api/user/register", data);
 export const getUserData = () => api.get("/api/user");
 export const logout = () => api.post("/api/user/logout");
+
+// Table Endpoints
+export const updateTable = ({ tableId, ...tableData }) =>
+  api.put(`/api/table/${tableId}`, tableData);
+
+// Order Endpoints
+export const addOrder = (data) => api.post("/api/order", data);
+export const getOrders = () => api.get("/api/order");
+export const updateOrderStatus = ({ orderId, orderStatus }) =>
+  api.put(`/api/order/${orderId}`, orderStatus);
