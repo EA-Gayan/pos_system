@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { register } from "../../https";
+import { enqueueSnackbar } from "notistack";
 
 const Register = (setIsRegister) => {
   const [formData, setFormData] = useState({
@@ -15,11 +18,37 @@ const Register = (setIsRegister) => {
   const handleRoleSelection = (selectedRole) => {
     setFormData({ ...formData, role: selectedRole });
   };
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    registerMutataion.mutate(formData);
     console.log(formData);
   };
 
+  const registerMutataion = useMutation({
+    mutationFn: (reqData) => register(reqData),
+    onSuccess: (res) => {
+      const { data } = res;
+      enqueueSnackbar(data.message, {
+        variant: "success",
+      });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        role: "",
+      });
+
+      setTimeout(() => {
+        setIsRegister(false);
+      }, 1500);
+    },
+    onError: (err) => {
+      enqueueSnackbar(err.response.message, {
+        variant: "error",
+      });
+    },
+  });
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -61,7 +90,7 @@ const Register = (setIsRegister) => {
           </label>
           <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
             <input
-              type="number"
+              type="text"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
