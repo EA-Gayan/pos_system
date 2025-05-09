@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
+const MealTypes = require("../enum/mealTypes");
 
 const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    mealType: {
+      type: Number,
+      enum: Object.values(MealTypes),
+    },
   },
   { timestamps: true }
 );
