@@ -61,6 +61,8 @@ const updateOrder = async (req, res, next) => {
     const orderId = req.params.id;
     const { orderStatus } = req.body;
 
+    console.log(orderId, orderStatus);
+
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       const error = createHttpError(400, "Invalid Order ID!");
       return next(error);

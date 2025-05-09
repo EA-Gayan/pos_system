@@ -24,7 +24,7 @@ const Orders = () => {
   }
 
   return (
-    <section className="bg-[#1f1f1f]">
+    <section className="bg-[#1f1f1f] min-h-[calc(100vh-96px)]">
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
           <BackButton />
@@ -68,7 +68,7 @@ const Orders = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 px-16 py-4 overflow-y-scroll scrollbar-hide">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 overflow-y-auto">
         {resData?.data?.data?.length > 0 ? (
           resData.data.data.map((order) => (
             <OrderCard key={order._id} order={order} />
