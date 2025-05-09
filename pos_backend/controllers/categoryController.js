@@ -4,11 +4,25 @@ const mongoose = require("mongoose");
 
 const addCategory = async (req, res, next) => {
   try {
-    const { categoryName } = req.body;
+    const { categoryName, mealType } = req.body;
 
     if (!categoryName) {
       const error = createHttpError(400, "Category name is required!");
       return next(error);
+    }
+    if (mealType == null) {
+      return next(createHttpError(400, "mealType is required!"));
+    }
+
+    // Ensure mealType is one of our enum values
+    const allowedValues = Object.values(MealTypes);
+    if (!allowedValues.includes(Number(mealType))) {
+      return next(
+        createHttpError(
+          400,
+          `Invalid mealType. Allowed values are: ${allowedValues.join(", ")}`
+        )
+      );
     }
 
     // Check if category already exists
@@ -19,7 +33,10 @@ const addCategory = async (req, res, next) => {
     }
 
     // Create new category
-    const newCategory = await Category.create({ name: categoryName });
+    const newCategory = await Category.create({
+      name: categoryName,
+      mealType: Number(mealType),
+    });
 
     res.status(201).json({
       success: true,
@@ -49,7 +66,7 @@ const updateCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const { categoryName } = req.body;
+    const { categoryName, mealType } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       const error = createHttpError(400, "Invalid Category ID!");
@@ -61,6 +78,20 @@ const updateCategory = async (req, res, next) => {
       return next(error);
     }
 
+    if (mealType == null) {
+      return next(createHttpError(400, "mealType is required!"));
+    }
+
+    const allowedMealTypes = Object.values(MealTypes);
+    if (!allowedMealTypes.includes(Number(mealType))) {
+      return next(
+        createHttpError(
+          400,
+          `Invalid mealType. Allowed values are: ${allowedMealTypes.join(", ")}`
+        )
+      );
+    }
+
     // Check if category already exists
     const existingCategory = await Category.findOne({ name: categoryName });
     if (existingCategory) {
@@ -70,7 +101,7 @@ const updateCategory = async (req, res, next) => {
 
     const categoryUpdate = await Category.findByIdAndUpdate(
       id,
-      { name: categoryName },
+      { name: categoryName, mealType: Number(mealType) },
       { new: true }
     );
 
