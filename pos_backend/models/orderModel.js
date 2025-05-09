@@ -26,6 +26,7 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table",
     },
+    paymentMethod: { type: String, default: "Cash" },
   },
   { timestamps: true }
 );
