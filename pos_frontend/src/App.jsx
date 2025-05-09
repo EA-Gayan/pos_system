@@ -14,6 +14,7 @@ import Menu from "./pages/Menu";
 import { useSelector } from "react-redux";
 import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
+import Dashboard from "./pages/Dashboard";
 function Layout() {
   const location = useLocation();
 
@@ -58,6 +59,14 @@ function Layout() {
           element={
             <ProtectedRoute>
               <Menu />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
             </ProtectedRoute>
           }
         />
