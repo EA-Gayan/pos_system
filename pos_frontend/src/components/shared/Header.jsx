@@ -32,7 +32,12 @@ const Header = () => {
     <header className="flex justify-between items-center py-4 px-8 bg-[#1a1a1a]">
       {/* LOGO */}
       <div className="flex items-center gap-2 cursor-pointer">
-        <img src={logo} className="h-16 w-16" alt="main logo" />
+        <img
+          src={logo}
+          className="h-16 w-16"
+          alt="main logo"
+          onClick={() => navigate("/")}
+        />
       </div>
 
       {/* SEARCH */}

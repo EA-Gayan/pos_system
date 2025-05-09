@@ -14,7 +14,6 @@ import { formatDateAndTime } from "../../utils";
 const RecentOrders = () => {
   const queryClient = useQueryClient();
   const handleStatusChange = ({ orderId, orderStatus }) => {
-    console.log(orderId, orderStatus);
     orderStatusUpdateMutation.mutate({ orderId, orderStatus });
   };
 
@@ -44,8 +43,6 @@ const RecentOrders = () => {
     enqueueSnackbar("Something went wrong!", { variant: "error" });
   }
 
-  console.log(resData.data.data);
-
   return (
     <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
       <h2 className="text-[#f5f5f5] text-xl font-semibold mb-4">
@@ -73,7 +70,9 @@ const RecentOrders = () => {
                 <td className="p-4">
                   #{Math.floor(new Date(order.orderDate).getTime())}
                 </td>
-                <td className="p-4">{order.customerDetails.name}</td>
+                <td className="p-4">
+                  {order?.customerDetails?.name ?? "N/A"}{" "}
+                </td>
                 <td className="p-4">
                   <select
                     className={`bg-[#1a1a1a] text-[#f5f5f5] border border-gray-500 p-2 rounded-lg focus:outline-none ${
@@ -99,7 +98,9 @@ const RecentOrders = () => {
                 </td>
                 <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
                 <td className="p-4">{order.items.length} Items</td>
-                <td className="p-4">Table - {order.table.tableNo}</td>
+                <td className="p-4">
+                  Table - {order?.table?.tableNo ?? "N/A"}
+                </td>
                 <td className="p-4">
                   Rs {order?.bills?.totalPayable?.toFixed(2)}
                 </td>
