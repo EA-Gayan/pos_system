@@ -11,14 +11,15 @@ const register = async (req, res, next) => {
     // Validate input
     if (!name || !email || !phone || !password || !role) {
       const error = createHttpError(400, "All fields are required!");
-      next(error);
+      return next(error);
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       const error = createHttpError(400, "User already exists!");
-      next(error);
+      return next(error);
     }
 
     // Create new user
@@ -77,7 +78,7 @@ const login = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Login successful!",
+      message: "User Login successful!",
       data: {
         user: {
           id: user._id,
@@ -112,4 +113,17 @@ const getUserData = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, getUserData };
+const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("accessToken", {
+      secure: true,
+    });
+    res.status(200).json({
+      success: true,
+      message: "User Logout successful!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { register, login, getUserData, logout };

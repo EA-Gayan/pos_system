@@ -83,11 +83,6 @@ export const tables = [
   { id: 8, name: "Table 8", status: "Available", initial: "DP", seats: 5 },
   { id: 9, name: "Table 9", status: "Booked", initial: "NK", seats: 6 },
   { id: 10, name: "Table 10", status: "Available", initial: "SB", seats: 6 },
-  { id: 11, name: "Table 11", status: "Booked", initial: "GT", seats: 4 },
-  { id: 12, name: "Table 12", status: "Available", initial: "JS", seats: 6 },
-  { id: 13, name: "Table 13", status: "Booked", initial: "EK", seats: 2 },
-  { id: 14, name: "Table 14", status: "Available", initial: "QN", seats: 6 },
-  { id: 15, name: "Table 15", status: "Booked", initial: "TW", seats: 3 },
 ];
 
 export const startersItem = [
@@ -119,6 +114,36 @@ export const startersItem = [
     id: 5,
     name: "Aloo Tikki",
     price: 120,
+    category: "Vegetarian",
+  },
+  {
+    id: 6,
+    name: "Hara Bhara Kebab",
+    price: 220,
+    category: "Vegetarian",
+  },
+  {
+    id: 6,
+    name: "Hara Bhara Kebab",
+    price: 220,
+    category: "Vegetarian",
+  },
+  {
+    id: 6,
+    name: "Hara Bhara Kebab",
+    price: 220,
+    category: "Vegetarian",
+  },
+  {
+    id: 6,
+    name: "Hara Bhara Kebab",
+    price: 220,
+    category: "Vegetarian",
+  },
+  {
+    id: 6,
+    name: "Hara Bhara Kebab",
+    price: 220,
     category: "Vegetarian",
   },
   {
@@ -373,6 +398,7 @@ export const menus = [
     icon: "🍲",
     items: startersItem,
   },
+
   {
     id: 2,
     name: "Main Course",
