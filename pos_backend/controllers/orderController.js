@@ -44,7 +44,10 @@ const getOrderById = async (req, res, next) => {
 
 const getOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find().populate("table");
+    const orders = await Order.find()
+      .populate("table")
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .limit(10); // Limit to last 10 entries
 
     res.status(200).json({
       success: true,

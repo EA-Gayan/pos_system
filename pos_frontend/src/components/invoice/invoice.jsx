@@ -70,13 +70,15 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
               {Math.floor(new Date(orderInfo?.orderDate).getTime())}
             </p>
             <p>
-              <strong>Name:</strong> {orderInfo?.customerDetails?.name}
+              <strong>Name:</strong> {orderInfo?.customerDetails?.name ?? "N/A"}
             </p>
             <p>
-              <strong>Phone:</strong> {orderInfo?.customerDetails?.phone}
+              <strong>Phone:</strong>{" "}
+              {orderInfo?.customerDetails?.phone ?? "N/A"}
             </p>
             <p>
-              <strong>Guests:</strong> {orderInfo?.customerDetails?.guests}
+              <strong>Guests:</strong>{" "}
+              {orderInfo?.customerDetails?.guests ?? "N/A"}
             </p>
           </div>
 
@@ -85,7 +87,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
           <div className="mt-4 border-t pt-4">
             <h3 className="text-sm font-semibold">Items Ordered</h3>
             <ul className="text-sm text-gray-700">
-              {orderInfo.items.map((item, index) => (
+              {orderInfo?.items?.map((item, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center text-xs"
@@ -103,14 +105,15 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
           <div className="mt-4 border-t pt-4 text-sm">
             <p>
-              <strong>Subtotal:</strong> ₹{orderInfo?.bills?.total?.toFixed(2)}
+              <strong>Subtotal:</strong> Rs{" "}
+              {orderInfo?.bills?.total?.toFixed(2)}
             </p>
             <p>
-              <strong>Tax:</strong> ₹{orderInfo?.bills?.tax?.toFixed(2)}
+              <strong>Tax:</strong> Rs {orderInfo?.bills?.tax?.toFixed(2)}
             </p>
             <p className="text-md font-semibold">
-              <strong>Grand Total:</strong> ₹
-              {orderInfo?.bills?.totalWithTax?.toFixed(2)}
+              <strong>Grand Total:</strong> Rs{" "}
+              {orderInfo?.bills?.totalPayable?.toFixed(2)}
             </p>
           </div>
 

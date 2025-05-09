@@ -5,36 +5,46 @@ import { getAvatarName } from "../../utils";
 
 const OrderList = ({ key, order }) => {
   return (
-    <div className="flex items-center gap-5 mb-3" key={key}>
-      <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg">
-        {getAvatarName(order?.customerDetails?.name)}
-      </button>
-      <div className="flex items-center justify-between w-[100%]">
-        <div className="flex flex-col items-start gap-1">
-          <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
-            {order?.customerDetails?.name}
+    <div
+      className="flex items-center justify-between gap-4 p-4 bg-[#1e1e1e] rounded-lg mb-3"
+      key={key}
+    >
+      {/* Left: Avatar + Name/Items */}
+      <div className="flex items-center gap-4 min-w-0">
+        <button className="bg-[#f6b100] w-12 h-12 text-xl font-bold rounded-full flex items-center justify-center shrink-0">
+          {getAvatarName(order?.customerDetails?.name || "N/A")}
+        </button>
+        <div className="flex flex-col">
+          <h1 className="text-white text-base font-semibold leading-tight truncate max-w-[100px]">
+            {order?.customerDetails?.name || "N/A"}
           </h1>
-          <p className="text-[#ababab] text-sm">{order?.items?.length} Items</p>
+          <p className="text-[#ababab] text-sm leading-tight">
+            {order?.items?.length || 0} Items
+          </p>
         </div>
+      </div>
 
-        <h1 className="text-[#f6b100] font-semibold border border-[#f6b100] rounded-lg p-1">
-          Table <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" />{" "}
-          {order?.table?.tableNo}
-        </h1>
+      {/* Center: Table Badge */}
+      <div className="flex items-center">
+        <span className="text-[#f6b100] font-semibold border border-[#f6b100] rounded-lg px-3 py-1 flex items-center whitespace-nowrap">
+          Table <FaLongArrowAltRight className="mx-2 text-[#ababab]" />
+          {order?.table?.tableNo || "N/A"}
+        </span>
+      </div>
 
-        <div className="flex flex-col items-end gap-2">
-          {order?.orderStatus === "Ready" ? (
-            <p className="text-green-600 bg-[#2e4a40] px-2 py-1 rounded-lg">
-              <FaCheckDouble className="inline mr-2" />
-              {order?.orderStatus}
-            </p>
-          ) : (
-            <p className="text-yellow-600 bg-[#4a452e] px-2 py-1 rounded-lg">
-              <FaCircle className="inline mr-2" />
-              {order?.orderStatus}
-            </p>
-          )}
-        </div>
+      {/* Right: Status Badge */}
+      <div className="flex items-center justify-between gap-4 p-4 bg-[#1e1e1e] rounded-lg mb-3 min-h-[80px]">
+        {order?.orderStatus === "Ready" ? (
+          <span className="text-green-500 bg-[#2e4a40] px-3 py-1.5 rounded-lg text-sm font-medium flex items-center min-h-[32px]">
+            <FaCheckDouble className="mr-1 text-xs" />
+            Ready
+          </span>
+        ) : (
+          <span className="text-yellow-500 bg-[#4a452e] px-3 py-1.5 rounded-lg text-sm font-medium flex items-center min-h-[32px]">
+            <FaCircle className="mr-1 text-xs" />
+            In Progress
+          </span>
+        )}
       </div>
     </div>
   );

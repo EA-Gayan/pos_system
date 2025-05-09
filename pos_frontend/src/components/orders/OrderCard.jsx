@@ -8,12 +8,12 @@ const OrderCard = ({ key, order }) => {
     <div className="w-full bg-[#262626] p-4 rounded-lg mb-4mx-auto" key={key}>
       <div className="flex items-center gap-5">
         <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg">
-          {getAvatarName(order?.customerDetails?.name)}
+          {getAvatarName(order?.customerDetails?.name ?? "N/A")}
         </button>
         <div className="flex items-center justify-between w-[100%]">
           <div className="flex flex-col items-start gap-1">
             <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
-              {order?.customerDetails?.name}
+              {order?.customerDetails?.name ?? "N/A"}
             </h1>
             <p className="text-[#ababab] text-sm">
               #{Math.floor(new Date(order?.orderDate).getTime())} / Dine in
@@ -21,7 +21,7 @@ const OrderCard = ({ key, order }) => {
             <p className="text-[#ababab] text-sm">
               Table{" "}
               <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" />{" "}
-              {order?.table?.tableNo}
+              {order?.table?.tableNo ?? "N/A"}
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
