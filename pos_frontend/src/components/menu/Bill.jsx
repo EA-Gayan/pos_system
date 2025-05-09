@@ -5,9 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import { addOrder, updateTable } from "../../https";
 import { enqueueSnackbar } from "notistack";
 import { removeCustomer } from "../../redux/slices/customerSlice";
+import Invoice from "../invoice/invoice";
 
 const Bill = () => {
-  // const [paymentMethod, setPaymentMethod] = useState("Cash");
   const cartData = useSelector((state) => state.cart);
   const total = useSelector(getTotalPrice);
   const taxRate = 0;
@@ -17,6 +17,8 @@ const Bill = () => {
 
   const customerData = useSelector((state) => state.customer);
   const dispatch = useDispatch();
+  const [showInvoice, setShowInvoice] = React.useState(false);
+  const [orderInfo, setOrderInfo] = React.useState();
 
   // Place the order
   const handlePlaceOrder = async () => {
@@ -34,6 +36,7 @@ const Bill = () => {
       },
       items: cartData,
       table: "681adc70e2d0bdb8095fd2e4",
+      paymentMethod: "Cash",
     };
 
     setTimeout(() => {
@@ -47,6 +50,8 @@ const Bill = () => {
     onSuccess: (resData) => {
       const { data } = resData.data;
       console.log(data);
+
+      setOrderInfo(data);
 
       // Update Table
       const tableData = {
@@ -62,6 +67,7 @@ const Bill = () => {
       enqueueSnackbar("Order Placed!", {
         variant: "success",
       });
+      setShowInvoice(true);
     },
     onError: (error) => {
       console.log(error);
@@ -113,6 +119,10 @@ const Bill = () => {
           Place Order
         </button>
       </div>
+
+      {showInvoice && (
+        <Invoice orderInfo={orderInfo} setShowInvoice={setShowInvoice} />
+      )}
     </>
   );
 };
