@@ -1,6 +1,3 @@
-import React from "react";
-import { orders } from "../../constants";
-import { GrUpdate } from "react-icons/gr";
 import {
   keepPreviousData,
   useMutation,
@@ -8,7 +5,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getOrders, updateOrderStatus } from "../../https/index";
+import React, { useEffect } from "react";
+import { getOrders, updateOrderStatus } from "../../https";
 import { formatDateAndTime } from "../../utils";
 
 const RecentOrders = () => {
@@ -39,9 +37,11 @@ const RecentOrders = () => {
     placeholderData: keepPreviousData,
   });
 
-  if (isError) {
-    enqueueSnackbar("Something went wrong!", { variant: "error" });
-  }
+  useEffect(() => {
+    if (isError) {
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
+    }
+  }, [isError]);
 
   return (
     <div className="container mx-auto bg-[#262626] p-4 rounded-lg">

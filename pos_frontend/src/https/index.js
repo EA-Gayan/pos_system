@@ -27,3 +27,11 @@ export const addOrder = (data) => api.post("/api/order", data);
 export const getOrders = () => api.get("/api/order");
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   api.put(`/api/order/${orderId}`, { orderStatus });
+
+// category Endpoints
+export const addCategory = (data) => api.post("/api/category", data);
+export const getCategories = () => api.get("/api/category");
+
+// product Endpoints
+export const addProduct = (data) => api.post("/api/product", data);
+export const getProducts = () => api.get("/api/product");
