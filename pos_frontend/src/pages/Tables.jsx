@@ -1,14 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BottomNav from "../components/shared/BottomNav";
 import TableCard from "../components/tables/TableCard";
 import BackButton from "../components/shared/BackButton";
 import { tables } from "../constants";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { enqueueSnackbar } from "notistack";
+import { getTables } from "../https";
+import { useDispatch, useSelector } from "react-redux";
+import { setTable } from "../redux/slices/tableSlice";
 
 const Tables = () => {
+  const dispatch = useDispatch();
   const [status, setStatus] = useState("all");
+  const [tableData, setTableData] = useState([]);
+
+  const { data: resData, isError } = useQuery({
+    queryKey: ["table"],
+    queryFn: async () => {
+      return await getTables();
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  const currentTableData = useSelector((state) => state.table.tableData);
+
+  const hasStatusChanged = (oldList, newList) => {
+    if (!oldList || oldList.length === 0) return true;
+
+    return newList.some((newItem) => {
+      const oldItem = oldList.find((item) => item.id === newItem.id);
+      return oldItem && oldItem.status !== newItem.status;
+    });
+  };
+
+  useEffect(() => {
+    if (resData) {
+      setTableData(resData.data.data);
+
+      if (hasStatusChanged(currentTableData, tableData)) {
+        dispatch(setTable(tableData));
+      } else {
+        console.log("No status change — skipping dispatch");
+      }
+    }
+  }, [resData, dispatch, currentTableData]);
+
+  if (isError) {
+    enqueueSnackbar("Something went wrong!", {
+      variant: "error",
+    });
+  }
 
   return (
-    <section className="bg-[#1f1f1f] scroll-auto">
+    <section className="bg-[#1f1f1f] scroll-auto min-h-[calc(100vh-96px)]">
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
           <BackButton />
@@ -36,11 +80,11 @@ const Tables = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 pb-20">
-        {tables.map((table) => (
+        {tableData.map((table) => (
           <TableCard
-            key={table.id}
+            key={table._id}
             status={table.status}
-            name={table.name}
+            name={table.tableNo}
             initials={table.initial}
             seats={table.seats}
           />

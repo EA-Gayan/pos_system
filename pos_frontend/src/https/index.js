@@ -21,6 +21,7 @@ export const logout = () => api.post("/api/user/logout");
 // Table Endpoints
 export const updateTable = ({ tableId, ...tableData }) =>
   api.put(`/api/table/${tableId}`, tableData);
+export const getTables = () => api.get("/api/table");
 
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
