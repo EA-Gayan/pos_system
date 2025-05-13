@@ -51,6 +51,11 @@ const Tables = () => {
     });
   }
 
+  const filteredTables =
+    status === "all"
+      ? tableData
+      : tableData.filter((table) => table.status?.toLowerCase() === status);
+
   return (
     <section className="bg-[#1f1f1f] scroll-auto min-h-[calc(100vh-96px)]">
       <div className="flex items-center justify-between px-10 py-4">
@@ -63,24 +68,33 @@ const Tables = () => {
         <div className="flex items-center justify-around gap-4">
           <button
             onClick={() => setStatus("all")}
-            className={`text-[#ababab] text-lg ${
-              status === "all" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+              status === "all" ? "bg-[#383838]" : ""
+            }`}
           >
             All
           </button>
           <button
             onClick={() => setStatus("booked")}
-            className={`text-[#ababab] text-lg ${
-              status === "booked" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+              status === "booked" ? "bg-[#383838]" : ""
+            }`}
           >
             Booked
           </button>
+          <button
+            onClick={() => setStatus("available")}
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+              status === "available" ? "bg-[#383838]" : ""
+            }`}
+          >
+            Available
+          </button>
         </div>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 pb-20">
-        {tableData.map((table) => (
+        {filteredTables.map((table) => (
           <TableCard
             key={table._id}
             status={table.status}
@@ -90,6 +104,7 @@ const Tables = () => {
           />
         ))}
       </div>
+
       <BottomNav />
     </section>
   );
