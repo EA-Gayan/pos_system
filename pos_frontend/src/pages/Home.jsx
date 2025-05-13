@@ -12,6 +12,7 @@ import { orderEarning } from "../https";
 const Home = () => {
   const [totalEarning, setTotalEarning] = useState(0);
   const [percentage, setpercentage] = useState(0);
+
   const orderEarningMutation = useMutation({
     mutationFn: ({ period }) => orderEarning({ period }),
     onSuccess: (response) => {
