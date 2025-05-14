@@ -97,7 +97,7 @@ const RecentOrders = () => {
                   </select>
                 </td>
                 <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
-                <td className="p-4">{order.items.length} Items</td>
+                <td className="p-4">{order?.items?.length} Items</td>
                 <td className="p-4">
                   Table - {order?.table?.tableNo ?? "N/A"}
                 </td>
