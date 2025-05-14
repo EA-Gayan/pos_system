@@ -85,6 +85,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, { variant: "success" });
     },
     onError: (error) => {
@@ -99,6 +101,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, {
         variant: "success",
       });
@@ -116,6 +120,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, {
         variant: "success",
       });

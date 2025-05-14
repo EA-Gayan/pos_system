@@ -6,10 +6,6 @@ import Login from "../components/auth/Login";
 const Auth = () => {
   const [isRegister, setIsRegister] = useState(false);
 
-  useEffect(() => {
-    document.title = "POS | Auth";
-  }, []);
-
   return (
     <div className="flex min-h-screen w-full">
       {/* Left Section */}
