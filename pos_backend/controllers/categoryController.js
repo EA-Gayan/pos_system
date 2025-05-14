@@ -1,6 +1,7 @@
 const Category = require("../models/categoryModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const MealTypes = require("../enum/mealTypes");
 
 const addCategory = async (req, res, next) => {
   try {
@@ -35,7 +36,7 @@ const addCategory = async (req, res, next) => {
     // Create new category
     const newCategory = await Category.create({
       name: categoryName,
-      mealType: Number(mealType),
+      mealType: mealType,
     });
 
     res.status(201).json({
