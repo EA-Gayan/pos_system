@@ -5,13 +5,14 @@ import { GrRadialSelected } from "react-icons/gr";
 import { useDispatch } from "react-redux";
 import { getCategories } from "../../https";
 import { addItems } from "../../redux/slices/cartSlice";
-import { getBgColor } from "../../utils";
 
 const MenuContainer = () => {
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantities, setQuantities] = useState({});
+
+  const selectedStatus = parseInt(localStorage.getItem("selectedStatus"), 10);
 
   const increment = (id) => () => {
     setQuantities((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -47,27 +48,34 @@ const MenuContainer = () => {
     placeholderData: keepPreviousData,
   });
 
+  // all categories
   const categories = resData?.data?.data || [];
 
+  // filtered categories
+  const filteredCategories = categories.filter(
+    (item) => item.mealType === selectedStatus || item.mealType === 4
+  );
+
   useEffect(() => {
-    if (categories.length && !selectedItem) {
-      setSelectedItem(categories[0]);
+    if (filteredCategories.length && !selectedItem) {
+      setSelectedItem(filteredCategories[0]);
     }
     if (isError) {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  }, [categories, selectedItem, isError]);
+  }, [categories, filteredCategories, selectedItem, isError]);
 
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
-        {categories.map((category) => {
+        {filteredCategories.map((category) => {
           const isSelected = selectedItem?.id === category.id;
           return (
             <div
               key={category.id}
-              className="flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200"
-              style={{ backgroundColor: getBgColor() }}
+              className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${
+                isSelected ? "bg-[#1d2569]" : "bg-gray-700"
+              }`}
               onClick={() => {
                 setSelectedItem(category);
               }}
