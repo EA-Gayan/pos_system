@@ -17,10 +17,10 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   });
 
   const [productData, setProductData] = useState({
-    productName: "",
+    name: "",
     price: "",
     description: "",
-    category: "",
+    categoryId: "",
   });
 
   const { data: resData, isError } = useQuery({
@@ -71,8 +71,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     } else if (labelType === "Category") {
       categoryMutation.mutate(categoryData);
     } else {
-      console.log("productData", productData);
-      // productMutation.mutate(productData);
+      productMutation.mutate(productData);
     }
   };
 
@@ -115,6 +114,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   const productMutation = useMutation({
     mutationFn: (reqData) => addProduct(reqData),
     onSuccess: (res) => {
+      setIsTableModalOpen(false);
       const { data } = res;
       enqueueSnackbar(data.message, {
         variant: "success",
@@ -234,12 +234,12 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
             <>
               <div>
                 <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-                  Dish Name
+                  Item Name
                 </label>
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <input
                     type="text"
-                    name="productName"
+                    name="name"
                     value={productData.productName}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
@@ -249,7 +249,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
               </div>
               <div>
                 <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-                  Dish Price
+                  Item Price
                 </label>
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <input
@@ -273,7 +273,6 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                     value={productData.description}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
                   />
                 </div>
               </div>
@@ -284,7 +283,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
 
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <select
-                    name="category"
+                    name="categoryId"
                     value={productData.category}
                     onChange={handleProductDownChange}
                     className="bg-[#1f1f1f] text-white w-full focus:outline-none"
