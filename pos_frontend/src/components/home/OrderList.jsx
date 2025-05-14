@@ -3,12 +3,12 @@ import { FaCheckDouble, FaLongArrowAltRight } from "react-icons/fa";
 import { FaCircle } from "react-icons/fa";
 import { getAvatarName } from "../../utils";
 
-const OrderList = ({ key, order }) => {
+const OrderList = (order) => {
   return (
     <div className="divide-y divide-gray-800 border border-gray-800 rounded-lg overflow-hidden">
       <div
         className="flex items-center justify-between gap-4 p-4 bg-[#1e1e1e]"
-        key={key}
+        key={order._id}
       >
         {/* Left: Avatar + Name/Items */}
         <div className="flex items-center gap-4 min-w-0">

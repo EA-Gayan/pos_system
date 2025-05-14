@@ -3,7 +3,7 @@ const createHttpError = require("http-errors");
 
 const getTotalEarnings = async (req, res, next) => {
   try {
-    const { period } = req.query;
+    const { period } = req.body;
     const now = new Date();
     let startDate, endDate;
 

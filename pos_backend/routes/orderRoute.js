@@ -5,14 +5,15 @@ const {
   getOrders,
   getOrderById,
   updateOrder,
+  getOrdersCount,
 } = require("../controllers/orderController");
 const {
   getTotalEarnings,
 } = require("../controllers/getTotalEarningController");
 const router = express.Router();
 
-router.route("/earnings").get(isVerifiedUser, getTotalEarnings);
-
+router.route("/earnings").post(isVerifiedUser, getTotalEarnings);
+router.route("/count").post(isVerifiedUser, getOrdersCount);
 router.route("/").post(isVerifiedUser, addOrder);
 router.route("/").get(isVerifiedUser, getOrders);
 router.route("/:id").get(isVerifiedUser, getOrderById);
