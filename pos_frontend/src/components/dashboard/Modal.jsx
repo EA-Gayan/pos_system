@@ -2,19 +2,13 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { enqueueSnackbar } from "notistack";
-import { addCategory, addProduct, getCategories } from "../../https";
+import { addCategory, addProduct, getCategories, addTable } from "../../https";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
-
-// Dummy mutation function (replace with actual)
-const addTable = async (reqData) => {
-  // Simulate API call
-  return { data: { message: "Table added successfully!" } };
-};
 
 const Modal = ({ setIsTableModalOpen, labelType }) => {
   const [tableData, setTableData] = useState({
     tableNo: "",
-    seats: "",
+    noOfSeats: null,
   });
 
   const [categoryData, setCategoryData] = useState({
@@ -104,6 +98,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   const categoryMutation = useMutation({
     mutationFn: (reqData) => addCategory(reqData),
     onSuccess: (res) => {
+      setIsTableModalOpen(false);
       const { data } = res;
       enqueueSnackbar(data.message, {
         variant: "success",
@@ -178,7 +173,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <input
                     type="number"
-                    name="seats"
+                    name="noOfSeats"
+                    placeholder="0"
                     value={tableData.seats}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
@@ -219,7 +215,11 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                     className="bg-[#1f1f1f] text-white w-full focus:outline-none"
                     required
                   >
-                    <option value={0}>Select a session</option>
+                    {categoryData.mealType === 0 && (
+                      <option value={0} disabled>
+                        Select a session
+                      </option>
+                    )}
                     <option value={1}>Breakfast</option>
                     <option value={2}>Lunch</option>
                     <option value={3}>Dinner</option>
