@@ -130,9 +130,22 @@ const MenuContainer = () => {
                   >
                     &minus;
                   </button>
-                  <span className="text-white">
-                    {quantities[item._id] || 0}
-                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    className="bg-transparent text-white text-center w-10 outline-none no-spinner"
+                    value={quantities[item._id] || ""}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value, 10);
+                      setQuantities((prev) => ({
+                        ...prev,
+                        [item._id]: isNaN(value) ? 0 : value,
+                      }));
+                    }}
+                    onClick={(e) => e.target.select()}
+                    inputMode="numeric"
+                  />
+
                   <button
                     onClick={increment(item._id)}
                     className="text-yellow-500 text-xl"
