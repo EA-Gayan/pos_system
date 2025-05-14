@@ -28,8 +28,8 @@ export const addOrder = (data) => api.post("/api/order", data);
 export const getOrders = () => api.get("/api/order");
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   api.put(`/api/order/${orderId}`, { orderStatus });
-export const orderEarning = ({ period }) =>
-  api.get(`/api/order/earnings?period=${period}`);
+export const getOrderEarning = (data) => api.post(`/api/order/earnings`, data);
+export const getOrdersCount = (data) => api.post(`/api/order/count`, data);
 
 // category Endpoints
 export const addCategory = (data) => api.post("/api/category", data);
