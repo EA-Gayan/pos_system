@@ -79,8 +79,6 @@ const Bill = () => {
 
     onSuccess: (resData) => {
       const { data } = resData.data;
-      console.log(data);
-
       dispatch(removeCustomer());
       dispatch(removeAllItems());
     },

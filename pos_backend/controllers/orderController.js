@@ -92,4 +92,53 @@ const updateOrder = async (req, res, next) => {
   }
 };
 
-module.exports = { addOrder, getOrderById, getOrders, updateOrder };
+const getOrdersCount = async (req, res, next) => {
+  try {
+    const { period } = req.body;
+    const match = {};
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (period === "today") {
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      match.createdAt = { $gte: today, $lt: tomorrow };
+    } else if (period === "yesterday") {
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      match.createdAt = { $gte: yesterday, $lt: today };
+    } else if (period === "week") {
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - today.getDay()); // Sunday
+      match.createdAt = {
+        $gte: startOfWeek,
+        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+      };
+    } else if (period === "month") {
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      match.createdAt = {
+        $gte: startOfMonth,
+        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
+      };
+    }
+
+    const ordersCount = await Order.find(match).populate("table");
+    res.status(200).json({
+      success: true,
+      message: "Orders count retrieved successfully",
+      data: ordersCount.length,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+module.exports = {
+  addOrder,
+  getOrderById,
+  getOrders,
+  updateOrder,
+  getOrdersCount,
+};
