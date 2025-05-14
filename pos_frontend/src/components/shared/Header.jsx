@@ -23,6 +23,7 @@ const Header = () => {
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [calendarDropdownOpen, setCalendarDropdownOpen] = useState(false);
+  const [isShowMenuTypeIcon, setIsShowMenuTypeIcon] = useState(false);
   const dropdownRef = useRef();
   const calendarDropdownRef = useRef();
 
@@ -63,6 +64,14 @@ const Header = () => {
       setSelectedMeal(parseInt(savedMeal));
     }
   }, []);
+
+  useEffect(() => {
+    if (window.location.pathname.includes("menu")) {
+      setIsShowMenuTypeIcon(true);
+    } else {
+      setIsShowMenuTypeIcon(false);
+    }
+  }, [window.location.pathname]);
 
   const handleMealSelect = (value) => {
     if (selectedMeal !== value) {
@@ -107,32 +116,34 @@ const Header = () => {
         )}
 
         {/* Calendar Icon */}
-        <div
-          className="bg-[#1f1f1f] rounded-[15px] p-3 cursor-pointer relative"
-          onClick={() => setCalendarDropdownOpen((prev) => !prev)}
-          ref={calendarDropdownRef}
-        >
-          <RiCalendarScheduleFill className="text-[#f5f5f5] text-2xl" />
+        {isShowMenuTypeIcon && (
+          <div
+            className="bg-[#1f1f1f] rounded-[15px] p-3 cursor-pointer relative"
+            onClick={() => setCalendarDropdownOpen((prev) => !prev)}
+            ref={calendarDropdownRef}
+          >
+            <RiCalendarScheduleFill className="text-[#f5f5f5] text-2xl" />
 
-          {/* Dropdown */}
-          {calendarDropdownOpen && (
-            <div className="absolute top-full right-0 mt-2 bg-[#1f1f1f] shadow-lg rounded-lg py-2 w-40 z-50">
-              {meals.map((meal) => (
-                <button
-                  key={meal.value}
-                  onClick={() => handleMealSelect(meal.value)}
-                  className={`block w-full text-left px-4 py-2 text-sm transition ${
-                    selectedMeal === meal.value
-                      ? "bg-[#333] text-white font-semibold"
-                      : "text-[#f5f5f5] hover:bg-[#333]"
-                  }`}
-                >
-                  {meal.name}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+            {/* Dropdown */}
+            {calendarDropdownOpen && (
+              <div className="absolute top-full right-0 mt-2 bg-[#1f1f1f] shadow-lg rounded-lg py-2 w-40 z-50">
+                {meals.map((meal) => (
+                  <button
+                    key={meal.value}
+                    onClick={() => handleMealSelect(meal.value)}
+                    className={`block w-full text-left px-4 py-2 text-sm transition ${
+                      selectedMeal === meal.value
+                        ? "bg-[#333] text-white font-semibold"
+                        : "text-[#f5f5f5] hover:bg-[#333]"
+                    }`}
+                  >
+                    {meal.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* User Icon */}
         <div
