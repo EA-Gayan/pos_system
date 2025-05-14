@@ -6,9 +6,9 @@ import Modal from "../components/dashboard/Modal";
 import { BiSolidDish } from "react-icons/bi";
 
 const buttons = [
-  { label: "Add Table", icon: <MdTableBar />, action: "table" },
-  { label: "Add Category", icon: <MdCategory />, action: "category" },
-  { label: "Add Dishes", icon: <BiSolidDish />, action: "dishes" },
+  { label: "Add Table", icon: <MdTableBar />, action: "Table" },
+  { label: "Add Category", icon: <MdCategory />, action: "Category" },
+  { label: "Add Dishes", icon: <BiSolidDish />, action: "Dishes" },
 ];
 
 const tabs = ["Metrics", "Orders"];
@@ -16,9 +16,13 @@ const tabs = ["Metrics", "Orders"];
 const Dashboard = () => {
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Metrics");
+  const [modalAction, setModalAction] = useState(null);
 
   const handleOpenModal = (action) => {
-    if (action === "table") setIsTableModalOpen(true);
+    setModalAction(action);
+    if (action === "Table" || action === "Category" || action === "Dishes") {
+      setIsTableModalOpen(true);
+    }
   };
 
   return (
@@ -62,7 +66,12 @@ const Dashboard = () => {
       {activeTab === "Metrics" && <Metrics />}
       {activeTab === "Orders" && <RecentOrders />}
 
-      {isTableModalOpen && <Modal setIsTableModalOpen={setIsTableModalOpen} />}
+      {isTableModalOpen && (
+        <Modal
+          setIsTableModalOpen={setIsTableModalOpen}
+          labelType={modalAction}
+        />
+      )}
     </div>
   );
 };

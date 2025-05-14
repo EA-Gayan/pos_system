@@ -20,7 +20,7 @@ const MiniCard = ({ title, icon, number, footerNum }) => {
           {title === "Total Earnings" ? `Rs ${number}` : number}
         </h1>
         <h1 className="text-[#f5f5f5] text-lg mt-2">
-          <span className="text-[#02ca3a]">{footerNum}%</span> than yesterday
+          <span className="text-[#02ca3a]">{footerNum}</span> than yesterday
         </h1>
       </div>
     </div>

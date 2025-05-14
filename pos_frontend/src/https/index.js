@@ -21,9 +21,20 @@ export const logout = () => api.post("/api/user/logout");
 // Table Endpoints
 export const updateTable = ({ tableId, ...tableData }) =>
   api.put(`/api/table/${tableId}`, tableData);
+export const getTables = () => api.get("/api/table");
 
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
 export const getOrders = () => api.get("/api/order");
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   api.put(`/api/order/${orderId}`, { orderStatus });
+export const orderEarning = ({ period }) =>
+  api.get(`/api/order/earnings?period=${period}`);
+
+// category Endpoints
+export const addCategory = (data) => api.post("/api/category", data);
+export const getCategories = () => api.get("/api/category");
+
+// product Endpoints
+export const addProduct = (data) => api.post("/api/product", data);
+export const getProducts = () => api.get("/api/product");

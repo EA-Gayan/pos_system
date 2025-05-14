@@ -6,7 +6,12 @@ const {
   getOrderById,
   updateOrder,
 } = require("../controllers/orderController");
+const {
+  getTotalEarnings,
+} = require("../controllers/getTotalEarningController");
 const router = express.Router();
+
+router.route("/earnings").get(isVerifiedUser, getTotalEarnings);
 
 router.route("/").post(isVerifiedUser, addOrder);
 router.route("/").get(isVerifiedUser, getOrders);
