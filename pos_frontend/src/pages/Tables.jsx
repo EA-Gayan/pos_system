@@ -99,7 +99,7 @@ const Tables = () => {
             status={table.status}
             name={table.tableNo}
             initials={table.initial}
-            seats={table.seats}
+            seats={table.noOfSeats}
           />
         ))}
       </div>

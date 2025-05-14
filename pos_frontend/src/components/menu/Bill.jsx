@@ -13,7 +13,6 @@ const Bill = () => {
   const taxRate = 0;
   const tax = total * taxRate;
   const grandTotal = total + tax;
-  console.log(total);
 
   const customerData = useSelector((state) => state.customer);
   const dispatch = useDispatch();
