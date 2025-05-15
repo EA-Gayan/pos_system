@@ -122,8 +122,34 @@ const updateCategory = async (req, res, next) => {
   }
 };
 
+const deleteCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createHttpError(400, "Invalid Category ID!"));
+    }
+
+    // Try finding and deleting the category
+    const deletedCategory = await Category.findByIdAndDelete(id);
+
+    if (!deletedCategory) {
+      return next(createHttpError(404, "Category not found!"));
+    }
+
+    res.status(200).json({
+      message: "Category deleted successfully!",
+      data: deletedCategory,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addCategory,
   getCategories,
   updateCategory,
+  deleteCategory,
 };

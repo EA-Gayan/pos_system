@@ -7,7 +7,7 @@ const Table = ({ headers, data, renderRow }) => {
         <thead className="bg-[#333] text-[#ababab]">
           <tr>
             {headers.map((header, idx) => (
-              <th key={idx} className="p-3">
+              <th key={idx} className="p-3 last:flex last:justify-center">
                 {header}
               </th>
             ))}
