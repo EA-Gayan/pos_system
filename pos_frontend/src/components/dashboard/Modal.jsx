@@ -23,13 +23,22 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     categoryId: "",
   });
 
-  const { data: resData, isError } = useQuery({
+  const {
+    data: resData,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getCategories();
     },
     placeholderData: keepPreviousData,
+    enabled: labelType === "Dishes", // Only runs if labelType is "Dishes"
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (isError) {

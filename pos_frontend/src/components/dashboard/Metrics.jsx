@@ -1,7 +1,12 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 import { itemsData, metricsData } from "../../constants";
-
 const Metrics = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (sectionName) => {
+    navigate(`/dashboard/${sectionName}`);
+  };
+
   return (
     <div className="container mx-auto py-2 px-6 md:px-4">
       <div className="flex flex-col justify-between ">
@@ -16,6 +21,7 @@ const Metrics = () => {
                 key={index}
                 className="shadow-sm rounded-lg p-4"
                 style={{ backgroundColor: item.color }}
+                onClick={() => handleClick(item.title)}
               >
                 <div className="flex justify-between items-center">
                   <p className="font-medium text-xs text-[#f5f5f5]">
