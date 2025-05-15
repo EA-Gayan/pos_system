@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { itemsData, metricsData } from "../../constants";
 import { getDashboardItemsData } from "../../https";
 import { enqueueSnackbar } from "notistack";
-import { Circles } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 
 const Metrics = () => {
@@ -34,13 +33,7 @@ const Metrics = () => {
     <div className="container mx-auto py-2 px-6 md:px-4">
       {isLoading ? (
         <div className="flex justify-center items-center h-32 mt-30">
-          <Circles
-            height="50"
-            width="50"
-            color="#ffffff"
-            ariaLabel="loading"
-            visible={true}
-          />
+          <p>Loading...</p>
         </div>
       ) : (
         <>
