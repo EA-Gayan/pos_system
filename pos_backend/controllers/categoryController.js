@@ -57,6 +57,7 @@ const getCategories = async (req, res, next) => {
       success: true,
       message: "Categories retrieved successfully",
       data: categories,
+      type: "category",
     });
   } catch (error) {
     next(error);
