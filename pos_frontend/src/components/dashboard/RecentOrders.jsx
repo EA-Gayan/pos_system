@@ -5,11 +5,13 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getOrders, updateOrderStatus } from "../../https";
 import { formatDateAndTime } from "../../utils";
 
 const RecentOrders = () => {
+  const [resultData, setResultData] = useState([]);
+
   const queryClient = useQueryClient();
   const handleStatusChange = ({ orderId, orderStatus }) => {
     orderStatusUpdateMutation.mutate({ orderId, orderStatus });
@@ -29,13 +31,28 @@ const RecentOrders = () => {
     },
   });
 
-  const { data: resData, isError } = useQuery({
+  const {
+    data: resData,
+    isError,
+    isSuccess,
+    refetch,
+  } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getOrders();
     },
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess && resData.data.type.includes("orders")) {
+      setResultData(resData.data.data); // update state when data is loaded
+    }
+  }, [isSuccess, resData]);
 
   useEffect(() => {
     if (isError) {
@@ -62,50 +79,51 @@ const RecentOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {resData?.data.data.map((order, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-600 hover:bg-[#333]"
-              >
-                <td className="p-4">
-                  #{Math.floor(new Date(order.orderDate).getTime())}
-                </td>
-                <td className="p-4">
-                  {order?.customerDetails?.name ?? "N/A"}{" "}
-                </td>
-                <td className="p-4">
-                  <select
-                    className={`bg-[#1a1a1a] text-[#f5f5f5] border border-gray-500 p-2 rounded-lg focus:outline-none ${
-                      order.orderStatus === "Ready"
-                        ? "text-green-500"
-                        : "text-yellow-500"
-                    }`}
-                    value={order.orderStatus}
-                    onChange={(e) =>
-                      handleStatusChange({
-                        orderId: order._id,
-                        orderStatus: e.target.value,
-                      })
-                    }
-                  >
-                    <option className="text-yellow-500" value="In Progress">
-                      In Progress
-                    </option>
-                    <option className="text-green-500" value="Ready">
-                      Ready
-                    </option>
-                  </select>
-                </td>
-                <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
-                <td className="p-4">{order?.items?.length} Items</td>
-                <td className="p-4">
-                  Table - {order?.table?.tableNo ?? "N/A"}
-                </td>
-                <td className="p-4">
-                  Rs {order?.bills?.totalPayable?.toFixed(2)}
-                </td>
-              </tr>
-            ))}
+            {resultData.length > 0 &&
+              resultData?.map((order, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-600 hover:bg-[#333]"
+                >
+                  <td className="p-4">
+                    #{Math.floor(new Date(order.orderDate).getTime())}
+                  </td>
+                  <td className="p-4">
+                    {order?.customerDetails?.name ?? "N/A"}{" "}
+                  </td>
+                  <td className="p-4">
+                    <select
+                      className={`bg-[#1a1a1a] text-[#f5f5f5] border border-gray-500 p-2 rounded-lg focus:outline-none ${
+                        order.orderStatus === "Ready"
+                          ? "text-green-500"
+                          : "text-yellow-500"
+                      }`}
+                      value={order.orderStatus}
+                      onChange={(e) =>
+                        handleStatusChange({
+                          orderId: order._id,
+                          orderStatus: e.target.value,
+                        })
+                      }
+                    >
+                      <option className="text-yellow-500" value="In Progress">
+                        In Progress
+                      </option>
+                      <option className="text-green-500" value="Ready">
+                        Ready
+                      </option>
+                    </select>
+                  </td>
+                  <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
+                  <td className="p-4">{order?.items?.length} Items</td>
+                  <td className="p-4">
+                    Table - {order?.table?.tableNo ?? "N/A"}
+                  </td>
+                  <td className="p-4">
+                    Rs {order?.bills?.totalPayable?.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

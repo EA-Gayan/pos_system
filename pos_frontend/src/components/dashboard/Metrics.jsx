@@ -3,10 +3,14 @@ import { itemsData, metricsData } from "../../constants";
 import { getDashboardItemsData } from "../../https";
 import { enqueueSnackbar } from "notistack";
 import FullScreenLoader from "../shared/FullScreenLoader";
+import { useNavigate } from "react-router-dom";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+  navigate(`/dashboard/${sectionName}`);
 
   useEffect(() => {
     fetchDashboardItemDetails();

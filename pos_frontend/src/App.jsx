@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
 import Dashboard from "./pages/Dashboard";
+import DashBoardTable from "./components/dashboard/DashBoardTable";
 
 function Layout() {
   const location = useLocation();
@@ -68,6 +69,14 @@ function Layout() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/:section"
+          element={
+            <ProtectedRoute>
+              <DashBoardTable />
             </ProtectedRoute>
           }
         />

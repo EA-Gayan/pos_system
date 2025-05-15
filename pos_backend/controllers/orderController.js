@@ -53,6 +53,7 @@ const getOrders = async (req, res, next) => {
       success: true,
       message: "Orders retrieved successfully",
       data: orders,
+      type: "orders",
     });
   } catch (error) {
     next(error);
