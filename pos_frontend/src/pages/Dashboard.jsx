@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { MdTableBar, MdCategory } from "react-icons/md";
-import Metrics from "../components/dashboard/Metrics";
-import RecentOrders from "../components/dashboard/RecentOrders";
-import Modal from "../components/dashboard/Modal";
+import { useState } from "react";
 import { BiSolidDish } from "react-icons/bi";
+import { MdCategory, MdTableBar } from "react-icons/md";
+import Metrics from "../components/dashboard/Metrics";
+import Modal from "../components/dashboard/Modal";
+import RecentOrders from "../components/dashboard/RecentOrders";
 
 const buttons = [
   { label: "Add Table", icon: <MdTableBar />, action: "Table" },

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { itemsData, metricsData } from "../../constants";
-import { getDashboardItemsData } from "../../https";
 import { enqueueSnackbar } from "notistack";
-import FullScreenLoader from "../shared/FullScreenLoader";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { metricsData } from "../../constants";
+import { getDashboardItemsData } from "../../https";
+import FullScreenLoader from "../shared/FullScreenLoader";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
@@ -11,6 +11,7 @@ const Metrics = () => {
 
   const navigate = useNavigate();
   const handleClick = (sectionName) => {
+    if (sectionName === "Active Orders") return null;
     navigate(`/dashboard/${sectionName}`);
   };
 
