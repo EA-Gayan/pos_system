@@ -39,3 +39,7 @@ export const getCategories = () => api.get("/api/category");
 // product Endpoints
 export const addProduct = (data) => api.post("/api/product", data);
 export const getProducts = () => api.get("/api/product");
+
+// dashboard Endpoints
+export const getDashboardItemsData = () =>
+  api.get("/api/dashboard/item-details");
