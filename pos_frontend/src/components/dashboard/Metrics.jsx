@@ -10,7 +10,9 @@ const Metrics = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
-  navigate(`/dashboard/${sectionName}`);
+  const handleClick = (sectionName) => {
+    navigate(`/dashboard/${sectionName}`);
+  };
 
   useEffect(() => {
     fetchDashboardItemDetails();
@@ -53,6 +55,7 @@ const Metrics = () => {
                       key={index}
                       className="shadow-sm rounded-lg p-4"
                       style={{ backgroundColor: item.color }}
+                      onClick={() => handleClick(item.title)}
                     >
                       <div className="flex justify-between items-center">
                         <p className="font-medium text-xs text-[#f5f5f5]">
