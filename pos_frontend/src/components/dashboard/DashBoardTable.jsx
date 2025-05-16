@@ -1,18 +1,30 @@
 import { useParams } from "react-router-dom";
 import BackButton from "../shared/BackButton";
 import Table from "../shared/Table";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getCategories, getTables } from "../../https";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { deleteTable, getCategories, getTables } from "../../https";
 import { useEffect, useState, useMemo } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "./Modal";
+import ConfirmationPopup from "../shared/ConfirmationPopup";
+import { enqueueSnackbar } from "notistack";
+import FullScreenLoader from "../shared/FullScreenLoader";
 
 const DashBoardTable = () => {
   const { section } = useParams();
+  const queryClient = useQueryClient();
+
   const [tableData, setTableData] = useState([]);
   const [headers, setHeaders] = useState([]);
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
   const [labelType, setLabelType] = useState("");
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
 
   // Determine API function and headers based on section
   const fetchFn = useMemo(() => {
@@ -34,7 +46,11 @@ const DashBoardTable = () => {
     }
   }, [section]);
 
-  const { data: resData, isError } = useQuery({
+  const {
+    data: resData,
+    isError,
+    isLoading: queryLoading,
+  } = useQuery({
     queryKey: [section],
     queryFn: async () => {
       if (!fetchFn) return [];
@@ -53,7 +69,7 @@ const DashBoardTable = () => {
       transformedData = records.flatMap((category) =>
         (category.products || []).map((product) => ({
           ...product,
-          categoryName: category.name, // optional
+          categoryName: category.name,
         }))
       );
     }
@@ -65,18 +81,37 @@ const DashBoardTable = () => {
     });
   }, [records, section]);
 
+  const deleteTableMutation = useMutation({
+    mutationFn: deleteTable,
+    onSuccess: () => {
+      enqueueSnackbar("Deleted successfully!", { variant: "success" });
+      setSelectedId("");
+      setPopupOpen(false);
+      queryClient.invalidateQueries([section]);
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to delete record!", { variant: "error" });
+    },
+  });
+
   const handleEdit = (row) => {
     setIsTableModalOpen(true);
     console.log("Edit clicked", row);
   };
 
   const handleDelete = (row) => {
-    console.log("Delete clicked", row._id);
+    setPopupOpen(true);
+    setSelectedId(row._id);
+  };
+
+  const handleDeleteApiCall = () => {
+    if (selectedId) {
+      deleteTableMutation.mutate(selectedId);
+    }
   };
 
   const renderRow = (row, index) => (
     <tr className="border-b border-[#444]" key={index}>
-      {/* Adjust column rendering based on section */}
       {section === "Total Categories" && (
         <>
           <td className="p-3">{row.name}</td>
@@ -84,7 +119,6 @@ const DashBoardTable = () => {
           <td className="p-3">{row.description}</td>
         </>
       )}
-
       {section === "Total Items" && (
         <>
           <td className="p-3">{row.name}</td>
@@ -94,7 +128,7 @@ const DashBoardTable = () => {
       )}
       {section === "Total Tables" && (
         <>
-          <td className="p-3">Table{row.tableNo}</td>
+          <td className="p-3">Table {row.tableNo}</td>
           <td className="p-3">{row.noOfSeats}</td>
         </>
       )}
@@ -119,23 +153,38 @@ const DashBoardTable = () => {
 
   return (
     <div className="bg-[#262626] p-4 w-full h-screen">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-10 py-4">
-        <div className="flex items-center gap-4">
-          <BackButton />
-          <h2 className="text-lg sm:text-xl text-white capitalize">
-            {section}
-          </h2>
+      {queryLoading ? (
+        <div className="flex justify-center items-center h-32 mt-30">
+          <FullScreenLoader />
         </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        <Table headers={headers} data={tableData} renderRow={renderRow} />
-      </div>
-      {isTableModalOpen && (
-        <Modal
-          setIsTableModalOpen={setIsTableModalOpen}
-          labelType={labelType}
-        />
+      ) : (
+        <>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-10 py-4">
+            <div className="flex items-center gap-4">
+              <BackButton />
+              <h2 className="text-lg sm:text-xl text-white capitalize">
+                {section}
+              </h2>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <Table headers={headers} data={tableData} renderRow={renderRow} />
+          </div>
+          {isTableModalOpen && (
+            <Modal
+              setIsTableModalOpen={setIsTableModalOpen}
+              labelType={labelType}
+            />
+          )}
+          {popupOpen && (
+            <ConfirmationPopup
+              message="Are you sure you want to delete this record?"
+              title="Delete Record"
+              onConfirm={handleDeleteApiCall}
+              onCancel={() => setPopupOpen(false)}
+            />
+          )}
+        </>
       )}
     </div>
   );

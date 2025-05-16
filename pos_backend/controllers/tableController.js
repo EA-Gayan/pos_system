@@ -75,4 +75,28 @@ const updateTable = async (req, res, next) => {
   }
 };
 
-module.exports = { addTable, getTables, updateTable };
+const deleteTable = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createHttpError(400, "Invalid Category ID!"));
+    }
+
+    // Try finding and deleting the Table
+    const deletedTable = await Table.findByIdAndDelete(id);
+
+    if (!deletedTable) {
+      return next(createHttpError(404, "Table not found!"));
+    }
+
+    res.status(200).json({
+      message: "Table deleted successfully!",
+      data: deletedTable,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+module.exports = { addTable, getTables, updateTable, deleteTable };

@@ -23,6 +23,8 @@ export const updateTable = ({ tableId, ...tableData }) =>
   api.put(`/api/table/${tableId}`, tableData);
 export const getTables = () => api.get("/api/table");
 export const addTable = (data) => api.post("/api/table", data);
+export const deleteTable = (orderId) =>
+  api.delete(`/api/table/delete/${orderId}`);
 
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
