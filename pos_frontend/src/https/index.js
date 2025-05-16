@@ -23,8 +23,8 @@ export const updateTable = ({ tableId, ...tableData }) =>
   api.put(`/api/table/${tableId}`, tableData);
 export const getTables = () => api.get("/api/table");
 export const addTable = (data) => api.post("/api/table", data);
-export const deleteTable = (orderId) =>
-  api.delete(`/api/table/delete/${orderId}`);
+export const deleteTable = (tableId) =>
+  api.delete(`/api/table/delete/${tableId}`);
 
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
@@ -37,10 +37,12 @@ export const getOrdersCount = (data) => api.post(`/api/order/count`, data);
 // category Endpoints
 export const addCategory = (data) => api.post("/api/category", data);
 export const getCategories = () => api.get("/api/category");
-
+export const deleteCategory = (categoryId) =>
+  api.delete(`/api/category/delete/${categoryId}`);
 // product Endpoints
 export const addProduct = (data) => api.post("/api/product", data);
-
+export const deleteProduct = (productId) =>
+  api.delete(`/api/product/delete/${productId}`);
 // dashboard Endpoints
 export const getDashboardItemsData = () =>
   api.get("/api/dashboard/item-details");

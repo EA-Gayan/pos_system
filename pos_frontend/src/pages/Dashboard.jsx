@@ -8,7 +8,7 @@ import RecentOrders from "../components/dashboard/RecentOrders";
 const buttons = [
   { label: "Add Table", icon: <MdTableBar />, action: "Table" },
   { label: "Add Category", icon: <MdCategory />, action: "Category" },
-  { label: "Add Dishes", icon: <BiSolidDish />, action: "Dishes" },
+  { label: "Add Products", icon: <BiSolidDish />, action: "Dishes" },
 ];
 
 const tabs = ["Metrics", "Orders"];
