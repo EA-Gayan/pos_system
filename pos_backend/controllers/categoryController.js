@@ -131,16 +131,20 @@ const deleteCategory = async (req, res, next) => {
       return next(createHttpError(400, "Invalid Category ID!"));
     }
 
-    // Try finding and deleting the category
-    const deletedCategory = await Category.findByIdAndDelete(id);
-
-    if (!deletedCategory) {
+    // Check if the category exists
+    const category = await Category.findById(id);
+    if (!category) {
       return next(createHttpError(404, "Category not found!"));
     }
 
+    // Delete all products associated with this category
+    await Product.deleteMany({ category: id });
+
+    // Delete the category itself
+    await Category.findByIdAndDelete(id);
+
     res.status(200).json({
-      message: "Category deleted successfully!",
-      data: deletedCategory,
+      message: "Category and its related products deleted successfully!",
     });
   } catch (error) {
     next(error);
