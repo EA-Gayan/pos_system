@@ -33,7 +33,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
       return await getCategories();
     },
     placeholderData: keepPreviousData,
-    enabled: labelType === "Dishes", // Only runs if labelType is "Dishes"
+    enabled: labelType === "Product", // Only runs if labelType is "Product"
   });
 
   useEffect(() => {
@@ -79,8 +79,10 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
       tableMutation.mutate(tableData);
     } else if (labelType === "Category") {
       categoryMutation.mutate(categoryData);
-    } else {
+    } else if (labelType === "Product") {
       productMutation.mutate(productData);
+    } else {
+      return;
     }
   };
 
@@ -245,7 +247,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
             </>
           )}
 
-          {labelType === "Dishes" && (
+          {labelType === "Product" && (
             <>
               <div>
                 <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">

@@ -8,7 +8,7 @@ import RecentOrders from "../components/dashboard/RecentOrders";
 const buttons = [
   { label: "Add Table", icon: <MdTableBar />, action: "Table" },
   { label: "Add Category", icon: <MdCategory />, action: "Category" },
-  { label: "Add Products", icon: <BiSolidDish />, action: "Dishes" },
+  { label: "Add Products", icon: <BiSolidDish />, action: "Product" },
 ];
 
 const tabs = ["Metrics", "Orders"];
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   const handleOpenModal = (action) => {
     setModalAction(action);
-    if (action === "Table" || action === "Category" || action === "Dishes") {
+    if (action === "Table" || action === "Category" || action === "Product") {
       setIsTableModalOpen(true);
     }
   };
