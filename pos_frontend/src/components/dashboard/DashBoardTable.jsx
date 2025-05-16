@@ -7,7 +7,13 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deleteTable, getCategories, getTables } from "../../https";
+import {
+  deleteCategory,
+  deleteProduct,
+  deleteTable,
+  getCategories,
+  getTables,
+} from "../../https";
 import { useEffect, useState, useMemo } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "./Modal";
@@ -93,6 +99,30 @@ const DashBoardTable = () => {
       enqueueSnackbar("Failed to delete record!", { variant: "error" });
     },
   });
+  const deleteCategoryMutation = useMutation({
+    mutationFn: deleteCategory,
+    onSuccess: () => {
+      enqueueSnackbar("Deleted successfully!", { variant: "success" });
+      setSelectedId("");
+      setPopupOpen(false);
+      queryClient.invalidateQueries([section]);
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to delete record!", { variant: "error" });
+    },
+  });
+  const deleteProductMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      enqueueSnackbar("Deleted successfully!", { variant: "success" });
+      setSelectedId("");
+      setPopupOpen(false);
+      queryClient.invalidateQueries([section]);
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to delete record!", { variant: "error" });
+    },
+  });
 
   const handleEdit = (row) => {
     setIsTableModalOpen(true);
@@ -105,8 +135,20 @@ const DashBoardTable = () => {
   };
 
   const handleDeleteApiCall = () => {
-    if (selectedId) {
-      deleteTableMutation.mutate(selectedId);
+    if (!selectedId) return;
+
+    switch (section) {
+      case "Total Items":
+        deleteProductMutation.mutate(selectedId);
+        break;
+      case "Total Categories":
+        deleteCategoryMutation.mutate(selectedId);
+        break;
+      case "Total Tables":
+        deleteTableMutation.mutate(selectedId);
+        break;
+      default:
+        break;
     }
   };
 
