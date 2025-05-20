@@ -128,9 +128,33 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const searchProductsByName = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return next(createHttpError(400, "Product name is required in query"));
+    }
+
+    // Search for products with matching name (case-insensitive), allow multiple results
+    const products = await Product.find({
+      name: { $regex: new RegExp(name, "i") },
+    }).populate("category"); // Populate category details
+
+    res.status(200).json({
+      success: true,
+      message: "Products retrieved successfully",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addProduct,
   getProductsByCategory,
   updateProduct,
   deleteProduct,
+  searchProductsByName,
 };
