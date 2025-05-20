@@ -16,7 +16,7 @@ import {
 } from "../../https";
 import { useEffect, useState, useMemo } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Modal from "./Modal";
+import EditModal from "./EditModal";
 import ConfirmationPopup from "../shared/ConfirmationPopup";
 import { enqueueSnackbar } from "notistack";
 import FullScreenLoader from "../shared/FullScreenLoader";
@@ -31,6 +31,7 @@ const DashBoardTable = () => {
   const [labelType, setLabelType] = useState("");
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [selectedRow, setSelectedRow] = useState({});
 
   // Determine API function and headers based on section
   const fetchFn = useMemo(() => {
@@ -41,7 +42,7 @@ const DashBoardTable = () => {
         return getCategories;
       case "Total Items":
         setHeaders(["Name", "Price", "Description", "Action"]);
-        setLabelType("Dishes");
+        setLabelType("Product");
         return getCategories;
       case "Total Tables":
         setHeaders(["TableNo", "seats", "Action"]);
@@ -125,8 +126,8 @@ const DashBoardTable = () => {
   });
 
   const handleEdit = (row) => {
+    setSelectedRow(row);
     setIsTableModalOpen(true);
-    console.log("Edit clicked", row);
   };
 
   const handleDelete = (row) => {
@@ -152,12 +153,27 @@ const DashBoardTable = () => {
     }
   };
 
+  const statusGetting = (number) => {
+    switch (number) {
+      case 1:
+        return "Breakfast";
+      case 2:
+        return "Lunch";
+      case 3:
+        return "Dinner";
+      case 4:
+        return "Common";
+      default:
+        return "Unknown";
+    }
+  };
+
   const renderRow = (row, index) => (
     <tr className="border-b border-[#444]" key={index}>
       {section === "Total Categories" && (
         <>
           <td className="p-3">{row.name}</td>
-          <td className="p-3">{row.mealType}</td>
+          <td className="p-3">{statusGetting(row.mealType)}</td>
           <td className="p-3">{row.description}</td>
         </>
       )}
@@ -212,8 +228,9 @@ const DashBoardTable = () => {
           <div className="overflow-x-auto">
             <Table headers={headers} data={tableData} renderRow={renderRow} />
           </div>
-          {isTableModalOpen && (
-            <Modal
+          {isTableModalOpen && selectedRow && (
+            <EditModal
+              currentData={selectedRow}
               setIsTableModalOpen={setIsTableModalOpen}
               labelType={labelType}
             />
