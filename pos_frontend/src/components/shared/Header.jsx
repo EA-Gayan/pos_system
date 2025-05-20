@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { FaBell, FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaSearch, FaUserCircle } from "react-icons/fa";
 import logo from "../../assets/images/logo-modified.png";
 import { useDispatch, useSelector } from "react-redux";
-import { IoLogOutOutline } from "react-icons/io5";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../../https";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { removeUser } from "../../redux/slices/userSlice";
 import { MdDashboard } from "react-icons/md";
 
@@ -20,10 +19,13 @@ const Header = () => {
   const userData = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [calendarDropdownOpen, setCalendarDropdownOpen] = useState(false);
   const [isShowMenuTypeIcon, setIsShowMenuTypeIcon] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [isShowSearch, setIsShowSearch] = useState(true);
   const dropdownRef = useRef();
   const calendarDropdownRef = useRef();
 
@@ -66,12 +68,19 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    if (window.location.pathname.includes("menu")) {
+    const path = location.pathname;
+    if (path.includes("menu")) {
       setIsShowMenuTypeIcon(true);
     } else {
       setIsShowMenuTypeIcon(false);
     }
-  }, [window.location.pathname]);
+    // Hide search only on root path ("/")
+    if (path === "/") {
+      setIsShowSearch(false);
+    } else {
+      setIsShowSearch(true);
+    }
+  }, [location]);
 
   const handleMealSelect = (value) => {
     if (selectedMeal !== value) {
@@ -81,6 +90,18 @@ const Header = () => {
       window.location.reload();
     }
   };
+
+  useEffect(() => {
+    const path = location.pathname.split("/")[1]; // get first segment after "/"
+    console.log("path:", path);
+    if (path === "orders") {
+      console.log("User is on Orders page");
+    } else if (path === "tables") {
+      console.log("User is on Tables page");
+    } else if (path === "menu") {
+      console.log("User is on menu page");
+    }
+  }, [location.pathname]);
 
   return (
     <header className="flex justify-between items-center py-4 px-8 bg-[#1a1a1a] relative">
@@ -95,14 +116,20 @@ const Header = () => {
       </div>
 
       {/* SEARCH */}
-      <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-5 py-2 w-[500px]">
-        <FaSearch className="text-[#f5f5f5]" />
-        <input
-          type="text"
-          placeholder="Search"
-          className="bg-[#1f1f1f] outline-none text-[#f5f5f5]"
-        />
-      </div>
+      {isShowSearch && (
+        <>
+          <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-5 py-2 w-[500px]">
+            <FaSearch className="text-[#f5f5f5]" />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search"
+              className="bg-[#1f1f1f] outline-none text-[#f5f5f5]"
+            />
+          </div>
+        </>
+      )}
 
       {/* USER SECTION */}
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>

@@ -96,7 +96,7 @@ const updateCategory = async (req, res, next) => {
 
     // Check if category already exists
     const existingCategory = await Category.findOne({ name: categoryName });
-    if (existingCategory) {
+    if (existingCategory && existingCategory._id.toString() !== id) {
       const error = createHttpError(400, "Category already exists!");
       return next(error);
     }

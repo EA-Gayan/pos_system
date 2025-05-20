@@ -1,22 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
-import { enqueueSnackbar } from "notistack";
-import { addCategory, addProduct, getCategories, addTable } from "../../https";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import {
+  updateCategory,
+  updateProduct,
+  updateTable,
+  getCategories,
+} from "../../https";
 
-const Modal = ({ setIsTableModalOpen, labelType }) => {
+const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
   const [tableData, setTableData] = useState({
+    tableId: null,
     tableNo: "",
     noOfSeats: null,
   });
 
   const [categoryData, setCategoryData] = useState({
+    categoryId: null,
     categoryName: "",
     mealType: 0,
   });
 
   const [productData, setProductData] = useState({
+    productId: null,
     name: "",
     price: "",
     description: "",
@@ -39,6 +47,32 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   useEffect(() => {
     refetch();
   }, []);
+
+  //current data setting
+  useEffect(() => {
+    console.log(currentData);
+    if (labelType === "Table") {
+      setTableData({
+        tableId: currentData._id,
+        tableNo: currentData.tableNo.toString(),
+        noOfSeats: currentData.noOfSeats.toString(),
+      });
+    } else if (labelType === "Category") {
+      setCategoryData({
+        categoryId: currentData.id,
+        categoryName: currentData.name,
+        mealType: currentData.mealType.toString(),
+      });
+    } else if (labelType === "Product") {
+      setProductData({
+        productId: currentData._id,
+        name: currentData.name,
+        price: currentData.price.toString(),
+        description: currentData.description,
+        categoryId: currentData.category,
+      });
+    }
+  }, [currentData]);
 
   useEffect(() => {
     if (isError) {
@@ -76,11 +110,25 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (labelType === "Table") {
-      tableMutation.mutate(tableData);
+      tableUpdateMutation.mutate({
+        tableId: tableData.tableId,
+        tableNo: tableData.tableNo,
+        noOfSeats: tableData.noOfSeats,
+      });
     } else if (labelType === "Category") {
-      categoryMutation.mutate(categoryData);
+      categoryUpdateMutation.mutate({
+        categoryId: categoryData.categoryId,
+        categoryName: categoryData.categoryName,
+        mealType: categoryData.mealType,
+      });
     } else if (labelType === "Product") {
-      productMutation.mutate(productData);
+      productUpdateMutation.mutate({
+        productId: productData.productId,
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        categoryId: productData.categoryId,
+      });
     } else {
       return;
     }
@@ -91,8 +139,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   };
 
   // tableMutation section
-  const tableMutation = useMutation({
-    mutationFn: (reqData) => addTable(reqData),
+  const tableUpdateMutation = useMutation({
+    mutationFn: (reqData) => updateTable(reqData),
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
@@ -107,8 +155,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   });
 
   // categoryMutation section
-  const categoryMutation = useMutation({
-    mutationFn: (reqData) => addCategory(reqData),
+  const categoryUpdateMutation = useMutation({
+    mutationFn: (reqData) => updateCategory(reqData),
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
@@ -126,8 +174,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   });
 
   // productMutation section
-  const productMutation = useMutation({
-    mutationFn: (reqData) => addProduct(reqData),
+  const productUpdateMutation = useMutation({
+    mutationFn: (reqData) => updateProduct(reqData),
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
@@ -191,8 +239,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   <input
                     type="number"
                     name="noOfSeats"
-                    placeholder="0"
-                    value={tableData.seats}
+                    placeholder={tableData.noOfSeats}
+                    value={tableData.noOfSeats}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
                     required
@@ -212,6 +260,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   <input
                     type="text"
                     name="categoryName"
+                    placeholder={categoryData.categoryName}
                     value={categoryData.categoryName}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
@@ -257,7 +306,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   <input
                     type="text"
                     name="name"
-                    value={productData.productName}
+                    placeholder={productData.name}
+                    value={productData.name}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
                     required
@@ -287,6 +337,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   <input
                     type="text"
                     name="description"
+                    placeholder={productData.description}
                     value={productData.description}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
@@ -301,7 +352,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <select
                     name="categoryId"
-                    value={productData.category}
+                    placeholder={productData.categoryId}
+                    value={productData.categoryId}
                     onChange={handleProductDownChange}
                     className="bg-[#1f1f1f] text-white w-full focus:outline-none"
                     required
@@ -330,4 +382,4 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   );
 };
 
-export default Modal;
+export default EditModal;

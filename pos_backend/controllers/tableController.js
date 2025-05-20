@@ -45,7 +45,7 @@ const getTables = async (req, res, next) => {
 
 const updateTable = async (req, res, next) => {
   try {
-    const { status, orderId } = req.body;
+    const { status, orderId, noOfSeats } = req.body;
 
     const { id } = req.params;
 
@@ -56,7 +56,7 @@ const updateTable = async (req, res, next) => {
 
     const tableUpdate = await Table.findByIdAndUpdate(
       id,
-      { status: status, currentOrder: orderId },
+      { status: status, currentOrder: orderId, noOfSeats: noOfSeats },
       { new: true }
     );
 
