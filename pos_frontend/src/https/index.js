@@ -39,10 +39,16 @@ export const addCategory = (data) => api.post("/api/category", data);
 export const getCategories = () => api.get("/api/category");
 export const deleteCategory = (categoryId) =>
   api.delete(`/api/category/delete/${categoryId}`);
+export const updateCategory = ({ categoryId, ...categoryData }) =>
+  api.put(`/api/category/${categoryId}`, categoryData);
+
 // product Endpoints
 export const addProduct = (data) => api.post("/api/product", data);
 export const deleteProduct = (productId) =>
   api.delete(`/api/product/delete/${productId}`);
+export const updateProduct = ({ productId, ...productData }) =>
+  api.put(`/api/product/${productId}`, productData);
+
 // dashboard Endpoints
 export const getDashboardItemsData = () =>
   api.get("/api/dashboard/item-details");
