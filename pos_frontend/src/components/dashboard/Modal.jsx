@@ -21,6 +21,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     price: "",
     description: "",
     categoryId: "",
+    sName: "",
   });
 
   const {
@@ -266,6 +267,21 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
               </div>
               <div>
                 <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                  Short Name
+                </label>
+                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+                  <input
+                    type="text"
+                    name="sname"
+                    value={productData.sName}
+                    onChange={handleInputChange}
+                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
                   Item Price
                 </label>
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
@@ -276,9 +292,11 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
                     required
+                    inputMode="decimal"
                   />
                 </div>
-              </div>{" "}
+              </div>
+
               <div>
                 <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
                   Description
