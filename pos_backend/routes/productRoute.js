@@ -5,6 +5,7 @@ const {
   getProductsByCategory,
   updateProduct,
   deleteProduct,
+  searchProduct,
 } = require("../controllers/productController");
 const router = express.Router();
 
@@ -13,4 +14,5 @@ router.route("/:id").get(isVerifiedUser, getProductsByCategory);
 router.route("/:id").put(isVerifiedUser, updateProduct);
 router.route("/delete/:id").delete(isVerifiedUser, deleteProduct);
 
+router.route("/search").get(isVerifiedUser, searchProduct);
 module.exports = router;

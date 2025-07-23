@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    const { name, price, description, categoryId } = req.body;
+    const { name, price, description, categoryId, sName } = req.body;
 
     // Check if category exists
     const category = await Category.findById(categoryId);
@@ -14,12 +14,26 @@ const addProduct = async (req, res, next) => {
       return error;
     }
 
+    // Check if product already exists
+    const existingProduct = await Product.findOne({ name: name });
+    if (existingProduct) {
+      const error = createHttpError(400, "Product already exists!");
+      return next(error);
+    }
+    // Check if short name already exists
+    const existingsName = await Product.findOne({ sName: sName });
+    if (existingsName) {
+      const error = createHttpError(400, "Product already exists!");
+      return next(error);
+    }
+
     // Create new product
     const newProduct = new Product({
       name,
       price,
       description,
       category: categoryId,
+      sName,
     });
 
     // Save product to DB
@@ -62,7 +76,7 @@ const getProductsByCategory = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, description, categoryId } = req.body;
+    const { name, price, description, categoryId, sName } = req.body;
 
     // If categoryId is provided, validate it
     if (categoryId) {
@@ -81,7 +95,7 @@ const updateProduct = async (req, res, next) => {
     // Find and update product
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, price, description, category: categoryId },
+      { name, price, description, category: categoryId, sName },
       { new: true, runValidators: true }
     );
 
@@ -128,9 +142,37 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const searchProduct = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim() === "") {
+      return next(createHttpError(400, "Search query is required!"));
+    }
+
+    const regex = new RegExp(query, "i"); // case-insensitive
+
+    const products = await Product.find({
+      $or: [
+        { name: regex },
+        { sName: regex }, // adjust field names based on your schema
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Search results",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addProduct,
   getProductsByCategory,
   updateProduct,
   deleteProduct,
+  searchProduct,
 };
