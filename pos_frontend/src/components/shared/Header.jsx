@@ -1,13 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import { FaSearch, FaUserCircle } from "react-icons/fa";
-import logo from "../../assets/images/logo-modified.png";
-import { useDispatch, useSelector } from "react-redux";
-import { RiCalendarScheduleFill } from "react-icons/ri";
 import { useMutation } from "@tanstack/react-query";
-import { logout } from "../../https";
-import { useLocation, useNavigate } from "react-router-dom";
-import { removeUser } from "../../redux/slices/userSlice";
+import { useEffect, useRef, useState } from "react";
+import { FaUserCircle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import logo from "../../assets/images/logo-modified.png";
+import { logout } from "../../https";
+import { removeUser } from "../../redux/slices/userSlice";
+import SearchBar from "./SearchBar";
+import { searchProduct } from "../../https";
+import { setSearchProductList } from "../../redux/slices/productSlice";
 
 const meals = [
   { name: "Breakfast", value: 1 },
@@ -20,12 +23,14 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [calendarDropdownOpen, setCalendarDropdownOpen] = useState(false);
   const [isShowMenuTypeIcon, setIsShowMenuTypeIcon] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
   const [isShowSearch, setIsShowSearch] = useState(true);
+  const [pageName, setPageName] = useState("");
+
   const dropdownRef = useRef();
   const calendarDropdownRef = useRef();
 
@@ -37,6 +42,16 @@ const Header = () => {
     },
     onError: (error) => {
       console.error("Logout failed:", error);
+    },
+  });
+
+  const searchMutation = useMutation({
+    mutationFn: (query) => searchProduct(query),
+    onSuccess: (res) => {
+      dispatch(setSearchProductList(res?.data?.data));
+    },
+    onError: (error) => {
+      console.error("Search product failed:", error);
     },
   });
 
@@ -67,8 +82,14 @@ const Header = () => {
     }
   }, []);
 
+  //Effect to update page name, menu icon, and search bar visibility on route change
   useEffect(() => {
     const path = location.pathname;
+
+    const pathSegments = path.split("/").filter(Boolean);
+    const lastSegment = pathSegments[pathSegments.length - 1] || "";
+    setPageName(lastSegment);
+
     if (path.includes("menu")) {
       setIsShowMenuTypeIcon(true);
     } else {
@@ -88,6 +109,12 @@ const Header = () => {
       localStorage.setItem("selectedStatus", value);
       setCalendarDropdownOpen(false);
       window.location.reload();
+    }
+  };
+
+  const handleSearchChange = (value) => {
+    if (pageName === "menu" && value != "") {
+      searchMutation.mutate(value);
     }
   };
 
@@ -116,20 +143,7 @@ const Header = () => {
       </div>
 
       {/* SEARCH */}
-      {isShowSearch && (
-        <>
-          <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-5 py-2 w-[500px]">
-            <FaSearch className="text-[#f5f5f5]" />
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search"
-              className="bg-[#1f1f1f] outline-none text-[#f5f5f5]"
-            />
-          </div>
-        </>
-      )}
+      {isShowSearch && <SearchBar onSearchChange={handleSearchChange} />}
 
       {/* USER SECTION */}
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>

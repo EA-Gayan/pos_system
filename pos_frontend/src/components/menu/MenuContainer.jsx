@@ -5,6 +5,7 @@ import { GrRadialSelected } from "react-icons/gr";
 import { useDispatch } from "react-redux";
 import { getCategories } from "../../https";
 import { addItems } from "../../redux/slices/cartSlice";
+import { setProductList } from "../../redux/slices/productSlice";
 
 const MenuContainer = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,12 @@ const MenuContainer = () => {
     queryFn: async () => await getCategories(),
     placeholderData: keepPreviousData,
   });
+
+  useEffect(() => {
+    if (resData) {
+      dispatch(setProductList(resData?.data?.data));
+    }
+  }, [resData]);
 
   // all categories
   const categories = resData?.data?.data || [];

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
-import { enqueueSnackbar } from "notistack";
-import { addCategory, addProduct, getCategories, addTable } from "../../https";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { addCategory, addProduct, addTable, getCategories } from "../../https";
 
 const Modal = ({ setIsTableModalOpen, labelType }) => {
   const [tableData, setTableData] = useState({
@@ -272,7 +272,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                 <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
                   <input
                     type="text"
-                    name="sname"
+                    name="sName"
                     value={productData.sName}
                     onChange={handleInputChange}
                     className="bg-transparent flex-1 text-white focus:outline-none"
