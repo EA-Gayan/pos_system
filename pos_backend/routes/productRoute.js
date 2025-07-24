@@ -15,5 +15,4 @@ router.route("/:id").get(isVerifiedUser, getProductsByCategory);
 router.route("/:id").put(isVerifiedUser, updateProduct);
 router.route("/delete/:id").delete(isVerifiedUser, deleteProduct);
 
-router.route("/search").get(isVerifiedUser, searchProduct);
 module.exports = router;
