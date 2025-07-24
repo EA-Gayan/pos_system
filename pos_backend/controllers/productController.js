@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    const { name, price, description, categoryId, sName } = req.body;
+    const { name, sname, price, description, categoryId } = req.body;
 
     // Check if category exists
     const category = await Category.findById(categoryId);
@@ -30,6 +30,7 @@ const addProduct = async (req, res, next) => {
     // Create new product
     const newProduct = new Product({
       name,
+      sname,
       price,
       description,
       category: categoryId,
@@ -76,7 +77,7 @@ const getProductsByCategory = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, description, categoryId, sName } = req.body;
+    const { name, sname, price, description, categoryId } = req.body;
 
     // If categoryId is provided, validate it
     if (categoryId) {
@@ -95,7 +96,7 @@ const updateProduct = async (req, res, next) => {
     // Find and update product
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, price, description, category: categoryId, sName },
+      { name, sname, price, description, category: categoryId },
       { new: true, runValidators: true }
     );
 
@@ -142,26 +143,25 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-const searchProduct = async (req, res, next) => {
+const searchProductsByName = async (req, res, next) => {
   try {
-    const { query } = req.query;
+    const { name } = req.body;
 
-    if (!query || query.trim() === "") {
-      return next(createHttpError(400, "Search query is required!"));
+    if (!name) {
+      return next(createHttpError(400, "Product name is required in query"));
     }
 
-    const regex = new RegExp(query, "i"); // case-insensitive
-
+    // Search for products with matching name (case-insensitive), allow multiple results
     const products = await Product.find({
       $or: [
-        { name: regex },
-        { sName: regex }, // adjust field names based on your schema
+        { name: { $regex: new RegExp(name, "i") } },
+        { sname: { $regex: new RegExp(name, "i") } },
       ],
-    });
+    }).populate("category");
 
     res.status(200).json({
       success: true,
-      message: "Search results",
+      message: "Products retrieved successfully",
       data: products,
     });
   } catch (error) {
@@ -174,5 +174,5 @@ module.exports = {
   getProductsByCategory,
   updateProduct,
   deleteProduct,
-  searchProduct,
+  searchProductsByName,
 };

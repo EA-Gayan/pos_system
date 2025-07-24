@@ -99,4 +99,35 @@ const deleteTable = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { addTable, getTables, updateTable, deleteTable };
+
+const searchTableByTableNo = async (req, res, next) => {
+  try {
+    const { tableNo } = req.body;
+
+    if (!tableNo) {
+      return next(createHttpError(400, "Table number is required in query."));
+    }
+
+    const table = await Table.findOne({ tableNo: Number(tableNo) });
+
+    if (!table) {
+      return next(createHttpError(404, "Table not found."));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Table retrieved successfully",
+      data: table,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  addTable,
+  getTables,
+  updateTable,
+  deleteTable,
+  searchTableByTableNo,
+};
