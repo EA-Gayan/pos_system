@@ -10,8 +10,14 @@ const SearchBar = ({ onSearchChange }) => {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setSearchValue(value);
-    onSearchChange(value);
+
+    if (value === "") {
+      handleClear();
+      onSearchChange("");
+    } else {
+      setSearchValue(value);
+      onSearchChange(value);
+    }
   };
 
   const handleClear = () => {

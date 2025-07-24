@@ -105,7 +105,7 @@ const BottomNav = () => {
             />
           </div>
         </div>
-        <div>
+        {/* <div>
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Guest
           </label>
@@ -124,7 +124,7 @@ const BottomNav = () => {
               &#43;
             </button>
           </div>
-        </div>
+        </div> */}
         <button
           onClick={handleCreateOrder}
           className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#f5f5f5] hover:text-yellow-700"
