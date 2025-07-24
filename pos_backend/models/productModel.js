@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema(
       ref: "Category", // references the Category model
       required: true,
     },
+    sName: { type: String },
   },
   { timestamps: true }
 );

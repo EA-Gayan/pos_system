@@ -48,6 +48,8 @@ export const deleteProduct = (productId) =>
   api.delete(`/api/product/delete/${productId}`);
 export const updateProduct = ({ productId, ...productData }) =>
   api.put(`/api/product/${productId}`, productData);
+export const searchProduct = (query) =>
+  api.get(`/api/product/search`, { params: { query } });
 
 // dashboard Endpoints
 export const getDashboardItemsData = () =>

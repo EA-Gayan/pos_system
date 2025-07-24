@@ -14,6 +14,19 @@ const addProduct = async (req, res, next) => {
       return error;
     }
 
+    // Check if product already exists
+    const existingProduct = await Product.findOne({ name: name });
+    if (existingProduct) {
+      const error = createHttpError(400, "Product already exists!");
+      return next(error);
+    }
+    // Check if short name already exists
+    const existingsName = await Product.findOne({ sName: sName });
+    if (existingsName) {
+      const error = createHttpError(400, "Product already exists!");
+      return next(error);
+    }
+
     // Create new product
     const newProduct = new Product({
       name,
@@ -21,6 +34,7 @@ const addProduct = async (req, res, next) => {
       price,
       description,
       category: categoryId,
+      sName,
     });
 
     // Save product to DB
