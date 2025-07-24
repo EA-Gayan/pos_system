@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    const { name, price, description, categoryId } = req.body;
+    const { name, sname, price, description, categoryId } = req.body;
 
     // Check if category exists
     const category = await Category.findById(categoryId);
@@ -17,6 +17,7 @@ const addProduct = async (req, res, next) => {
     // Create new product
     const newProduct = new Product({
       name,
+      sname,
       price,
       description,
       category: categoryId,
@@ -62,7 +63,7 @@ const getProductsByCategory = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, description, categoryId } = req.body;
+    const { name, sname, price, description, categoryId } = req.body;
 
     // If categoryId is provided, validate it
     if (categoryId) {
@@ -81,7 +82,7 @@ const updateProduct = async (req, res, next) => {
     // Find and update product
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, price, description, category: categoryId },
+      { name, sname, price, description, category: categoryId },
       { new: true, runValidators: true }
     );
 
@@ -138,8 +139,11 @@ const searchProductsByName = async (req, res, next) => {
 
     // Search for products with matching name (case-insensitive), allow multiple results
     const products = await Product.find({
-      name: { $regex: new RegExp(name, "i") },
-    }).populate("category"); // Populate category details
+      $or: [
+        { name: { $regex: new RegExp(name, "i") } },
+        { sname: { $regex: new RegExp(name, "i") } },
+      ],
+    }).populate("category");
 
     res.status(200).json({
       success: true,
