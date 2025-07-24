@@ -169,10 +169,37 @@ const searchProductsByName = async (req, res, next) => {
   }
 };
 
+const searchProduct = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim() === "") {
+      return next(createHttpError(400, "Search query is required!"));
+    }
+
+    const regex = new RegExp(query, "i"); // case-insensitive
+
+    const products = await Product.find({
+      $or: [
+        { name: regex },
+        { sName: regex }, // adjust field names based on your schema
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Search results",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   addProduct,
   getProductsByCategory,
   updateProduct,
   deleteProduct,
   searchProductsByName,
+  searchProduct,
 };
