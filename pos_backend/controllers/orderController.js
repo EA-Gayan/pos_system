@@ -160,10 +160,29 @@ const getOrdersCount = async (req, res, next) => {
   }
 };
 
+const getRecentOrders = async (req, res, next) => {
+  try {
+    const recentOrders = await Order.find()
+      .populate("table") // populate table info if available
+      .sort({ createdAt: -1 }) // newest orders first
+      .limit(3);
+
+    res.status(200).json({
+      success: true,
+      message: "Recent Orders retrieved successfully",
+      data: recentOrders,
+      type: "orders",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addOrder,
   getOrderById,
   getOrders,
   updateOrder,
   getOrdersCount,
+  getRecentOrders,
 };

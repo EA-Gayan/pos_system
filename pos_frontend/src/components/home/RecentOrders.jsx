@@ -1,21 +1,7 @@
-import React from "react";
-import { FaSearch } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import OrderList from "./OrderList";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getOrders } from "../../https";
-import { enqueueSnackbar } from "notistack";
 
-const RecentOrders = () => {
-  const { data: resData, isError } = useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => await getOrders(),
-    placeholderData: keepPreviousData,
-  });
-
-  if (isError) {
-    enqueueSnackbar("Something went wrong!", { variant: "error" });
-  }
-
+const RecentOrders = ({ orders }) => {
   return (
     <div className="bg-[#1a1a1a] w-full rounded-lg overflow-hidden px-4 sm:px-6 md:px-8 py-4">
       {/* Header */}
@@ -23,12 +9,13 @@ const RecentOrders = () => {
         <h1 className="text-[#f5f5f5] text-base sm:text-lg font-semibold tracking-wide">
           Recent Orders
         </h1>
-        <a
-          href="#"
+
+        <Link
+          to="/orders"
           className="text-[#025cca] text-sm font-semibold hover:underline"
         >
           View all
-        </a>
+        </Link>
       </div>
 
       {/* Optional: Search bar (uncomment if needed) */}
@@ -45,10 +32,8 @@ const RecentOrders = () => {
 
       {/* Order list */}
       <div className="mt-3 max-h-[400px] overflow-y-auto scrollbar-hide">
-        {resData?.data?.data?.length > 0 ? (
-          resData.data.data.map((order) => (
-            <OrderList key={order._id} order={order} />
-          ))
+        {orders?.length > 0 ? (
+          orders.map((order) => <OrderList key={order._id} order={order} />)
         ) : (
           <p className="text-gray-500 text-sm">No orders available</p>
         )}

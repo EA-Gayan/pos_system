@@ -13,9 +13,7 @@ const OrderCard = ({ order }) => {
             <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
               {order?.customerDetails?.name ?? "N/A"}
             </h1>
-            <p className="text-[#ababab] text-sm">
-              #{Math.floor(new Date(order?.orderDate).getTime())} / Dine in
-            </p>
+            <p className="text-[#ababab] text-sm">#{order?.orderId}</p>
             <p className="text-[#ababab] text-sm">
               Table{" "}
               <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" />{" "}

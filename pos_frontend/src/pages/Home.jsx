@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { BsCashCoin } from "react-icons/bs";
@@ -6,12 +6,13 @@ import { GrBasket } from "react-icons/gr";
 import Greetings from "../components/home/Greetings";
 import MiniCard from "../components/home/MiniCard";
 import RecentOrders from "../components/home/RecentOrders";
-import { getOrderEarning, getOrdersCount } from "../https";
+import { getOrderEarning, getOrdersCount, getRecentOrders } from "../https";
 
 const Home = () => {
   const [totalEarning, setTotalEarning] = useState(0);
   const [percentage, setpercentage] = useState(0);
   const [orderCount, setOrderCount] = useState(0);
+  const [recentOrders, setRecentorders] = useState([]);
 
   const orderEarningMutation = useMutation({
     mutationFn: (reqData) => getOrderEarning(reqData),
@@ -38,17 +39,29 @@ const Home = () => {
     },
   });
 
+  const recentOrderMutation = useMutation({
+    mutationFn: () => getRecentOrders(),
+    onSuccess: (response) => {
+      setRecentorders(response.data.data);
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to fetch recent orders!", {
+        variant: "error",
+      });
+    },
+  });
+
   useEffect(() => {
     const data = {
       period: "today",
     };
     orderEarningMutation.mutate(data);
     orderCountMutation.mutate(data);
+    recentOrderMutation.mutate();
   }, []);
 
   return (
     <section className="bg-[#1f1f1f] h-screen p-6">
-      {/* Content Wrapper */}
       {/* Left Section */}
       <div className="flex-[3] space-y-6">
         <Greetings />
@@ -69,7 +82,7 @@ const Home = () => {
             number={orderCount}
           />
         </div>
-        <RecentOrders />
+        <RecentOrders orders={recentOrders} />
       </div>
 
       {/* Right Section (optional) */}
