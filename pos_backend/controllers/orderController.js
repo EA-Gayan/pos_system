@@ -1,10 +1,36 @@
 const Order = require("../models/orderModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const OrderTypes = require("../enum/orderTypes");
 
 const addOrder = async (req, res, next) => {
   try {
     const order = new Order(req.body);
+
+    const today = new Date();
+    const yy = today.getFullYear().toString().slice(-2);
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Month is 0-based
+    const dd = String(today.getDate()).padStart(2, "0");
+    const datePrefix = `${yy}${mm}${dd}`;
+
+    // Get count of today's orders
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const todayOrders = await Order.find({
+      orderDate: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+    const count = todayOrders.length;
+
+    // Assign orderId
+    order.orderId = `${datePrefix} - ${count + 1}`;
+    order.orderStatus = OrderTypes.INPROGRESS;
+
     await order.save();
     res.status(201).json({
       success: true,

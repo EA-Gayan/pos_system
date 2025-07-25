@@ -7,8 +7,12 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String },
       guests: { type: Number },
     },
-    orderStatus: {
+    orderId: {
       type: String,
+      required: true,
+    },
+    orderStatus: {
+      type: Number,
       required: true,
     },
     orderDate: {
