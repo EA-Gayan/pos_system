@@ -6,6 +6,7 @@ import { addOrder, updateTable } from "../../https";
 import { enqueueSnackbar } from "notistack";
 import { removeCustomer } from "../../redux/slices/customerSlice";
 import Invoice from "../invoice/invoice";
+import { OrderTypes } from "../../enum/orderTypes";
 
 const Bill = () => {
   const cartData = useSelector((state) => state.cart);
@@ -27,7 +28,7 @@ const Bill = () => {
         phone: customerData.customerPhone,
         guests: customerData.guests,
       },
-      orderStatus: "In Progress",
+      orderStatus: OrderTypes.COMPLETE,
       bills: {
         total: total,
         tax: tax,
