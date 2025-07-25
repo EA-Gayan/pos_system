@@ -2,7 +2,7 @@ const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const Order = require("../models/orderModel");
 const Table = require("../models/tableModel");
-const createHttpError = require("http-errors");
+const OrderTypes = require("../enum/orderTypes");
 
 const getItemDetails = async (req, res, next) => {
   try {
@@ -10,7 +10,7 @@ const getItemDetails = async (req, res, next) => {
     const productCount = await Product.countDocuments();
     const tableCount = await Table.countDocuments();
     const inProgressOrderCount = await Order.countDocuments({
-      orderStatus: "In Progress",
+      orderStatus: OrderTypes.INPROGRESS,
     });
 
     res.status(200).json([

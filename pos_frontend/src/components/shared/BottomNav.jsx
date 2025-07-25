@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Modal from "./Modal";
 import { useDispatch } from "react-redux";
 import { setCustomer } from "../../redux/slices/customerSlice";
+import { useMutation } from "@tanstack/react-query";
 
 const BottomNav = () => {
   const navigate = useNavigate();
@@ -14,20 +15,37 @@ const BottomNav = () => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [guestCount, setGuestCount] = useState(0);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const isActive = (path) => location.pathname === path;
 
-  const handleCreateOrder = () => {
-    dispatch(setCustomer({ name, phone, guests: guestCount }));
-    navigate("/tables");
-  };
+  const handleCreateOrderMutation = useMutation({
+    mutationFn: async () => {
+      if (!name.trim()) {
+        throw new Error("Customer name is required.");
+      }
 
+      return { name, phone };
+    },
+    onSuccess: (data) => {
+      dispatch(setCustomer(data));
+      navigate("/tables");
+      closeModal();
+      setError("");
+    },
+    onError: (err) => {
+      setError(err.message);
+    },
+  });
+
+  const handleCreateOrder = () => {
+    handleCreateOrderMutation.mutate();
+  };
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#262626] p-2 h-16 flex justify-around">
       <button
@@ -83,6 +101,7 @@ const BottomNav = () => {
               placeholder="Customer Name"
               id=""
               className="bg-transparent flex-1 text-white foucus:outline-none"
+              required={true}
             />
           </div>
         </div>
@@ -105,26 +124,6 @@ const BottomNav = () => {
             />
           </div>
         </div>
-        {/* <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-            Guest
-          </label>
-          <div className="flex items-center justify-between bg-[#1f1f1f] rounded-lg py-3 px-4">
-            <button
-              onClick={() => setGuestCount((pre) => pre - 1)}
-              className="text-yellow-500 text-2xl"
-            >
-              &minus;
-            </button>
-            <span className="text-white">{guestCount} Person</span>
-            <button
-              onClick={() => setGuestCount((pre) => pre + 1)}
-              className="text-yellow-500 text-2xl"
-            >
-              &#43;
-            </button>
-          </div>
-        </div> */}
         <button
           onClick={handleCreateOrder}
           className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#f5f5f5] hover:text-yellow-700"

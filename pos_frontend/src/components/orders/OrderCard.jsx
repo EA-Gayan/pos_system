@@ -1,5 +1,6 @@
 import { FaCheckDouble, FaCircle, FaLongArrowAltRight } from "react-icons/fa";
 import { formatDateAndTime, getAvatarName } from "../../utils";
+import { OrderTypes } from "../../enum/orderTypes";
 
 const OrderCard = ({ order }) => {
   return (
@@ -14,33 +15,31 @@ const OrderCard = ({ order }) => {
               {order?.customerDetails?.name ?? "N/A"}
             </h1>
             <p className="text-[#ababab] text-sm">#{order?.orderId}</p>
-            <p className="text-[#ababab] text-sm">
+            {/* <p className="text-[#ababab] text-sm">
               Table{" "}
               <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" />{" "}
               {order?.table?.tableNo ?? "N/A"}
-            </p>
+            </p> */}
           </div>
           <div className="flex flex-col items-end gap-2">
-            {order?.orderStatus === "Ready" ? (
+            {order?.orderStatus === OrderTypes.COMPLETE ? (
               <>
                 <p className="text-green-600 bg-[#2e4a40] px-2 py-1 rounded-lg">
-                  <FaCheckDouble className="inline mr-2" />
-                  {order?.orderStatus}
+                  <FaCheckDouble className="inline" />
                 </p>
                 <p className="text-[#ababab] text-sm">
-                  <FaCircle className="inline mr-2 text-green-600" /> Ready to
-                  serve
+                  <FaCircle className="inline mr-2 text-green-600" /> Order
+                  Delivered
                 </p>
               </>
             ) : (
               <>
                 <p className="text-yellow-600 bg-[#4a452e] px-2 py-1 rounded-lg">
-                  <FaCircle className="inline mr-2" />
-                  {order?.orderStatus}
+                  <FaCircle className="inline" />
                 </p>
                 <p className="text-[#ababab] text-sm">
-                  <FaCircle className="inline mr-2 text-yellow-600" /> Preparing
-                  your order
+                  <FaCircle className="inline mr-2 text-yellow-600" /> Still
+                  Inprogress
                 </p>
               </>
             )}
