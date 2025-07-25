@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    const { name, sname, price, description, categoryId } = req.body;
+    const { name, sName, price, description, categoryId } = req.body;
 
     // Check if category exists
     const category = await Category.findById(categoryId);
@@ -21,16 +21,15 @@ const addProduct = async (req, res, next) => {
       return next(error);
     }
     // Check if short name already exists
-    const existingsName = await Product.findOne({ sName: sName });
-    if (existingsName) {
-      const error = createHttpError(400, "Product already exists!");
-      return next(error);
-    }
+    // const existingsName = await Product.findOne({ sName: sName });
+    // if (existingsName) {
+    //   const error = createHttpError(400, "Product already exists!");
+    //   return next(error);
+    // }
 
     // Create new product
     const newProduct = new Product({
       name,
-      sname,
       price,
       description,
       category: categoryId,

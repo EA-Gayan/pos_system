@@ -127,12 +127,12 @@ const Header = () => {
   }, [location.pathname]);
 
   return (
-    <header className="flex justify-between items-center py-4 px-8 bg-[#1a1a1a] relative">
+    <header className="flex justify-between items-center py-4 px-8 bg-[#1a1a1a] sticky top-0">
       {/* LOGO */}
       <div className="flex items-center gap-2 cursor-pointer">
         <img
           src={logo}
-          className="h-16 w-16"
+          className="h-12 w-12"
           alt="main logo"
           onClick={() => navigate("/")}
         />

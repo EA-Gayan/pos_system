@@ -87,13 +87,17 @@ const MenuContainer = () => {
                 <div
                   key={item._id}
                   className="flex flex-col justify-between p-4 rounded-lg min-h-[150px] hover:bg-[#494949] bg-[#1a1a1a] transition duration-200"
+                  onClick={() => handleAddToCart(item)}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h1 className="text-[#f5f5f5] text-lg font-semibold">
                       {item.name}
                     </h1>
                     <button
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(item);
+                      }}
                       className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"
                     >
                       <FaShoppingCart />
@@ -107,7 +111,10 @@ const MenuContainer = () => {
 
                     <div className="flex items-center justify-between bg-[#1f1f1f] px-3 py-2 rounded-lg gap-4 w-32">
                       <button
-                        onClick={decrement(item._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          decrement(item._id)();
+                        }}
                         className="text-yellow-500 text-xl"
                       >
                         &minus;
@@ -118,18 +125,24 @@ const MenuContainer = () => {
                         className="bg-transparent text-white text-center w-10 outline-none no-spinner"
                         value={quantities[item._id] || ""}
                         onChange={(e) => {
+                          e.stopPropagation();
                           const value = parseInt(e.target.value, 10);
                           setQuantities((prev) => ({
                             ...prev,
                             [item._id]: isNaN(value) ? 0 : value,
                           }));
                         }}
-                        onClick={(e) => e.target.select()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.target.select();
+                        }}
                         inputMode="numeric"
                       />
-
                       <button
-                        onClick={increment(item._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          increment(item._id)();
+                        }}
                         className="text-yellow-500 text-xl"
                       >
                         &#43;
@@ -179,13 +192,17 @@ const MenuContainer = () => {
                 <div
                   key={item._id}
                   className="flex flex-col justify-between p-4 rounded-lg min-h-[150px] hover:bg-[#494949] bg-[#1a1a1a] transition duration-200"
+                  onClick={() => handleAddToCart(item)}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h1 className="text-[#f5f5f5] text-lg font-semibold">
                       {item.name}
                     </h1>
                     <button
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(item);
+                      }}
                       className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"
                     >
                       <FaShoppingCart />
@@ -199,7 +216,10 @@ const MenuContainer = () => {
 
                     <div className="flex items-center justify-between bg-[#1f1f1f] px-3 py-2 rounded-lg gap-4 w-32">
                       <button
-                        onClick={decrement(item._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          decrement(item._id)();
+                        }}
                         className="text-yellow-500 text-xl"
                       >
                         &minus;
@@ -210,18 +230,24 @@ const MenuContainer = () => {
                         className="bg-transparent text-white text-center w-10 outline-none no-spinner"
                         value={quantities[item._id] || ""}
                         onChange={(e) => {
+                          e.stopPropagation();
                           const value = parseInt(e.target.value, 10);
                           setQuantities((prev) => ({
                             ...prev,
                             [item._id]: isNaN(value) ? 0 : value,
                           }));
                         }}
-                        onClick={(e) => e.target.select()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.target.select();
+                        }}
                         inputMode="numeric"
                       />
-
                       <button
-                        onClick={increment(item._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          increment(item._id)();
+                        }}
                         className="text-yellow-500 text-xl"
                       >
                         &#43;

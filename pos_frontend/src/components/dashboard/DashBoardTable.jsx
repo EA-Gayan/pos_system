@@ -210,7 +210,7 @@ const DashBoardTable = () => {
   );
 
   return (
-    <div className="bg-[#262626] p-4 w-full h-[calc(100vh-96px)] overflow-hidden">
+    <div className="bg-[#262626] p-4 w-full h-full overflow-hidden">
       {queryLoading ? (
         <div className="flex justify-center items-center h-32">
           <FullScreenLoader />
