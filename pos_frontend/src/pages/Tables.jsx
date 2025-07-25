@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import BottomNav from "../components/shared/BottomNav";
-import TableCard from "../components/tables/TableCard";
-import BackButton from "../components/shared/BackButton";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getTables } from "../https";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import BackButton from "../components/shared/BackButton";
+import TableCard from "../components/tables/TableCard";
+import { getTables } from "../https";
 import { setTable } from "../redux/slices/tableSlice";
 
 const Tables = () => {
@@ -103,8 +102,6 @@ const Tables = () => {
           />
         ))}
       </div>
-
-      <BottomNav />
     </section>
   );
 };

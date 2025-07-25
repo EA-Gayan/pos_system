@@ -1,19 +1,17 @@
-import React from "react";
-import BackButton from "../components/shared/BackButton";
-import BottomNav from "../components/shared/BottomNav";
-import MenuContainer from "../components/menu/MenuContainer";
-import CartInfo from "../components/menu/CartInfo";
-import Bill from "../components/menu/Bill";
-import { useSelector } from "react-redux";
-import CustomerInfo from "../components/menu/CustomerInfo";
 import { MdRestaurantMenu } from "react-icons/md";
+import { useSelector } from "react-redux";
+import Bill from "../components/menu/Bill";
+import CartInfo from "../components/menu/CartInfo";
+import CustomerInfo from "../components/menu/CustomerInfo";
+import MenuContainer from "../components/menu/MenuContainer";
+import BackButton from "../components/shared/BackButton";
 
 const Menu = () => {
   // Redux state to get customer data
   const customerData = useSelector((state) => state.customer);
 
   return (
-    <section className="bg-[#1f1f1f] flex gap-3">
+    <section className="bg-[#1f1f1f] flex gap-3 overflow-y-auto">
       {/* left side */}
       <div className="flex-[3]">
         <div className=" flex items-center justify-between px-10 py-4">
@@ -41,7 +39,7 @@ const Menu = () => {
         <MenuContainer />
       </div>
       {/* Right side */}
-      <div className="flex-[1] bg-[#1a1a1a] mt-4 mr-3 rounded-lg pt-2 mb-[5rem]">
+      <div className="flex-[1] bg-[#1a1a1a] mt-4 mr-3 rounded-lg pt-2 mb-[5rem] ">
         {/* customer Info */}
         <CustomerInfo />
         <hr className="border-[#2a2a2a] border-t-2 " />
@@ -51,8 +49,6 @@ const Menu = () => {
         {/* Bills */}
         <Bill />
       </div>
-
-      <BottomNav />
     </section>
   );
 };
