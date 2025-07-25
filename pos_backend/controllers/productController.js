@@ -77,7 +77,7 @@ const getProductsByCategory = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, sname, price, description, categoryId } = req.body;
+    const { name, sname, price, description, categoryId, sName } = req.body;
 
     // If categoryId is provided, validate it
     if (categoryId) {
@@ -96,7 +96,7 @@ const updateProduct = async (req, res, next) => {
     // Find and update product
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, sname, price, description, category: categoryId },
+      { name, sname, price, description, category: categoryId, sName },
       { new: true, runValidators: true }
     );
 

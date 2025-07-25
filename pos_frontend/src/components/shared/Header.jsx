@@ -96,7 +96,7 @@ const Header = () => {
       setIsShowMenuTypeIcon(false);
     }
     // Hide search only on root path ("/")
-    if (path === "/") {
+    if (path === "/" || path.includes("dashboard")) {
       setIsShowSearch(false);
     } else {
       setIsShowSearch(true);
@@ -120,13 +120,9 @@ const Header = () => {
 
   useEffect(() => {
     const path = location.pathname.split("/")[1]; // get first segment after "/"
-    console.log("path:", path);
     if (path === "orders") {
-      console.log("User is on Orders page");
     } else if (path === "tables") {
-      console.log("User is on Tables page");
     } else if (path === "menu") {
-      console.log("User is on menu page");
     }
   }, [location.pathname]);
 
@@ -144,7 +140,11 @@ const Header = () => {
 
       {/* SEARCH */}
       {isShowSearch && <SearchBar onSearchChange={handleSearchChange} />}
-
+      {pageName === "dashboard" && (
+        <div className="flex items-center text-[#f5f5f5] font-semibold text-md flex items-center gap-2">
+          <h2>Admin Dashboard</h2>
+        </div>
+      )}
       {/* USER SECTION */}
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>
         {userData.role === "Admin" && (

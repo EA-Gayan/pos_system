@@ -29,6 +29,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     price: "",
     description: "",
     categoryId: "",
+    sName: "",
   });
 
   const {
@@ -50,7 +51,6 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
 
   //current data setting
   useEffect(() => {
-    console.log(currentData);
     if (labelType === "Table") {
       setTableData({
         tableId: currentData._id,
@@ -70,6 +70,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
         price: currentData.price.toString(),
         description: currentData.description,
         categoryId: currentData.category,
+        sName: currentData.sName,
       });
     }
   }, [currentData]);
@@ -128,6 +129,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
         price: productData.price,
         description: productData.description,
         categoryId: productData.categoryId,
+        sName: productData.sName,
       });
     } else {
       return;
@@ -193,17 +195,17 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
   });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-[#262626] p-6 rounded-lg shadow-lg w-96"
+        className="bg-[#262626] p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[#f5f5f5] text-xl font-semibold">
-            Add {labelType}
+          <h2 className="text-[#f5f5f5] text-lg sm:text-xl font-semibold">
+            Update {labelType}
           </h2>
           <button
             onClick={handleCloseModal}
@@ -213,39 +215,35 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-6">
           {labelType === "Table" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Table Number
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="tableNo"
-                    value={tableData.tableNo}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="number"
+                  name="tableNo"
+                  value={tableData.tableNo}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Number of Seats
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="noOfSeats"
-                    placeholder={tableData.noOfSeats}
-                    value={tableData.noOfSeats}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="number"
+                  name="noOfSeats"
+                  placeholder={tableData.noOfSeats}
+                  value={tableData.noOfSeats}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
             </>
           )}
@@ -253,45 +251,41 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
           {labelType === "Category" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Category Name
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="categoryName"
-                    placeholder={categoryData.categoryName}
-                    value={categoryData.categoryName}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="categoryName"
+                  placeholder={categoryData.categoryName}
+                  value={categoryData.categoryName}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Session Type
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <select
-                    name="mealType"
-                    value={categoryData.mealType}
-                    onChange={handledropDownChange}
-                    className="bg-[#1f1f1f] text-white w-full focus:outline-none"
-                    required
-                  >
-                    {categoryData.mealType === 0 && (
-                      <option value={0} disabled>
-                        Select a session
-                      </option>
-                    )}
-                    <option value={1}>Breakfast</option>
-                    <option value={2}>Lunch</option>
-                    <option value={3}>Dinner</option>
-                    <option value={4}>Other</option>
-                  </select>
-                </div>
+                <select
+                  name="mealType"
+                  value={categoryData.mealType}
+                  onChange={handledropDownChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                >
+                  {categoryData.mealType === 0 && (
+                    <option value={0} disabled>
+                      Select a session
+                    </option>
+                  )}
+                  <option value={1}>Breakfast</option>
+                  <option value={2}>Lunch</option>
+                  <option value={3}>Dinner</option>
+                  <option value={4}>Other</option>
+                </select>
               </div>
             </>
           )}
@@ -299,82 +293,88 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
           {labelType === "Product" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Item Name
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder={productData.name}
-                    value={productData.name}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder={productData.name}
+                  value={productData.name}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                  Short Name
+                </label>
+                <input
+                  type="text"
+                  name="sName"
+                  placeholder={productData.sName}
+                  value={productData.sName}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Item Price
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="price"
-                    value={productData.price}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="number"
+                  name="price"
+                  value={productData.price}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>{" "}
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Description
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="description"
-                    placeholder={productData.description}
-                    value={productData.description}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="description"
+                  placeholder={productData.description}
+                  value={productData.description}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Category Type
                 </label>
 
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <select
-                    name="categoryId"
-                    placeholder={productData.categoryId}
-                    value={productData.categoryId}
-                    onChange={handleProductDownChange}
-                    className="bg-[#1f1f1f] text-white w-full focus:outline-none"
-                    required
-                  >
-                    <option value="">Select a Category</option>
-                    {resData?.data?.data.map((each) => (
-                      <option key={each._id} value={each._id}>
-                        {each.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  name="categoryId"
+                  placeholder={productData.categoryId}
+                  value={productData.categoryId}
+                  onChange={handleProductDownChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                >
+                  <option value="">Select a Category</option>
+                  {resData?.data?.data.map((each) => (
+                    <option key={each._id} value={each._id}>
+                      {each.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
           )}
 
           <button
             type="submit"
-            className="w-full rounded-lg mt-10 mb-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+            className="w-full rounded-lg mt-8 py-3 text-base sm:text-lg bg-yellow-400 text-gray-900 font-bold"
           >
-            Add {labelType}
+            Update {labelType}
           </button>
         </form>
       </motion.div>
