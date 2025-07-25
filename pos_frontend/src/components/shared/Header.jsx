@@ -140,9 +140,15 @@ const Header = () => {
 
       {/* SEARCH */}
       {isShowSearch && <SearchBar onSearchChange={handleSearchChange} />}
+
       {pageName === "dashboard" && (
         <div className="flex items-center text-[#f5f5f5] font-semibold text-md flex items-center gap-2">
           <h2>Admin Dashboard</h2>
+        </div>
+      )}
+      {pageName === "" && (
+        <div className="flex items-center text-[#f5f5f5] font-semibold text-md flex items-center gap-2">
+          <h2>123 Hotel</h2>
         </div>
       )}
       {/* USER SECTION */}

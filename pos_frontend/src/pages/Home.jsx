@@ -48,7 +48,6 @@ const Home = () => {
 
   return (
     <section className="bg-[#1f1f1f] h-screen p-6">
-      {/* Content Wrapper */}
       {/* Left Section */}
       <div className="flex-[3] space-y-6">
         <Greetings />

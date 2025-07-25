@@ -40,10 +40,10 @@ const Greetings = () => {
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h1 className="text-[#f5f5f5] text-2xl font-semibold tracking-wide">
+        <h1 className="text-[#f5f5f5] text-2xl font-semibold tracking-wide ml-3">
           Good Morning, {userdata.name || "Test User"} 👋
         </h1>
-        <p className="text-[#ababab] text-sm">
+        <p className="text-[#ababab] text-sm ml-3">
           Give your best services for customers
         </p>
       </div>
