@@ -4,7 +4,7 @@ const Table = ({ headers, data, renderRow }) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-[#f5f5f5]">
-        <thead className="bg-[#333] text-[#ababab]">
+        <thead className="bg-[#333] text-[#ababab] sticky top-0">
           <tr>
             {headers.map((header, idx) => (
               <th key={idx} className="p-3 last:flex last:justify-center">

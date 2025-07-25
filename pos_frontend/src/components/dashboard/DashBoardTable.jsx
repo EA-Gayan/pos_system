@@ -210,9 +210,9 @@ const DashBoardTable = () => {
   );
 
   return (
-    <div className="bg-[#262626] p-4 w-full h-screen">
+    <div className="bg-[#262626] p-4 w-full h-[calc(100vh-96px)] overflow-hidden">
       {queryLoading ? (
-        <div className="flex justify-center items-center h-32 mt-30">
+        <div className="flex justify-center items-center h-32">
           <FullScreenLoader />
         </div>
       ) : (
@@ -225,7 +225,7 @@ const DashBoardTable = () => {
               </h2>
             </div>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto h-[calc(100%-80px)]">
             <Table headers={headers} data={tableData} renderRow={renderRow} />
           </div>
           {isTableModalOpen && selectedRow && (
