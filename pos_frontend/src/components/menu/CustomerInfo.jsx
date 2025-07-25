@@ -13,7 +13,7 @@ const CustomerInfo = () => {
           {customerData.customerName}
         </h1>
         <p className="text-xs text-[#ababab] font-medium mt-1">
-          #{formatTime()} /
+          {formatTime()} /
           {customerData.tableNo === "" ? " Take away" : " Dine In"}
         </p>
         <p className="text-xs text-[#ababab] font-medium mt-2">

@@ -1,7 +1,6 @@
 // INVOICE COMPONENT
-
-import React, { useRef } from "react";
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import { FaCheck } from "react-icons/fa6";
 
 const Invoice = ({ orderInfo, setShowInvoice }) => {
@@ -13,7 +12,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
     WinPrint.document.write(`
             <html>
               <head>
-                <title>Order Receipt</title>
+                <title>Jayanthi Hotel</title>
                 <style>
                   body { font-family: Arial, sans-serif; padding: 20px; }
                   .receipt-container { width: 300px; border: 1px solid #ddd; padding: 10px; }
@@ -69,17 +68,6 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
               <strong>Order ID:</strong>{" "}
               {orderInfo?.customerDetails?.orderId ?? "N/A"}
             </p>
-            <p>
-              <strong>Name:</strong> {orderInfo?.customerDetails?.name ?? "N/A"}
-            </p>
-            <p>
-              <strong>Phone:</strong>{" "}
-              {orderInfo?.customerDetails?.phone ?? "N/A"}
-            </p>
-            <p>
-              <strong>Guests:</strong>{" "}
-              {orderInfo?.customerDetails?.guests ?? "N/A"}
-            </p>
           </div>
 
           {/* Items Summary */}
@@ -120,9 +108,9 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
           {/* Payment Details */}
 
           <div className="mb-2 mt-2 text-xs">
-            <p>
+            {/* <p>
               <strong>Payment Method:</strong> {orderInfo?.paymentMethod}
-            </p>
+            </p> */}
           </div>
         </div>
 

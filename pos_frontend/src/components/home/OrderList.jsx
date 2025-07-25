@@ -34,7 +34,7 @@ const OrderList = (orderList) => {
 
         {/* Right: Status Badge */}
         <div className="flex items-center min-w-[110px] justify-end">
-          {orderList?.orderStatus === OrderTypes.COMPLETE ? (
+          {orderList?.order?.orderStatus === OrderTypes.COMPLETE ? (
             <span className="text-green-500 bg-[#2e4a40] px-3 py-1 rounded-lg text-sm font-medium flex items-center">
               <FaCheckDouble className="mr-1" />
               Complete
