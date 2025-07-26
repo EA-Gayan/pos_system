@@ -5,9 +5,12 @@ import OrderCard from "../components/orders/OrderCard";
 import BackButton from "../components/shared/BackButton";
 import { getfindOrders } from "../https";
 import { OrderTypes } from "../enum/orderTypes";
+import { useSelector } from "react-redux";
 
 const Orders = () => {
   const [status, setStatus] = useState(OrderTypes.ALL);
+
+  const searchData = useSelector((state) => state.order.searchList);
 
   const { data: resData, isError } = useQuery({
     queryKey: ["orders", status],
@@ -20,6 +23,13 @@ const Orders = () => {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
   }, [isError]);
+
+  const displayOrders =
+    searchData && Object.keys(searchData).length > 0
+      ? Array.isArray(searchData)
+        ? searchData
+        : [searchData]
+      : resData?.data?.data || [];
 
   return (
     <section className="bg-[#1f1f1f] h-full">
@@ -59,8 +69,8 @@ const Orders = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 overflow-y-auto">
-        {resData?.data?.data?.length > 0 ? (
-          resData.data.data.map((order) => (
+        {displayOrders?.length > 0 ? (
+          displayOrders.map((order) => (
             <OrderCard key={order._id} order={order} />
           ))
         ) : (
