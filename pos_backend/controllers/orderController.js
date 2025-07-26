@@ -54,15 +54,14 @@ const findOrders = async (req, res, next) => {
     const { id, status } = req.body;
 
     if (id) {
-      if (!mongoose.Types.ObjectId.isValid(id)) {
-        return next(createHttpError(400, "Invalid Order ID!"));
-      }
-      const order = await Order.findById(id)
-        .sort({ createdAt: -1 }) // Sort by newest first
+      const order = await Order.findOne({ orderId: id })
+        .sort({ createdAt: -1 })
         .limit(9);
+
       if (!order) {
         return next(createHttpError(404, "Order not found!"));
       }
+
       return res.status(200).json({
         success: true,
         message: "Order retrieved successfully",
@@ -77,11 +76,13 @@ const findOrders = async (req, res, next) => {
       } else {
         queryStatus = [status];
       }
+
       const orders = await Order.find({
         orderStatus: { $in: queryStatus },
       })
-        .sort({ createdAt: -1 }) // Sort by newest first
+        .sort({ createdAt: -1 })
         .limit(9);
+
       return res.status(200).json({
         success: true,
         message: "Orders retrieved successfully",
@@ -96,6 +97,7 @@ const findOrders = async (req, res, next) => {
     next(error);
   }
 };
+
 const getOrders = async (req, res, next) => {
   try {
     const orders = await Order.find()
