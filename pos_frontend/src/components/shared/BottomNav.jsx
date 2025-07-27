@@ -15,8 +15,8 @@ const BottomNav = () => {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState(0);
   const [error, setError] = useState("");
 
   const openModal = () => setIsModalOpen(true);
@@ -43,8 +43,8 @@ const BottomNav = () => {
     },
   });
 
-  const handleCreateOrder = () => {
-    handleCreateOrderMutation.mutate();
+  const handleCreateRecord = () => {
+    // handleCreateOrderMutation.mutate();
   };
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#262626] p-2 h-16 flex justify-around">
@@ -57,12 +57,17 @@ const BottomNav = () => {
         <FaHome className="inline mr-2" size={20} /> <p>Home</p>
       </button>
       <button
-        onClick={() => navigate("/menu")}
+        onClick={() => {
+          navigate("/expenses");
+          openModal();
+        }}
         className={`flex items-center justify-center font-bold ${
-          isActive("/menu") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"
+          isActive("/expenses")
+            ? "text-[#f5f5f5] bg-[#343434]"
+            : "text-[#ababab]"
         } w-[300px] rounded-[20px]`}
       >
-        <CiCircleMore className="inline mr-2" size={20} /> <p>Menu</p>
+        <CiCircleMore className="inline mr-2" size={20} /> <p>Expenses</p>
       </button>
       <button
         onClick={() => navigate("/orders")}
@@ -82,23 +87,23 @@ const BottomNav = () => {
       </button>
 
       <button
-        disabled={isActive("/tables") || isActive("/menu")} // Disable button on menu and tables page
-        onClick={openModal}
+        // disabled={isActive("/tables") || isActive("/menu")} // Disable button on menu and tables page
+        onClick={() => navigate("/menu")}
         className="absolute bottom-6 bg-[#F6B100] text-[#f5f5f5] rounded-full p-4 items-center"
       >
         <BiSolidDish size={40} />
       </button>
       {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="Create Order">
+      <Modal isOpen={isModalOpen} onClose={closeModal} title="Create Record">
         <div>
           <label className="block text-[#ababab] mb-2 text-sm font-medium">
-            Customer Name
+            Description
           </label>
           <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
             <input
               type="text"
               onChange={(e) => setName(e.target.value)}
-              placeholder="Customer Name"
+              placeholder="Description"
               id=""
               className="bg-transparent flex-1 text-white foucus:outline-none"
               required={true}
@@ -106,29 +111,25 @@ const BottomNav = () => {
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-            Customer Phone
+          <label className="block text-[#ababab] mb-2 text-sm font-medium">
+            Amount
           </label>
           <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
             <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              maxLength={10}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, "");
-                setPhone(value);
-              }}
-              placeholder="+94 77 123 4567"
+              type="number"
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="Amount"
+              id=""
               className="bg-transparent flex-1 text-white foucus:outline-none"
+              required={true}
             />
           </div>
         </div>
         <button
-          onClick={handleCreateOrder}
+          onClick={handleCreateRecord}
           className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#f5f5f5] hover:text-yellow-700"
         >
-          Create orders
+          Create Record
         </button>
       </Modal>
     </div>
