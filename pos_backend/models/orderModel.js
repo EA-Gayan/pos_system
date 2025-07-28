@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { ItemDto } = require("./DTOModels/ItemDTO");
 
 const orderSchema = new mongoose.Schema(
   {
@@ -26,7 +25,15 @@ const orderSchema = new mongoose.Schema(
       discount: { type: Number },
       totalPayable: { type: Number, required: true },
     },
-    items: [ItemDto],
+    items: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        name: { type: String, required: true },
+        pricePerQuantity: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
     table: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table",

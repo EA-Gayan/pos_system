@@ -1,7 +1,9 @@
 const Order = require("../models/orderModel");
+const Expenses = require("../models/expensesModel");
 const generateIncomeReport = require("../services/generateIncomeReport");
+const generateExpensesReport = require("../services/generateExpensesReport");
 
-const generateTodayOrderExcel = async (req, res, next) => {
+const generateTodayIncomeReport = async (req, res, next) => {
   try {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -62,6 +64,63 @@ const generateTodayOrderExcel = async (req, res, next) => {
   }
 };
 
+const generateTodayExpensesReport = async (req, res, next) => {
+  try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const expenses = await Expenses.find({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    if (expenses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No expenses found for today",
+      });
+    }
+
+    const fileName = "today_expenses_report.xlsx";
+
+    let grandTotal = 0;
+    const expensesSummary = {};
+
+    for (const ex of expenses) {
+      const description = ex.description;
+      const price = ex.amount;
+
+      if (!expensesSummary[description]) {
+        expensesSummary[description] = {
+          total: 0,
+        };
+      }
+
+      expensesSummary[description].total += price;
+
+      grandTotal += price;
+    }
+
+    await generateExpensesReport(
+      "Today Expenses",
+      fileName,
+      expensesSummary,
+      grandTotal
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Report generated successfully",
+      fileUrl: `/reports/${fileName}`,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
-  generateTodayOrderExcel,
+  generateTodayIncomeReport,
+  generateTodayExpensesReport,
 };
