@@ -19,6 +19,7 @@ connectDB(); // Connect to the database
 app.use(cors({ credentials: true, origin: ["http://localhost:5173"] })); // Enable CORS with credentials
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
+app.use(express.static("public"));
 
 // Root Endpoint
 app.get("/", (req, res) => {
@@ -32,6 +33,7 @@ app.use("/api/table", require("./routes/tableRoute"));
 app.use("/api/category", require("./routes/categoryRoute"));
 app.use("/api/product", require("./routes/productRoute"));
 app.use("/api/dashboard", require("./routes/dashboardRoute"));
+app.use("/api/xml", require("./routes/generateXmlRoute"));
 app.use("/api/expenses", require("./routes/expensesRoute"));
 
 // Global Error Handler
