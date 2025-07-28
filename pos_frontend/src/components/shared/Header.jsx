@@ -15,6 +15,8 @@ import { getfindOrders } from "../../https";
 import { setSearchOrderList } from "../../redux/slices/orderSlice";
 import { OrderTypes } from "../../enum/orderTypes";
 import { enqueueSnackbar } from "notistack";
+import { searchExpenseRecord } from "../../https";
+import { setSearchExpensesList } from "../../redux/slices/expensesSlice";
 
 const meals = [
   { name: "Breakfast", value: 1 },
@@ -68,6 +70,21 @@ const Header = () => {
     mutationFn: (value) => getfindOrders({ id: value, status: OrderTypes.ALL }),
     onSuccess: (res) => {
       dispatch(setSearchOrderList(res?.data?.data));
+    },
+    onError: (error) => {
+      enqueueSnackbar(
+        error?.response?.data?.message || error?.message || "Request failed",
+        {
+          variant: "error",
+        }
+      );
+    },
+  });
+
+  const searchRecordMutation = useMutation({
+    mutationFn: (query) => searchExpenseRecord(query),
+    onSuccess: (res) => {
+      dispatch(setSearchExpensesList(res?.data?.data));
     },
     onError: (error) => {
       enqueueSnackbar(
@@ -142,6 +159,9 @@ const Header = () => {
     }
     if (pageName === "orders" && value != "") {
       searchOrderMutation.mutate(value);
+    }
+    if (pageName === "expenses" && value != "") {
+      searchRecordMutation.mutate(value);
     }
   };
 

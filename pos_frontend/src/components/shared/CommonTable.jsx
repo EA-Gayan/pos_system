@@ -35,7 +35,7 @@ const CommonTable = ({ data, columns, onEdit, onDelete }) => {
                   </td>
                 ))}
                 <td className="p-3">
-                  <div className="gap-10 flex justify-center">
+                  <div className="gap-10 flex">
                     <button
                       onClick={() => onEdit?.(item)}
                       className="text-blue-500 hover:text-blue-400"
