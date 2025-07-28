@@ -10,7 +10,16 @@ const addExpenseRecord = async (req, res, next) => {
     }
 
     // Check if a record with the same description exists
-    let existingRecord = await Expenses.findOne({ description });
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    let existingRecord = await Expenses.findOne({
+      description,
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    });
 
     if (existingRecord) {
       // Update the amount
