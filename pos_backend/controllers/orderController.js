@@ -5,64 +5,94 @@ const OrderTypes = require("../enum/orderTypes");
 
 const addOrder = async (req, res, next) => {
   try {
-    const order = new Order(req.body);
+    const body = { ...req.body };
+
+    // Validate table only if provided
+    if (body.table !== undefined && body.table !== null && body.table !== "") {
+      if (!mongoose.Types.ObjectId.isValid(body.table)) {
+        return next(createHttpError(400, "Invalid table ID"));
+      }
+    } else {
+      delete body.table;
+    }
+
+    const order = new Order(body);
 
     const today = new Date();
     const yy = today.getFullYear().toString().slice(-2);
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Month is 0-based
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
     const dd = String(today.getDate()).padStart(2, "0");
     const datePrefix = `${yy}${mm}${dd}`;
 
-    // Get count of today's orders
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
     const todayOrders = await Order.find({
-      orderDate: {
-        $gte: startOfDay,
-        $lte: endOfDay,
-      },
+      orderDate: { $gte: startOfDay, $lte: endOfDay },
     });
-    const count = todayOrders.length;
 
-    // Assign orderId
+    const count = todayOrders.length;
     order.orderId = `${datePrefix} - ${count + 1}`;
-    order.orderStatus = OrderTypes.INPROGRESS;
+    order.orderStatus = body.orderStatus || OrderTypes.INPROGRESS;
 
     await order.save();
-    res.status(201).json({
+
+    return res.status(201).json({
       success: true,
       message: "Order created successfully",
       data: order,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-const getOrderById = async (req, res, next) => {
+const findOrders = async (req, res, next) => {
   try {
-    const orderId = req.params.id;
+    const { id, status } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(orderId)) {
-      const error = createHttpError(400, "Invalid Order ID!");
-      return next(error);
+    if (id) {
+      const order = await Order.findOne({ orderId: id })
+        .sort({ createdAt: -1 })
+        .limit(9);
+
+      if (!order) {
+        return next(createHttpError(404, "Order not found!"));
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Order retrieved successfully",
+        data: order,
+      });
     }
 
-    const order = await Order.findById(orderId);
+    if (status !== undefined) {
+      let queryStatus;
+      if (status === 3) {
+        queryStatus = [OrderTypes.INPROGRESS, OrderTypes.COMPLETE];
+      } else {
+        queryStatus = [status];
+      }
 
-    if (!order) {
-      const error = createHttpError(404, "Order not found!");
-      return next(error);
+      const orders = await Order.find({
+        orderStatus: { $in: queryStatus },
+      })
+        .sort({ createdAt: -1 })
+        .limit(9);
+
+      return res.status(200).json({
+        success: true,
+        message: "Orders retrieved successfully",
+        data: orders,
+      });
     }
 
-    res.status(200).json({
-      success: true,
-      message: "Order retrieved successfully",
-      data: order,
-    });
+    return next(
+      createHttpError(400, "Please provide order ID or status in request body.")
+    );
   } catch (error) {
     next(error);
   }
@@ -73,7 +103,7 @@ const getOrders = async (req, res, next) => {
     const orders = await Order.find()
       .populate("table")
       .sort({ createdAt: -1 }) // Sort by newest first
-      .limit(10); // Limit to last 10 entries
+      .limit(9); // Limit to last 10 entries
 
     res.status(200).json({
       success: true,
@@ -180,7 +210,7 @@ const getRecentOrders = async (req, res, next) => {
 
 module.exports = {
   addOrder,
-  getOrderById,
+  findOrders,
   getOrders,
   updateOrder,
   getOrdersCount,

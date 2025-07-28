@@ -18,10 +18,19 @@ const Bill = () => {
   const customerData = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const [showInvoice, setShowInvoice] = React.useState(false);
-  const [orderInfo, setOrderInfo] = React.useState();
+  const [orderInfo, setOrderInfo] = React.useState(null);
 
-  // Place the order
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrder = () => {
+    if (!cartData.length) {
+      enqueueSnackbar(
+        "Cart is empty. Please add items before placing an order.",
+        {
+          variant: "warning",
+        }
+      );
+      return;
+    }
+
     const orderData = {
       customerDetails: {
         name: customerData.customerName,
@@ -35,54 +44,64 @@ const Bill = () => {
         totalPayable: grandTotal,
       },
       items: cartData,
-      table: "681adc70e2d0bdb8095fd2e4",
+      table: customerData.table,
       paymentMethod: "Cash",
     };
 
-    setTimeout(() => {
-      orderMutation.mutate(orderData);
-    }, 1500);
+    orderMutation.mutate(orderData);
+  };
+
+  const handlePrintReceipt = () => {
+    if (!orderInfo) {
+      enqueueSnackbar("No order info available to print.", {
+        variant: "warning",
+      });
+      return;
+    }
+    setShowInvoice(true);
   };
 
   const orderMutation = useMutation({
     mutationFn: (reqData) => addOrder(reqData),
-
     onSuccess: (resData) => {
       const { data } = resData.data;
-
       setOrderInfo(data);
 
-      // Update Table
+      // Update table status
       const tableData = {
         status: "Booked",
         orderId: data._id,
         tableId: data.table,
       };
-
-      setTimeout(() => {
+      if (tableData.tableId != null) {
         tableUpdateMutation.mutate(tableData);
-      }, 1500);
+      }
 
       enqueueSnackbar("Order Placed!", {
         variant: "success",
       });
+
       setShowInvoice(true);
     },
     onError: (error) => {
-      console.log(error);
+      enqueueSnackbar("Failed to place order", {
+        variant: "error",
+      });
+      console.error("Order placement error:", error);
     },
   });
 
   const tableUpdateMutation = useMutation({
     mutationFn: (reqData) => updateTable(reqData),
-
-    onSuccess: (resData) => {
-      const { data } = resData.data;
+    onSuccess: () => {
       dispatch(removeCustomer());
       dispatch(removeAllItems());
     },
     onError: (error) => {
-      console.log(error);
+      enqueueSnackbar("Table update failed", {
+        variant: "error",
+      });
+      console.error("Table update error:", error);
     },
   });
 
@@ -106,14 +125,21 @@ const Bill = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 px-4 sm:px-5 mt-4">
-        <button className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-lg font-semibold break-words">
+        <button
+          className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-lg font-semibold break-words"
+          onClick={handlePrintReceipt}
+        >
           Print Receipt
         </button>
+
         <button
-          className="bg-[#f6b100] px-4 py-3 w-full rounded-lg text-[#1f1f1f] text-sm sm:text-lg font-semibold break-words"
-          onClick={() => handlePlaceOrder()}
+          className={`bg-[#f6b100] px-4 py-3 w-full rounded-lg text-[#1f1f1f] text-sm sm:text-lg font-semibold break-words ${
+            orderMutation.isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          onClick={handlePlaceOrder}
+          disabled={orderMutation.isLoading}
         >
-          Place Order
+          {orderMutation.isLoading ? "Placing..." : "Place Order"}
         </button>
       </div>
 

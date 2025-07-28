@@ -11,6 +11,10 @@ import { removeUser } from "../../redux/slices/userSlice";
 import SearchBar from "./SearchBar";
 import { searchProduct } from "../../https";
 import { setSearchProductList } from "../../redux/slices/productSlice";
+import { getfindOrders } from "../../https";
+import { setSearchOrderList } from "../../redux/slices/orderSlice";
+import { OrderTypes } from "../../enum/orderTypes";
+import { enqueueSnackbar } from "notistack";
 
 const meals = [
   { name: "Breakfast", value: 1 },
@@ -45,13 +49,33 @@ const Header = () => {
     },
   });
 
-  const searchMutation = useMutation({
+  const searchProductMutation = useMutation({
     mutationFn: (query) => searchProduct(query),
     onSuccess: (res) => {
       dispatch(setSearchProductList(res?.data?.data));
     },
     onError: (error) => {
-      console.error("Search product failed:", error);
+      enqueueSnackbar(
+        error?.response?.data?.message || error?.message || "Request failed",
+        {
+          variant: "error",
+        }
+      );
+    },
+  });
+
+  const searchOrderMutation = useMutation({
+    mutationFn: (value) => getfindOrders({ id: value, status: OrderTypes.ALL }),
+    onSuccess: (res) => {
+      dispatch(setSearchOrderList(res?.data?.data));
+    },
+    onError: (error) => {
+      enqueueSnackbar(
+        error?.response?.data?.message || error?.message || "Request failed",
+        {
+          variant: "error",
+        }
+      );
     },
   });
 
@@ -114,7 +138,10 @@ const Header = () => {
 
   const handleSearchChange = (value) => {
     if (pageName === "menu" && value != "") {
-      searchMutation.mutate(value);
+      searchProductMutation.mutate(value);
+    }
+    if (pageName === "orders" && value != "") {
+      searchOrderMutation.mutate(value);
     }
   };
 
@@ -142,13 +169,13 @@ const Header = () => {
       {isShowSearch && <SearchBar onSearchChange={handleSearchChange} />}
 
       {pageName === "dashboard" && (
-        <div className="flex items-center text-[#f5f5f5] font-semibold text-md flex items-center gap-2">
+        <div className="flex items-center text-[#f5f5f5] font-semibold text-md gap-2">
           <h2>Admin Dashboard</h2>
         </div>
       )}
       {pageName === "" && (
-        <div className="flex items-center text-[#f5f5f5] font-semibold text-md flex items-center gap-2">
-          <h2>123 Hotel</h2>
+        <div className="flex items-center text-[#f5f5f5] font-semibold text-md gap-2">
+          <h1>Jayanthi Hotel</h1>
         </div>
       )}
       {/* USER SECTION */}

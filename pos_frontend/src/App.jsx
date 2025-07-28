@@ -17,6 +17,7 @@ import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
 import Dashboard from "./pages/Dashboard";
 import DashBoardTable from "./components/dashboard/DashBoardTable";
+import Expenses from "./pages/Expenses";
 
 function Layout() {
   const location = useLocation();
@@ -94,6 +95,14 @@ function Layout() {
             element={
               <ProtectedRoute>
                 <DashBoardTable />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <ProtectedRoute>
+                <Expenses />
               </ProtectedRoute>
             }
           />

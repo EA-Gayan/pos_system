@@ -1,6 +1,5 @@
-import { useMutation, useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
 import { BsCashCoin } from "react-icons/bs";
 import { GrBasket } from "react-icons/gr";
 import Greetings from "../components/home/Greetings";
@@ -9,62 +8,43 @@ import RecentOrders from "../components/home/RecentOrders";
 import { getOrderEarning, getOrdersCount, getRecentOrders } from "../https";
 
 const Home = () => {
-  const [totalEarning, setTotalEarning] = useState(0);
-  const [percentage, setpercentage] = useState(0);
-  const [orderCount, setOrderCount] = useState(0);
-  const [recentOrders, setRecentorders] = useState([]);
+  const periodData = { period: "today" };
 
-  const orderEarningMutation = useMutation({
-    mutationFn: (reqData) => getOrderEarning(reqData),
-    onSuccess: (response) => {
-      setTotalEarning(response.data.totalEarnings);
-      setpercentage(response?.data?.percentChange);
-    },
+  const { data: earningsData, isError: isEarningsError } = useQuery({
+    queryKey: ["orderEarnings", periodData],
+    queryFn: () => getOrderEarning(periodData),
     onError: () => {
-      enqueueSnackbar("Failed to fetch earnings!", {
-        variant: "error",
-      });
+      enqueueSnackbar("Failed to fetch earnings!", { variant: "error" });
     },
   });
 
-  const orderCountMutation = useMutation({
-    mutationFn: (reqData) => getOrdersCount(reqData),
-    onSuccess: (response) => {
-      setOrderCount(response.data.data);
-    },
+  const { data: orderCountData, isError: isOrderCountError } = useQuery({
+    queryKey: ["orderCount", periodData],
+    queryFn: () => getOrdersCount(periodData),
     onError: () => {
-      enqueueSnackbar("Failed to fetch orders count!", {
-        variant: "error",
-      });
+      enqueueSnackbar("Failed to fetch orders count!", { variant: "error" });
     },
   });
 
-  const recentOrderMutation = useMutation({
-    mutationFn: () => getRecentOrders(),
-    onSuccess: (response) => {
-      setRecentorders(response.data.data);
-    },
+  const { data: recentOrdersData, isError: isRecentOrdersError } = useQuery({
+    queryKey: ["recentOrders"],
+    queryFn: getRecentOrders,
     onError: () => {
-      enqueueSnackbar("Failed to fetch recent orders!", {
-        variant: "error",
-      });
+      enqueueSnackbar("Failed to fetch recent orders!", { variant: "error" });
     },
   });
 
-  useEffect(() => {
-    const data = {
-      period: "today",
-    };
-    orderEarningMutation.mutate(data);
-    orderCountMutation.mutate(data);
-    recentOrderMutation.mutate();
-  }, []);
+  // Safely access deeply nested values
+  const totalEarning = earningsData?.data?.totalEarnings ?? 0;
+  const percentage = earningsData?.data?.percentChange ?? 0;
+  const orderCount = orderCountData?.data?.data ?? 0;
+  const recentOrders = recentOrdersData?.data?.data ?? [];
 
   return (
-    <section className="bg-[#1f1f1f] h-screen p-6">
-      {/* Left Section */}
+    <section className="bg-[#1f1f1f] h-screen p-6 overflow-y-auto">
       <div className="flex-[3] space-y-6">
         <Greetings />
+
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <MiniCard
             title="Today Earnings"
@@ -76,19 +56,21 @@ const Home = () => {
               </span>
             }
           />
+
           <MiniCard
             title="Today Orders Count"
             icon={<GrBasket />}
             number={orderCount}
           />
         </div>
+
         <RecentOrders orders={recentOrders} />
       </div>
 
-      {/* Right Section (optional) */}
+      {/* Optional Right Section */}
       {/* <div className="flex-[2] pb-20">
-          <PopularDishes />
-        </div> */}
+        <PopularDishes />
+      </div> */}
     </section>
   );
 };

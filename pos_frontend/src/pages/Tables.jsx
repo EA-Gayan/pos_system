@@ -38,7 +38,6 @@ const Tables = () => {
       if (hasStatusChanged(currentTableData, tableData)) {
         dispatch(setTable(tableData));
       } else {
-        console.log("No status change — skipping dispatch");
       }
     }
   }, [resData, dispatch, currentTableData]);

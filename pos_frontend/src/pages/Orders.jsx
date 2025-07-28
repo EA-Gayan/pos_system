@@ -1,26 +1,35 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import OrderCard from "../components/orders/OrderCard";
 import BackButton from "../components/shared/BackButton";
-import { getOrders } from "../https";
+import { getfindOrders } from "../https";
+import { OrderTypes } from "../enum/orderTypes";
+import { useSelector } from "react-redux";
 
 const Orders = () => {
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState(OrderTypes.ALL);
+
+  const searchData = useSelector((state) => state.order.searchList);
 
   const { data: resData, isError } = useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => {
-      return await getOrders();
-    },
-    placeholderData: keepPreviousData,
+    queryKey: ["orders", status],
+    queryFn: () => getfindOrders({ id: "", status }),
+    keepPreviousData: true,
   });
 
-  if (isError) {
-    enqueueSnackbar("Something went wrong!", {
-      variant: "error",
-    });
-  }
+  useEffect(() => {
+    if (isError) {
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
+    }
+  }, [isError]);
+
+  const displayOrders =
+    searchData && Object.keys(searchData).length > 0
+      ? Array.isArray(searchData)
+        ? searchData
+        : [searchData]
+      : resData?.data?.data || [];
 
   return (
     <section className="bg-[#1f1f1f] h-full">
@@ -33,34 +42,26 @@ const Orders = () => {
         </div>
         <div className="flex items-center justify-around gap-4">
           <button
-            onClick={() => setStatus("all")}
+            onClick={() => setStatus(OrderTypes.ALL)}
             className={`text-[#ababab] text-lg ${
-              status === "all" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.ALL ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             All
           </button>
           <button
-            onClick={() => setStatus("progress")}
+            onClick={() => setStatus(OrderTypes.INPROGRESS)}
             className={`text-[#ababab] text-lg ${
-              status === "progress" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.INPROGRESS ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             In Progress
           </button>
           <button
-            onClick={() => setStatus("ready")}
+            onClick={() => setStatus(OrderTypes.COMPLETE)}
             className={`text-[#ababab] text-lg ${
-              status === "ready" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
-          >
-            Ready
-          </button>
-          <button
-            onClick={() => setStatus("completed")}
-            className={`text-[#ababab] text-lg ${
-              status === "completed" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.COMPLETE ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             Completed
           </button>
@@ -68,8 +69,8 @@ const Orders = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 overflow-y-auto">
-        {resData?.data?.data?.length > 0 ? (
-          resData.data.data.map((order) => (
+        {displayOrders?.length > 0 ? (
+          displayOrders.map((order) => (
             <OrderCard key={order._id} order={order} />
           ))
         ) : (
