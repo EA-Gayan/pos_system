@@ -13,6 +13,13 @@ const generateTodayOrderExcel = async (req, res, next) => {
       orderDate: { $gte: startOfDay, $lte: endOfDay },
     }).populate("items.product");
 
+    if (orders.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No orders found for today",
+      });
+    }
+
     const fileName = "today_orders_report.xlsx";
 
     let grandTotal = 0;
