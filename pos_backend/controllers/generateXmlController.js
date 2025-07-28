@@ -13,7 +13,7 @@ const generateTodayOrderExcel = async (req, res, next) => {
       orderDate: { $gte: startOfDay, $lte: endOfDay },
     }).populate("items.product");
 
-        if (orders.length === 0) {
+    if (orders.length === 0) {
       return res.status(404).json({
         success: false,
         message: "No orders found for today",
