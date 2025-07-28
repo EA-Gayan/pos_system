@@ -60,3 +60,9 @@ export const getDashboardItemsData = () =>
 // Expenses Record Endpoints
 export const getExpenseRecords = () => api.get("/api/expenses");
 export const addExpenseRecord = (data) => api.post("/api/expenses", data);
+export const deleteExpenseRecord = (recordId) =>
+  api.delete(`/api/expenses/delete/${recordId}`);
+export const updateExpenseRecord = ({ recordId, ...recordData }) =>
+  api.put(`/api/expenses/${recordId}`, recordData);
+export const searchExpenseRecord = (query) =>
+  api.get(`/api/expenses/search`, { params: { query } });
