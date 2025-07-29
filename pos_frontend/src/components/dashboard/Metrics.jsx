@@ -2,12 +2,14 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { metricsData } from "../../constants";
-import { getDashboardItemsData } from "../../https";
+import { exportIncomeRecord, getDashboardItemsData } from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
+import { useMutation } from "@tanstack/react-query";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [exportOpen, setExportOpen] = useState(false);
 
   const navigate = useNavigate();
   const handleClick = (sectionName) => {
@@ -18,6 +20,17 @@ const Metrics = () => {
   useEffect(() => {
     fetchDashboardItemDetails();
   }, []);
+
+  const exportRecordMutation = useMutation({
+    mutationFn: (type) => exportIncomeRecord(type),
+    onSuccess: () => {
+      enqueueSnackbar("Record exported successfully!", { variant: "success" });
+      refetch();
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to export record!", { variant: "error" });
+    },
+  });
 
   const fetchDashboardItemDetails = async () => {
     try {
@@ -31,6 +44,11 @@ const Metrics = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleExport = (type) => {
+    setExportOpen(false);
+    exportRecordMutation.mutate(type);
   };
 
   return (
@@ -77,17 +95,33 @@ const Metrics = () => {
                 Overall Performance
               </h2>
             </div>
-            <button className="flex items-center gap-1 px-4 py-2 rounded-md text-[#f5f5f5] bg-[#1a1a1a]">
-              Last 1 Month
-              <svg
-                className="w-3 h-3"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="4"
+            {/* Export Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setExportOpen((prev) => !prev)}
+                className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
               >
-                <path d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                Export Expense
+              </button>
+
+              {/* Dropdown Menu */}
+              {exportOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                  <button
+                    onClick={() => handleExport("today")}
+                    className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                  >
+                    Today
+                  </button>
+                  <button
+                    onClick={() => handleExport("week")}
+                    className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                  >
+                    This Week
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
