@@ -1,18 +1,35 @@
 const Order = require("../models/orderModel");
 const Expenses = require("../models/expensesModel");
-const generateIncomeReport = require("../services/generateIncomeReport");
-const generateExpensesReport = require("../services/generateExpensesReport");
+const generateExpensesReportService = require("../services/generateExpensesReport");
+const generateIncomeReportService = require("../services/generateIncomeReport");
 
-const generateTodayIncomeReport = async (req, res, next) => {
+const generateIncomeReport = async (req, res, next) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const { type } = req.params;
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const now = new Date();
+    let startDate, endDate;
+
+    if (type === "week") {
+      const day = now.getDay();
+      const diffToMonday = (day + 6) % 7;
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - diffToMonday);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
 
     const orders = await Order.find({
-      orderDate: { $gte: startOfDay, $lte: endOfDay },
+      orderDate: { $gte: startDate, $lte: endDate },
     }).populate("items.product");
 
     if (orders.length === 0) {
@@ -22,7 +39,8 @@ const generateTodayIncomeReport = async (req, res, next) => {
       });
     }
 
-    const fileName = "today_orders_report.xlsx";
+    const fileName =
+      type === "week" ? "week_orders_report.xlsx" : "today_orders_report.xlsx";
 
     let grandTotal = 0;
     const productSummary = {};
@@ -47,8 +65,8 @@ const generateTodayIncomeReport = async (req, res, next) => {
       }
     }
 
-    await generateIncomeReport(
-      "Today Orders",
+    await generateIncomeReportService(
+      type === "week" ? "Week Orders" : "Today Orders",
       fileName,
       productSummary,
       grandTotal
@@ -64,16 +82,33 @@ const generateTodayIncomeReport = async (req, res, next) => {
   }
 };
 
-const generateTodayExpensesReport = async (req, res, next) => {
+const generateExpensesReport = async (req, res, next) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const { type } = req.params;
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const now = new Date();
+    let startDate, endDate;
+
+    if (type === "week") {
+      const day = now.getDay();
+      const diffToMonday = (day + 6) % 7;
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - diffToMonday);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
 
     const expenses = await Expenses.find({
-      createdAt: { $gte: startOfDay, $lte: endOfDay },
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
     if (expenses.length === 0) {
@@ -83,7 +118,10 @@ const generateTodayExpensesReport = async (req, res, next) => {
       });
     }
 
-    const fileName = "today_expenses_report.xlsx";
+    const fileName =
+      type === "week"
+        ? "week_expenses_report.xlsx"
+        : "today_expenses_report.xlsx";
 
     let grandTotal = 0;
     const expensesSummary = {};
@@ -103,8 +141,8 @@ const generateTodayExpensesReport = async (req, res, next) => {
       grandTotal += price;
     }
 
-    await generateExpensesReport(
-      "Today Expenses",
+    await generateExpensesReportService(
+      type === "week" ? "Week Expenses" : "Today Expenses",
       fileName,
       expensesSummary,
       grandTotal
@@ -121,6 +159,6 @@ const generateTodayExpensesReport = async (req, res, next) => {
 };
 
 module.exports = {
-  generateTodayIncomeReport,
-  generateTodayExpensesReport,
+  generateIncomeReport,
+  generateExpensesReport,
 };
