@@ -32,7 +32,7 @@ const Orders = () => {
       : resData?.data?.data || [];
 
   return (
-    <section className="bg-[#1f1f1f] h-full">
+    <section className="bg-[#1f1f1f]">
       <div className="flex items-center justify-between px-10 py-4">
         <div className="flex items-center gap-4">
           <BackButton />

@@ -140,7 +140,7 @@ const Expenses = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden px-4 sm:px-10 pb-4">
+      <div className="flex-1 px-4 sm:px-10 pb-4 overflow-y-hidden">
         <CommonTable
           data={displayRecords}
           columns={columns}
