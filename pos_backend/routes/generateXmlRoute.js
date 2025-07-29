@@ -1,14 +1,12 @@
 const express = require("express");
 const { isVerifiedUser } = require("../middleware/tokenVerification");
 const {
-  generateTodayIncomeReport,
-  generateTodayExpensesReport,
+  generateIncomeReport,
+  generateExpensesReport,
 } = require("../controllers/generateXmlController");
 const router = express.Router();
 
-router.route("/today/income").get(isVerifiedUser, generateTodayIncomeReport);
-router
-  .route("/today/expenses")
-  .get(isVerifiedUser, generateTodayExpensesReport);
+router.route("/income").get(isVerifiedUser, generateIncomeReport);
+router.route("/expenses").get(isVerifiedUser, generateExpensesReport);
 
 module.exports = router;

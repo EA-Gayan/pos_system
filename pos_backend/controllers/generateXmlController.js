@@ -3,13 +3,30 @@ const Expenses = require("../models/expensesModel");
 const generateIncomeReport = require("../services/generateIncomeReport");
 const generateExpensesReport = require("../services/generateExpensesReport");
 
-const generateTodayIncomeReport = async (req, res, next) => {
+const generateIncomeReport = async (req, res, next) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const { type } = req.params;
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const now = new Date();
+    let startDate, endDate;
+
+    if (type === "week") {
+      const day = now.getDay();
+      const diffToMonday = (day + 6) % 7;
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - diffToMonday);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
 
     const orders = await Order.find({
       orderDate: { $gte: startOfDay, $lte: endOfDay },
@@ -64,13 +81,30 @@ const generateTodayIncomeReport = async (req, res, next) => {
   }
 };
 
-const generateTodayExpensesReport = async (req, res, next) => {
+const generateExpensesReport = async (req, res, next) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const { type } = req.params;
 
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const now = new Date();
+    let startDate, endDate;
+
+    if (type === "week") {
+      const day = now.getDay();
+      const diffToMonday = (day + 6) % 7;
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - diffToMonday);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      startDate = new Date();
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date();
+      endDate.setHours(23, 59, 59, 999);
+    }
 
     const expenses = await Expenses.find({
       createdAt: { $gte: startOfDay, $lte: endOfDay },
@@ -121,6 +155,6 @@ const generateTodayExpensesReport = async (req, res, next) => {
 };
 
 module.exports = {
-  generateTodayIncomeReport,
-  generateTodayExpensesReport,
+  generateIncomeReport,
+  generateExpensesReport,
 };
