@@ -2,7 +2,7 @@ const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
 
-const generateExpensesReport = async (
+const generateExpensesReportService = async (
   reportName,
   file,
   expensesDetails,
@@ -42,4 +42,4 @@ const generateExpensesReport = async (
   await workbook.xlsx.writeFile(filePath);
 };
 
-module.exports = generateExpensesReport;
+module.exports = generateExpensesReportService;

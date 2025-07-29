@@ -1,7 +1,7 @@
 const Order = require("../models/orderModel");
 const Expenses = require("../models/expensesModel");
-const generateIncomeReport = require("../services/generateIncomeReport");
-const generateExpensesReport = require("../services/generateExpensesReport");
+const generateExpensesReportService = require("../services/generateExpensesReport");
+const generateIncomeReportService = require("../services/generateIncomeReport");
 
 const generateIncomeReport = async (req, res, next) => {
   try {
@@ -29,7 +29,7 @@ const generateIncomeReport = async (req, res, next) => {
     }
 
     const orders = await Order.find({
-      orderDate: { $gte: startOfDay, $lte: endOfDay },
+      orderDate: { $gte: startDate, $lte: endDate },
     }).populate("items.product");
 
     if (orders.length === 0) {
@@ -39,7 +39,8 @@ const generateIncomeReport = async (req, res, next) => {
       });
     }
 
-    const fileName = "today_orders_report.xlsx";
+    const fileName =
+      type === "week" ? "week_orders_report.xlsx" : "today_orders_report.xlsx";
 
     let grandTotal = 0;
     const productSummary = {};
@@ -64,8 +65,8 @@ const generateIncomeReport = async (req, res, next) => {
       }
     }
 
-    await generateIncomeReport(
-      "Today Orders",
+    await generateIncomeReportService(
+      type === "week" ? "Week Orders" : "Today Orders",
       fileName,
       productSummary,
       grandTotal
@@ -107,7 +108,7 @@ const generateExpensesReport = async (req, res, next) => {
     }
 
     const expenses = await Expenses.find({
-      createdAt: { $gte: startOfDay, $lte: endOfDay },
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
     if (expenses.length === 0) {
@@ -117,7 +118,10 @@ const generateExpensesReport = async (req, res, next) => {
       });
     }
 
-    const fileName = "today_expenses_report.xlsx";
+    const fileName =
+      type === "week"
+        ? "week_expenses_report.xlsx"
+        : "today_expenses_report.xlsx";
 
     let grandTotal = 0;
     const expensesSummary = {};
@@ -137,8 +141,8 @@ const generateExpensesReport = async (req, res, next) => {
       grandTotal += price;
     }
 
-    await generateExpensesReport(
-      "Today Expenses",
+    await generateExpensesReportService(
+      type === "week" ? "Week Expenses" : "Today Expenses",
       fileName,
       expensesSummary,
       grandTotal
