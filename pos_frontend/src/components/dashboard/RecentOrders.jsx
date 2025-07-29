@@ -8,6 +8,7 @@ import { enqueueSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { getOrders, updateOrderStatus } from "../../https";
 import { formatDateAndTime } from "../../utils";
+import { OrderTypes } from "../../enum/orderTypes";
 
 const RecentOrders = () => {
   const [resultData, setResultData] = useState([]);
@@ -92,27 +93,17 @@ const RecentOrders = () => {
                     {order?.customerDetails?.name ?? "N/A"}{" "}
                   </td>
                   <td className="p-4">
-                    <select
-                      className={`bg-[#1a1a1a] text-[#f5f5f5] border border-gray-500 p-2 rounded-lg focus:outline-none ${
-                        order.orderStatus === "Ready"
+                    <div
+                      className={` text-[#f5f5f5]  p-2  focus:outline-none ${
+                        order.orderStatus === OrderTypes.COMPLETE
                           ? "text-green-500"
                           : "text-yellow-500"
                       }`}
-                      value={order.orderStatus}
-                      onChange={(e) =>
-                        handleStatusChange({
-                          orderId: order._id,
-                          orderStatus: e.target.value,
-                        })
-                      }
                     >
-                      <option className="text-yellow-500" value="In Progress">
-                        In Progress
-                      </option>
-                      <option className="text-green-500" value="Ready">
-                        Ready
-                      </option>
-                    </select>
+                      {Object.keys(OrderTypes).find(
+                        (key) => OrderTypes[key] === order.orderStatus
+                      )}{" "}
+                    </div>
                   </td>
                   <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
                   <td className="p-4">{order?.items?.length} Items</td>
