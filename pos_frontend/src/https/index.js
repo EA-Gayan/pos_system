@@ -35,6 +35,8 @@ export const updateOrderStatus = ({ orderId, orderStatus }) =>
 export const getOrderEarning = (data) => api.post(`/api/order/earnings`, data);
 export const getOrdersCount = (data) => api.post(`/api/order/count`, data);
 export const getfindOrders = (data) => api.post(`/api/order/findOrders`, data);
+export const exportIncomeRecord = (query) =>
+  api.get(`/api/report/income`, { params: { query } });
 
 // category Endpoints
 export const addCategory = (data) => api.post("/api/category", data);
@@ -60,3 +62,11 @@ export const getDashboardItemsData = () =>
 // Expenses Record Endpoints
 export const getExpenseRecords = () => api.get("/api/expenses");
 export const addExpenseRecord = (data) => api.post("/api/expenses", data);
+export const deleteExpenseRecord = (recordId) =>
+  api.delete(`/api/expenses/delete/${recordId}`);
+export const updateExpenseRecord = ({ recordId, ...recordData }) =>
+  api.put(`/api/expenses/${recordId}`, recordData);
+export const searchExpenseRecord = (query) =>
+  api.get(`/api/expenses/search`, { params: { query } });
+export const exportExpenseRecord = (query) =>
+  api.get(`/api/report/expenses${query}`);

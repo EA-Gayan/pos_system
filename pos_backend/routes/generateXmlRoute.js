@@ -6,7 +6,7 @@ const {
 } = require("../controllers/generateXmlController");
 const router = express.Router();
 
-router.route("/income").get(isVerifiedUser, generateIncomeReport);
-router.route("/expenses").get(isVerifiedUser, generateExpensesReport);
+router.route("/income:type").get(isVerifiedUser, generateTodayIncomeReport);
+router.route("/expenses:type").get(isVerifiedUser, generateTodayExpensesReport);
 
 module.exports = router;

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setClearSearchProductList } from "../../redux/slices/productSlice";
 import { setClearSearchOrderList } from "../../redux/slices/orderSlice";
+import { setClearSearchExpensesList } from "../../redux/slices/expensesSlice";
 
 const SearchBar = ({ onSearchChange }) => {
   const [searchValue, setSearchValue] = useState("");
@@ -26,6 +27,7 @@ const SearchBar = ({ onSearchChange }) => {
     onSearchChange("");
     dispatch(setClearSearchProductList());
     dispatch(setClearSearchOrderList());
+    dispatch(setClearSearchExpensesList());
   };
 
   const handleKeyDown = (e) => {

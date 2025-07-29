@@ -68,7 +68,7 @@ const Orders = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 overflow-y-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 pb-20 overflow-y-auto">
         {displayOrders?.length > 0 ? (
           displayOrders.map((order) => (
             <OrderCard key={order._id} order={order} />
