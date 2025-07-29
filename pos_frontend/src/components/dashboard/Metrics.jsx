@@ -91,7 +91,7 @@ const Metrics = () => {
           </div>
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {metricsData.map((metric, index) => {
+            {/* {metricsData.map((metric, index) => {
               return (
                 <div
                   key={index}
@@ -132,7 +132,7 @@ const Metrics = () => {
                   </p>
                 </div>
               );
-            })}
+            })} */}
           </div>
         </>
       )}
