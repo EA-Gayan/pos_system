@@ -36,7 +36,7 @@ export const getOrderEarning = (data) => api.post(`/api/order/earnings`, data);
 export const getOrdersCount = (data) => api.post(`/api/order/count`, data);
 export const getfindOrders = (data) => api.post(`/api/order/findOrders`, data);
 export const exportIncomeRecord = (query) =>
-  api.get(`/api/report/income`, { params: { query } });
+  api.get(`/api/report/income/${query}`);
 
 // category Endpoints
 export const addCategory = (data) => api.post("/api/category", data);
@@ -69,4 +69,4 @@ export const updateExpenseRecord = ({ recordId, ...recordData }) =>
 export const searchExpenseRecord = (query) =>
   api.get(`/api/expenses/search`, { params: { query } });
 export const exportExpenseRecord = (query) =>
-  api.get(`/api/report/expenses${query}`);
+  api.get(`/api/report/expenses/${query}`);
