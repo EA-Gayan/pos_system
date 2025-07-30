@@ -49,7 +49,7 @@ const generateIncomeReport = async (req, res, next) => {
       for (const item of order.items) {
         const productName = item.name;
         const quantity = item.quantity;
-        const total = item.price * quantity;
+        const total = item.pricePerQuantity * quantity;
 
         if (!productSummary[productName]) {
           productSummary[productName] = {
