@@ -40,13 +40,35 @@ const Expenses = () => {
   });
 
   const exportRecordMutation = useMutation({
-    mutationFn: (type) => exportExpenseRecord(type),
-    onSuccess: () => {
+    mutationFn: (type) => exportExpenseRecord(type), // should return JSON with fileUrl
+    onSuccess: (response) => {
+      const fileUrl = response?.data?.fileUrl;
+      if (!fileUrl) {
+        enqueueSnackbar("Exported but no file URL returned.", {
+          variant: "warning",
+        });
+        return;
+      }
+
+      const fullUrl = fileUrl.startsWith("/")
+        ? `${import.meta.env.VITE_API_URL}${fileUrl}`
+        : fileUrl;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = fullUrl;
+      link.setAttribute("download", "");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
       enqueueSnackbar("Record exported successfully!", { variant: "success" });
       refetch();
     },
-    onError: () => {
-      enqueueSnackbar("Failed to export record!", { variant: "error" });
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Unknown error";
+      enqueueSnackbar(errorMessage, { variant: "error" });
     },
   });
 

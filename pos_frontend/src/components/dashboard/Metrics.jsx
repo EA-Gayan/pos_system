@@ -2,9 +2,15 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { metricsData } from "../../constants";
-import { exportIncomeRecord, getDashboardItemsData } from "../../https";
+import {
+  exportIncomeRecord,
+  getDashboardItemsData,
+  getOrderEarning,
+  getOrdersCount,
+  getTotalExpenses,
+} from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
@@ -16,19 +22,68 @@ const Metrics = () => {
     if (sectionName === "Active Orders") return null;
     navigate(`/dashboard/${sectionName}`);
   };
+  const periodData = { period: "today" };
 
   useEffect(() => {
     fetchDashboardItemDetails();
   }, []);
 
+  const { data: earningsData, isError: isEarningsError } = useQuery({
+    queryKey: ["orderEarnings", periodData],
+    queryFn: () => getOrderEarning(periodData),
+    onError: () => {
+      enqueueSnackbar("Failed to fetch earnings!", { variant: "error" });
+    },
+  });
+
+  const { data: expensesData, isError: isExpensesError } = useQuery({
+    queryKey: ["orderExpenses", periodData],
+    queryFn: () => getTotalExpenses(periodData),
+    onError: () => {
+      enqueueSnackbar("Failed to fetch expenses!", { variant: "error" });
+    },
+  });
+
+  const { data: orderCountData, isError: isOrderCountError } = useQuery({
+    queryKey: ["orderCount", periodData],
+    queryFn: () => getOrdersCount(periodData),
+    onError: () => {
+      enqueueSnackbar("Failed to fetch orders count!", { variant: "error" });
+    },
+  });
+  const totalEarning = earningsData?.data?.totalEarnings ?? 0;
+  const totalExpenses = expensesData?.data?.totalExpenses ?? 0;
+  const totalOrders = orderCountData?.data?.data ?? 0;
+
   const exportRecordMutation = useMutation({
     mutationFn: (type) => exportIncomeRecord(type),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const fileUrl = response?.data?.fileUrl;
+      if (!fileUrl) {
+        enqueueSnackbar("Exported but no file URL returned.", {
+          variant: "warning",
+        });
+        return;
+      }
+
+      const fullUrl = fileUrl.startsWith("/")
+        ? `${import.meta.env.VITE_API_URL}${fileUrl}`
+        : fileUrl;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = fullUrl;
+      link.setAttribute("download", "");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
       enqueueSnackbar("Record exported successfully!", { variant: "success" });
       refetch();
     },
-    onError: () => {
-      enqueueSnackbar("Failed to export record!", { variant: "error" });
+    onError: (error) => {
+      const errorMessage = error?.response?.data?.message;
+      enqueueSnackbar(errorMessage, { variant: "error" });
     },
   });
 
@@ -101,7 +156,7 @@ const Metrics = () => {
                 onClick={() => setExportOpen((prev) => !prev)}
                 className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
               >
-                Export Expense
+                Export Income
               </button>
 
               {/* Dropdown Menu */}
@@ -125,18 +180,15 @@ const Metrics = () => {
           </div>
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {/* {metricsData.map((metric, index) => {
-              return (
-                <div
-                  key={index}
-                  className="shadow-sm rounded-lg p-4"
-                  style={{ backgroundColor: metric.color }}
-                >
-                  <div className="flex justify-between items-center">
-                    <p className="font-medium text-xs text-[#f5f5f5]">
-                      {metric.title}
-                    </p>
-                    <div className="flex items-center gap-1">
+            <div
+              className="shadow-sm rounded-lg p-4"
+              style={{ backgroundColor: "#025cca" }}
+            >
+              <div className="flex justify-between items-center">
+                <p className="font-medium text-xs text-[#f5f5f5]">
+                  Today Income
+                </p>
+                {/* <div className="flex items-center gap-1">
                       <svg
                         className="w-3 h-3"
                         viewBox="0 0 24 24"
@@ -159,14 +211,38 @@ const Metrics = () => {
                       >
                         {metric.percentage}
                       </p>
-                    </div>
-                  </div>
-                  <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
-                    {metric.value}
-                  </p>
-                </div>
-              );
-            })} */}
+                    </div> */}
+              </div>
+              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                {totalEarning}
+              </p>
+            </div>
+            <div
+              className="shadow-sm rounded-lg p-4"
+              style={{ backgroundColor: "#02ca3a" }}
+            >
+              <div className="flex justify-between items-center">
+                <p className="font-medium text-xs text-[#f5f5f5]">
+                  Today Expense
+                </p>
+              </div>
+              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                {totalExpenses}
+              </p>
+            </div>
+            <div
+              className="shadow-sm rounded-lg p-4"
+              style={{ backgroundColor: "#be3e3f" }}
+            >
+              <div className="flex justify-between items-center">
+                <p className="font-medium text-xs text-[#f5f5f5]">
+                  Today Orders Count
+                </p>
+              </div>
+              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                {totalOrders}
+              </p>
+            </div>
           </div>
         </>
       )}
