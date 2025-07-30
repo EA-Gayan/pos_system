@@ -70,3 +70,5 @@ export const searchExpenseRecord = (query) =>
   api.get(`/api/expenses/search`, { params: { query } });
 export const exportExpenseRecord = (query) =>
   api.get(`/api/report/expenses/${query}`);
+export const getTotalExpenses = (data) =>
+  api.post(`/api/expenses/totalExpenses`, data);

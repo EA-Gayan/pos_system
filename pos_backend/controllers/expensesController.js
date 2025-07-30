@@ -50,7 +50,6 @@ const addExpenseRecord = async (req, res, next) => {
 };
 
 // get the expense records
-
 const getExpenseRecords = async (req, res, next) => {
   try {
     const records = await Expenses.find();
@@ -158,10 +157,63 @@ const searchByExpensesRecord = async (req, res, next) => {
   }
 };
 
+//get total expenses for time period
+const getTotalExpenses = async (req, res, next) => {
+  try {
+    const { period } = req.body;
+    let startDate, endDate;
+
+    const now = new Date();
+
+    if (period === "today") {
+      startDate = new Date(now.setHours(0, 0, 0, 0));
+      endDate = new Date(now.setHours(23, 59, 59, 999));
+    } else if (period === "week") {
+      const day = now.getDay(); // 0 (Sun) to 6 (Sat)
+      const diffToMonday = day === 0 ? -6 : 1 - day; // start from Monday
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() + diffToMonday);
+      startDate.setHours(0, 0, 0, 0);
+
+      endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      throw createHttpError(
+        400,
+        "Invalid range parameter. Use 'today' or 'week'."
+      );
+    }
+
+    const totalExpenses = await Expenses.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      period,
+      totalExpenses: totalExpenses[0]?.total || 0,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addExpenseRecord,
   getExpenseRecords,
   updateExpenseRecord,
   deleteExpenseRecord,
   searchByExpensesRecord,
+  getTotalExpenses,
 };

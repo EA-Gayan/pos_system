@@ -74,7 +74,9 @@ const Orders = () => {
             <OrderCard key={order._id} order={order} />
           ))
         ) : (
-          <p className="col-span-3 text-gray-500">No orders available</p>
+          <p className="col-span-3 text-gray-500 h-screen">
+            No orders available
+          </p>
         )}
       </div>
     </section>
