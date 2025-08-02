@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.route("/").post(isVerifiedUser, addProduct);
-router.route("/search").get(isVerifiedUser, searchProduct);
+router.route("/search").post(isVerifiedUser, searchProduct);
 router.route("/:id").get(isVerifiedUser, getProductsByCategory);
 router.route("/:id").put(isVerifiedUser, updateProduct);
 router.route("/delete/:id").delete(isVerifiedUser, deleteProduct);

@@ -52,7 +52,13 @@ const Header = () => {
   });
 
   const searchProductMutation = useMutation({
-    mutationFn: (query) => searchProduct(query),
+    mutationFn: (value) => {
+      const selectedStatus = parseInt(
+        localStorage.getItem("selectedStatus"),
+        10
+      );
+      return searchProduct({ value, selectedStatus });
+    },
     onSuccess: (res) => {
       dispatch(setSearchProductList(res?.data?.data));
     },
