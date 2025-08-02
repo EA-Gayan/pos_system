@@ -144,18 +144,31 @@ const deleteProduct = async (req, res, next) => {
 
 const searchProduct = async (req, res, next) => {
   try {
-    const { query } = req.query;
+    const { value, selectedStatus } = req.body;
 
-    if (!query || query.trim() === "") {
+    if (!value || value.trim() === "") {
       return next(createHttpError(400, "Search query is required!"));
     }
 
-    const regex = new RegExp(query, "i"); // case-insensitive
+    const regex = new RegExp(value, "i");
+
+    let categoryFilter = {};
+
+    if (selectedStatus !== undefined && selectedStatus !== null) {
+      const categories = await Category.find(
+        { mealType: selectedStatus },
+        "_id"
+      );
+      const categoryIds = categories.map((cat) => cat._id);
+      categoryFilter = { category: { $in: categoryIds } };
+    }
 
     const products = await Product.find({
-      $or: [
-        { name: regex },
-        { sName: regex }, // adjust field names based on your schema
+      $and: [
+        {
+          $or: [{ name: regex }, { sName: regex }],
+        },
+        categoryFilter,
       ],
     });
 
@@ -168,6 +181,7 @@ const searchProduct = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   addProduct,
   getProductsByCategory,
