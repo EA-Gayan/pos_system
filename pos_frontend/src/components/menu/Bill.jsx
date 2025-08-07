@@ -125,12 +125,12 @@ const Bill = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 px-4 sm:px-5 mt-4">
-        <button
+        {/* <button
           className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#ababab] text-sm sm:text-lg font-semibold break-words"
           onClick={handlePrintReceipt}
         >
           Print Receipt
-        </button>
+        </button> */}
 
         <button
           className={`bg-[#f6b100] px-4 py-3 w-full rounded-lg text-[#1f1f1f] text-sm sm:text-lg font-semibold break-words ${

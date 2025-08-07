@@ -2,9 +2,19 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { FaCheck } from "react-icons/fa6";
-
+import { useDispatch } from "react-redux";
+import { removeAllItems } from "../../redux/slices/cartSlice";
+import logo from "../../../public/logo-modified.png";
 const Invoice = ({ orderInfo, setShowInvoice }) => {
   const invoiceRef = useRef(null);
+
+  const dispatch = useDispatch();
+
+  const handleInvoiceClose = () => {
+    setShowInvoice(false);
+    dispatch(removeAllItems());
+  };
+
   const handlePrint = () => {
     const printContent = invoiceRef.current.innerHTML;
     const WinPrint = window.open("", "", "width=900,height=650");
@@ -40,8 +50,9 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
         <div ref={invoiceRef} className="p-4">
           {/* Receipt Header */}
-          <div className="flex justify-center mb-4">
-            <motion.div
+          <div className="flex justify-center mb-4 px-35">
+            <img src={logo} />
+            {/* <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1.2, opacity: 1 }}
               transition={{ duration: 0.5, type: "spring", stiffness: 150 }}
@@ -55,18 +66,17 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
               >
                 <FaCheck className="text-white" />
               </motion.span>
-            </motion.div>
+            </motion.div> */}
           </div>
 
-          <h2 className="text-xl font-bold text-center mb-2">Order Receipt</h2>
+          <h2 className="text-xl font-bold text-center mb-2">Jayanthi Hotel</h2>
           <p className="text-gray-600 text-center">Thank you for your order!</p>
 
           {/* Order Details */}
 
           <div className="mt-4 border-t pt-4 text-sm text-gray-700">
             <p>
-              <strong>Order ID:</strong>{" "}
-              {orderInfo?.customerDetails?.orderId ?? "N/A"}
+              <strong>Order ID:</strong> {orderInfo?.orderId ?? "N/A"}
             </p>
           </div>
 
@@ -123,7 +133,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
             Print Receipt
           </button>
           <button
-            onClick={() => setShowInvoice(false)}
+            onClick={handleInvoiceClose}
             className="text-red-500 hover:underline text-xs px-4 py-2 rounded-lg"
           >
             Close
