@@ -71,3 +71,6 @@ export const exportExpenseRecord = (query) =>
   api.get(`/api/report/expenses/${query}`);
 export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
+
+//print invoice endpoit
+export const printInvoice = (id) => api.get(`/api/print`, { params: { id } });

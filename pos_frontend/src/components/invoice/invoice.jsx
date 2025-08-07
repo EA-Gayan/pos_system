@@ -1,14 +1,31 @@
 // INVOICE COMPONENT
-import { motion } from "framer-motion";
 import { useRef } from "react";
-import { FaCheck } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { removeAllItems } from "../../redux/slices/cartSlice";
 import logo from "../../../public/logo-modified.png";
+import { useMutation } from "@tanstack/react-query";
+import { printInvoice } from "../../https";
+import { enqueueSnackbar } from "notistack";
+
 const Invoice = ({ orderInfo, setShowInvoice }) => {
   const invoiceRef = useRef(null);
 
   const dispatch = useDispatch();
+
+  const printInvoiceMutation = useMutation({
+    mutationFn: (query) => printInvoice(query),
+    onSuccess: (res) => {
+      enqueueSnackbar("Record added successfully!", { variant: "success" });
+    },
+    onError: (error) => {
+      enqueueSnackbar(
+        error?.response?.data?.message || error?.message || "Request failed",
+        {
+          variant: "error",
+        }
+      );
+    },
+  });
 
   const handleInvoiceClose = () => {
     setShowInvoice(false);
@@ -16,6 +33,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
   };
 
   const handlePrint = () => {
+    printInvoiceMutation.mutate(orderInfo?.orderId ?? "N/A");
     const printContent = invoiceRef.current.innerHTML;
     const WinPrint = window.open("", "", "width=900,height=650");
 
