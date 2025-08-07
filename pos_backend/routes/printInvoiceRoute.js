@@ -3,6 +3,6 @@ const { printInvoice } = require("../controllers/printInvoiceController");
 const router = express.Router();
 const { isVerifiedUser } = require("../middleware/tokenVerification");
 
-router.route("/:orderId").get(isVerifiedUser, printInvoice);
+router.route("/").post(isVerifiedUser, printInvoice);
 
 module.exports = router;

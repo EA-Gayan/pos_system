@@ -73,4 +73,4 @@ export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
 
 //print invoice endpoit
-export const printInvoice = (id) => api.get(`/api/print`, { params: { id } });
+export const printInvoice = (data) => api.post(`/api/print`, data);

@@ -13,9 +13,10 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
   const dispatch = useDispatch();
 
   const printInvoiceMutation = useMutation({
-    mutationFn: (query) => printInvoice(query),
+    mutationFn: (value) => printInvoice({ orderId: value }),
+
     onSuccess: (res) => {
-      enqueueSnackbar("Record added successfully!", { variant: "success" });
+      enqueueSnackbar("Print successfully!", { variant: "success" });
     },
     onError: (error) => {
       enqueueSnackbar(
@@ -34,31 +35,6 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
   const handlePrint = () => {
     printInvoiceMutation.mutate(orderInfo?.orderId ?? "N/A");
-    const printContent = invoiceRef.current.innerHTML;
-    const WinPrint = window.open("", "", "width=900,height=650");
-
-    WinPrint.document.write(`
-            <html>
-              <head>
-                <title>Jayanthi Hotel</title>
-                <style>
-                  body { font-family: Arial, sans-serif; padding: 20px; }
-                  .receipt-container { width: 300px; border: 1px solid #ddd; padding: 10px; }
-                  h2 { text-align: center; }
-                </style>
-              </head>
-              <body>
-                ${printContent}
-              </body>
-            </html>
-          `);
-
-    WinPrint.document.close();
-    WinPrint.focus();
-    setTimeout(() => {
-      WinPrint.print();
-      WinPrint.close();
-    }, 1000);
   };
 
   return (
