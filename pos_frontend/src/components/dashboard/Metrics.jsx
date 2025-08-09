@@ -8,6 +8,7 @@ import {
   getOrderEarning,
   getOrdersCount,
   getTotalExpenses,
+  exportExpenseRecord,
 } from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -16,6 +17,7 @@ const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [exportOpen, setExportOpen] = useState(false);
+  const [expenseExport, setExpenseExport] = useState(false);
 
   const navigate = useNavigate();
   const handleClick = (sectionName) => {
@@ -87,6 +89,38 @@ const Metrics = () => {
     },
   });
 
+  const exportExpenseRecordMutation = useMutation({
+    mutationFn: (type) => exportExpenseRecord(type), // should return JSON with fileUrl
+    onSuccess: (response) => {
+      const fileUrl = response?.data?.fileUrl;
+      if (!fileUrl) {
+        enqueueSnackbar("Exported but no file URL returned.", {
+          variant: "warning",
+        });
+        return;
+      }
+
+      const fullUrl = fileUrl.startsWith("/")
+        ? `${import.meta.env.VITE_API_URL}${fileUrl}`
+        : fileUrl;
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.href = fullUrl;
+      link.setAttribute("download", "");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      enqueueSnackbar("Record exported successfully!", { variant: "success" });
+      refetch();
+    },
+    onError: (error) => {
+      const errorMessage = error?.response?.data?.message;
+      enqueueSnackbar(errorMessage, { variant: "error" });
+    },
+  });
+
   const fetchDashboardItemDetails = async () => {
     try {
       const data = await getDashboardItemsData();
@@ -104,6 +138,11 @@ const Metrics = () => {
   const handleExport = (type) => {
     setExportOpen(false);
     exportRecordMutation.mutate(type);
+  };
+
+  const handleExpenseExport = (type) => {
+    setExpenseExport(false);
+    exportExpenseRecordMutation.mutate(type);
   };
 
   return (
@@ -151,31 +190,64 @@ const Metrics = () => {
               </h2>
             </div>
             {/* Export Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setExportOpen((prev) => !prev)}
-                className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
-              >
-                Export Income
-              </button>
+            <div className="flex items-center space-x-4 relative">
+              {/* Export Income Button */}
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setExportOpen((prev) => !prev);
+                    setExpenseExport(false);
+                  }}
+                  className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                >
+                  Export Income
+                </button>
+                {exportOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                    <button
+                      onClick={() => handleExport("today")}
+                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                    >
+                      Today
+                    </button>
+                    <button
+                      onClick={() => handleExport("week")}
+                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                    >
+                      This Week
+                    </button>
+                  </div>
+                )}
+              </div>
 
-              {/* Dropdown Menu */}
-              {exportOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
-                  <button
-                    onClick={() => handleExport("today")}
-                    className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                  >
-                    Today
-                  </button>
-                  <button
-                    onClick={() => handleExport("week")}
-                    className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                  >
-                    This Week
-                  </button>
-                </div>
-              )}
+              {/* Export Expense Button */}
+              <div className="relative">
+                <button
+                  onClick={() => {
+                    setExpenseExport((prev) => !prev);
+                    setExportOpen(false);
+                  }}
+                  className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                >
+                  Export Expense
+                </button>
+                {expenseExport && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                    <button
+                      onClick={() => handleExpenseExport("today")}
+                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                    >
+                      Today
+                    </button>
+                    <button
+                      onClick={() => handleExpenseExport("week")}
+                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                    >
+                      This Week
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

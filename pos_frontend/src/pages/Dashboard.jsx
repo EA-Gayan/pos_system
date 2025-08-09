@@ -26,7 +26,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#1f1f1f] md:h-full">
+    <div className="bg-[#1f1f1f] min-h-screen flex flex-col">
       <div className="container mx-auto flex items-center justify-between py-14 px-6 md:px-4">
         <div className="flex items-center gap-3">
           {buttons.map(({ label, icon, action, id }) => {
