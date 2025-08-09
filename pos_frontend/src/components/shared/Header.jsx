@@ -204,7 +204,7 @@ const Header = () => {
           <h1>Jayanthi Hotel</h1>
         </div>
       )}
-      {/* USER SECTION */}
+      {/* GOTO ADMIN SECTION */}
       <div className="flex items-center gap-4 relative" ref={dropdownRef}>
         {userData.role === "Admin" && (
           <div className="bg-[#1f1f1f] rounded-[15px] p-1 cursor-pointer">

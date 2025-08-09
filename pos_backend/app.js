@@ -1,4 +1,7 @@
 require("dotenv").config();
+require("./services/orderCleanupService");
+require("./services/expenseCleanUpService");
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
