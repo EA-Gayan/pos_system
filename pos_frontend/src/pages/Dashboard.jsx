@@ -3,7 +3,7 @@ import { BiSolidDish } from "react-icons/bi";
 import { MdCategory, MdTableBar } from "react-icons/md";
 import Metrics from "../components/dashboard/Metrics";
 import Modal from "../components/dashboard/Modal";
-import RecentOrders from "../components/dashboard/RecentOrders";
+import WeeklyFinanceChart from "../components/dashboard/WeeklyFinanceChart";
 
 const buttons = [
   { label: "Add Table", icon: <MdTableBar />, action: "Table" },
@@ -11,7 +11,7 @@ const buttons = [
   { label: "Add Products", icon: <BiSolidDish />, action: "Product" },
 ];
 
-const tabs = ["Metrics", "Orders"];
+const tabs = ["Metrics", "View Report"];
 
 const Dashboard = () => {
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
@@ -26,7 +26,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#1f1f1f] md:h-full">
+    <div className="bg-[#1f1f1f] min-h-screen flex flex-col">
       <div className="container mx-auto flex items-center justify-between py-14 px-6 md:px-4">
         <div className="flex items-center gap-3">
           {buttons.map(({ label, icon, action, id }) => {
@@ -64,7 +64,7 @@ const Dashboard = () => {
       </div>
 
       {activeTab === "Metrics" && <Metrics />}
-      {activeTab === "Orders" && <RecentOrders />}
+      {activeTab === "View Report" && <WeeklyFinanceChart />}
 
       {isTableModalOpen && (
         <Modal

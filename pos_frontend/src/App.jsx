@@ -29,16 +29,13 @@ function Layout() {
 
   // Helper function to check if current path matches any hideBottomNav pattern
   const shouldHideBottomNav = () => {
-    // exact paths to hide BottomNav on
+    //  paths to hide BottomNav on
     const exactHide = ["/auth", "/dashboard"];
-    // paths that start with these prefixes to hide BottomNav on (for dynamic routes)
     const prefixHide = ["/dashboard/"];
-
-    if (exactHide.includes(location.pathname)) return true;
-    if (prefixHide.some((prefix) => location.pathname.startsWith(prefix)))
-      return true;
-
-    return false;
+    return (
+      exactHide.includes(location.pathname) ||
+      prefixHide.some((prefix) => location.pathname.startsWith(prefix))
+    );
   };
 
   return (
@@ -46,14 +43,16 @@ function Layout() {
       {!hideHeader.includes(location.pathname) && <Header />}
       <main className="flex-1 overflow-auto">
         <Routes>
+          {/* Only Admin can view Home, else go to Menu */}
           <Route
             path="/"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly redirectTo="/menu">
                 <Home />
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/auth"
             element={isAuth ? <Navigate to="/" /> : <Auth />}
@@ -113,11 +112,17 @@ function Layout() {
   );
 }
 
-function ProtectedRoute({ children }) {
-  const { isAuth } = useSelector((state) => state.user);
+function ProtectedRoute({ children, adminOnly, redirectTo }) {
+  const { isAuth, role } = useSelector((state) => state.user);
+
   if (!isAuth) {
-    return <Navigate to="/auth" />;
+    return <Navigate to="/auth" replace />;
   }
+
+  if (adminOnly && role !== "Admin") {
+    return <Navigate to={redirectTo || "/menu"} replace />;
+  }
+
   return children;
 }
 

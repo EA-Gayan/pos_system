@@ -57,6 +57,7 @@ export const searchProduct = (data) => api.post(`/api/product/search`, data);
 // dashboard Endpoints
 export const getDashboardItemsData = () =>
   api.get("/api/dashboard/item-details");
+export const getWeeklyData = () => api.get("/api/dashboard/getWeeklyData");
 
 // Expenses Record Endpoints
 export const getExpenseRecords = () => api.get("/api/expenses");
