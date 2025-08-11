@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { removeAllItems } from "../../redux/slices/cartSlice";
-import logo from "../../../public/logo-modified.png";
+import logo from "../../assets/images/logo-modified.png";
 import { useMutation } from "@tanstack/react-query";
 import { printInvoice } from "../../https";
 import { enqueueSnackbar } from "notistack";
