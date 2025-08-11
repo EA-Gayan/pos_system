@@ -41,7 +41,7 @@ function Layout() {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {!hideHeader.includes(location.pathname) && <Header />}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 min-h-0">
         <Routes>
           {/* Only Admin can view Home, else go to Menu */}
           <Route
