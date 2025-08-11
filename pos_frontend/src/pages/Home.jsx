@@ -64,7 +64,10 @@ const Home = () => {
           />
         </div>
 
-        <RecentOrders orders={recentOrders} />
+        {/* Only this section is modified for scrolling */}
+        <div className="h-[calc(100vh-420px)] overflow-y-auto">
+          <RecentOrders orders={recentOrders} />
+        </div>
       </div>
 
       {/* Optional Right Section */}
