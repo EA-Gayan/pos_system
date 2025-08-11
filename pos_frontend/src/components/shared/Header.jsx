@@ -34,7 +34,7 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [calendarDropdownOpen, setCalendarDropdownOpen] = useState(false);
   const [isShowMenuTypeIcon, setIsShowMenuTypeIcon] = useState(false);
-  const [isShowSearch, setIsShowSearch] = useState(true);
+  const [isShowSearch, setIsShowSearch] = useState(false);
   const [pageName, setPageName] = useState("");
 
   const dropdownRef = useRef();
