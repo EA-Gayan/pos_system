@@ -46,11 +46,26 @@ const Orders = () => {
             onClick={() => setStatus(OrderTypes.ALL)}
             className={`text-[#ababab] text-lg ${
               status === OrderTypes.ALL ? "bg-[#383838]" : ""
-            } rounded-lg px-3 sm:px-5 py-2 font-semibold`}
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             All
           </button>
-          {/* Other filter buttons */}
+          <button
+            onClick={() => setStatus(OrderTypes.INPROGRESS)}
+            className={`text-[#ababab] text-lg ${
+              status === OrderTypes.INPROGRESS ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
+          >
+            In Progress
+          </button>
+          <button
+            onClick={() => setStatus(OrderTypes.COMPLETE)}
+            className={`text-[#ababab] text-lg ${
+              status === OrderTypes.COMPLETE ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
+          >
+            Completed
+          </button>
         </div>
       </div>
 
