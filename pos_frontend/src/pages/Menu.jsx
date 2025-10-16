@@ -11,17 +11,19 @@ const Menu = () => {
   const customerData = useSelector((state) => state.customer);
 
   return (
-    <section className="bg-[#1f1f1f] flex gap-3 overflow-y-auto">
-      {/* left side */}
-      <div className="flex-[3]">
-        <div className=" flex items-center justify-between px-10 py-4">
+    <section className="bg-[#1f1f1f] flex gap-3 h-screen">
+      {/* Left side */}
+      <div className="flex-[3] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-10 py-4 flex-none">
           <div className="flex items-center gap-4">
             <BackButton />
             <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wider">
               Menu
             </h1>
           </div>
-          {/* customer details */}
+
+          {/* Customer details */}
           <div className="flex items-center justify-around gap-4">
             <div className="flex items-center gap-3 cursor-pointer">
               <MdRestaurantMenu className="text-[#f5f5f5] text-4xl" />
@@ -36,19 +38,15 @@ const Menu = () => {
             </div>
           </div>
         </div>
-        <MenuContainer />
+
+        {/* MenuContainer fills the rest */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
+          <MenuContainer />
+        </div>
       </div>
+
       {/* Right side */}
-      <div className="flex-[1] bg-[#1a1a1a] mt-4 mr-3 rounded-lg pt-2 mb-[5rem] ">
-        {/* customer Info */}
-        <CustomerInfo />
-        <hr className="border-[#2a2a2a] border-t-2 " />
-        {/* cart items */}
-        <hr className="border-[#2a2a2a] border-t-2 " />
-        <CartInfo />
-        {/* Bills */}
-        <Bill />
-      </div>
+      <CartInfo />
     </section>
   );
 };
