@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { RiDeleteBin2Fill } from "react-icons/ri";
+import { RiDeleteBin2Fill, RiProhibitedLine } from "react-icons/ri";
 import { FaNotesMedical } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem } from "../../redux/slices/cartSlice";
+import { removeItem, removeAllItems } from "../../redux/slices/cartSlice";
 
 const CartInfo = () => {
   const dispatch = useDispatch();
@@ -12,6 +12,11 @@ const CartInfo = () => {
   const handleRemove = (itemId) => {
     dispatch(removeItem(itemId));
   };
+
+  const handleClearCart = () => {
+    dispatch(removeAllItems());
+  };
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
@@ -23,17 +28,30 @@ const CartInfo = () => {
 
   return (
     <div className="px-4 py-2">
-      <h1 className="text-lg text-[#e4e4e4] font-semibold tracking-wide">
-        Order Details
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg text-[#e4e4e4] font-semibold tracking-wide">
+          Order Details
+        </h1>
+        {cartData.length > 0 && (
+          <RiDeleteBin2Fill
+            onClick={handleClearCart}
+            className="text-[#ababab] cursor-pointer hover:text-red-500"
+            size={20}
+            title="Clear Cart"
+          />
+        )}
+      </div>
       <div
-        className="mt-4  min-h-[380px] overflow-y-auto bg-gray-800"
+        className={`mt-4 min-h-[380px] overflow-y-auto bg-gray-800 ${
+          cartData.length === 0 ? "flex items-center justify-center" : ""
+        }`}
         ref={scrollRef}
       >
         {cartData.length === 0 ? (
-          <p className="text-[#ababab] text-sm flex justify-center items-center">
-            No item in cart
-          </p>
+          <div className="flex flex-col items-center">
+            <RiProhibitedLine className="text-[#ababab] mb-2" size={40} />
+            <p className="text-[#ababab] text-sm">Your cart is empty</p>
+          </div>
         ) : (
           cartData.map((item) => (
             <div
@@ -50,8 +68,9 @@ const CartInfo = () => {
                 <div className="flex items-center gap-3">
                   <RiDeleteBin2Fill
                     onClick={() => handleRemove(item.id)}
-                    className="text-[#ababab] cursor-pointer"
+                    className="text-[#ababab] cursor-pointer hover:text-red-500"
                     size={20}
+                    title="Remove Item"
                   />
                   {/* <FaNotesMedical
                     className="text-[#ababab] cursor-pointer"

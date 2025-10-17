@@ -7,8 +7,12 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String },
       guests: { type: Number },
     },
-    orderStatus: {
+    orderId: {
       type: String,
+      required: true,
+    },
+    orderStatus: {
+      type: Number,
       required: true,
     },
     orderDate: {
@@ -21,7 +25,15 @@ const orderSchema = new mongoose.Schema(
       discount: { type: Number },
       totalPayable: { type: Number, required: true },
     },
-    items: [],
+    items: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+        name: { type: String, required: true },
+        pricePerQuantity: { type: Number, required: true },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
     table: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table",

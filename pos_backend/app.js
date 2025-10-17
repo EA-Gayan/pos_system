@@ -1,4 +1,7 @@
 require("dotenv").config();
+require("./services/orderCleanupService");
+require("./services/expenseCleanUpService");
+
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -19,6 +22,7 @@ connectDB(); // Connect to the database
 app.use(cors({ credentials: true, origin: ["http://localhost:5173"] })); // Enable CORS with credentials
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
+app.use(express.static("public"));
 
 // Root Endpoint
 app.get("/", (req, res) => {
@@ -31,6 +35,10 @@ app.use("/api/order", require("./routes/orderRoute"));
 app.use("/api/table", require("./routes/tableRoute"));
 app.use("/api/category", require("./routes/categoryRoute"));
 app.use("/api/product", require("./routes/productRoute"));
+app.use("/api/dashboard", require("./routes/dashboardRoute"));
+app.use("/api/report", require("./routes/generateXmlRoute"));
+app.use("/api/expenses", require("./routes/expensesRoute"));
+app.use("/api/print", require("./routes/printInvoiceRoute"));
 
 // Global Error Handler
 app.use(globalErrorHandler);

@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 
 const addProduct = async (req, res, next) => {
   try {
-    const { name, price, description, categoryId } = req.body;
+    const { name, sName, price, description, categoryId } = req.body;
 
     // Check if category exists
     const category = await Category.findById(categoryId);
@@ -14,12 +14,26 @@ const addProduct = async (req, res, next) => {
       return error;
     }
 
+    // Check if product already exists
+    const existingProduct = await Product.findOne({ name: name });
+    if (existingProduct) {
+      const error = createHttpError(400, "Product already exists!");
+      return next(error);
+    }
+    // Check if short name already exists
+    // const existingsName = await Product.findOne({ sName: sName });
+    // if (existingsName) {
+    //   const error = createHttpError(400, "Product already exists!");
+    //   return next(error);
+    // }
+
     // Create new product
     const newProduct = new Product({
       name,
       price,
       description,
       category: categoryId,
+      sName,
     });
 
     // Save product to DB
@@ -62,7 +76,7 @@ const getProductsByCategory = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, price, description, categoryId } = req.body;
+    const { name, sname, price, description, categoryId, sName } = req.body;
 
     // If categoryId is provided, validate it
     if (categoryId) {
@@ -81,7 +95,7 @@ const updateProduct = async (req, res, next) => {
     // Find and update product
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      { name, price, description, category: categoryId },
+      { name, sname, price, description, category: categoryId, sName },
       { new: true, runValidators: true }
     );
 
@@ -100,8 +114,78 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Validate Product ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = createHttpError(400, "Invalid Product ID!");
+      return next(error);
+    }
+
+    // Find and delete the product
+    const deletedProduct = await Product.findByIdAndDelete(id);
+
+    if (!deletedProduct) {
+      const error = createHttpError(404, "Product not found!");
+      return next(error);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+      data: deletedProduct,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const searchProduct = async (req, res, next) => {
+  try {
+    const { value, selectedStatus } = req.body;
+
+    if (!value || value.trim() === "") {
+      return next(createHttpError(400, "Search query is required!"));
+    }
+
+    const regex = new RegExp(value, "i");
+
+    let categoryFilter = {};
+
+    if (selectedStatus !== undefined && selectedStatus !== null) {
+      const categories = await Category.find(
+        { mealType: selectedStatus },
+        "_id"
+      );
+      const categoryIds = categories.map((cat) => cat._id);
+      categoryFilter = { category: { $in: categoryIds } };
+    }
+
+    const products = await Product.find({
+      $and: [
+        {
+          $or: [{ name: regex }, { sName: regex }],
+        },
+        categoryFilter,
+      ],
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Search results",
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addProduct,
   getProductsByCategory,
   updateProduct,
+  deleteProduct,
+  searchProduct,
 };

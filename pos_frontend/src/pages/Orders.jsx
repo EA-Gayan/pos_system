@@ -1,84 +1,88 @@
-import React, { useState } from "react";
-import BottomNav from "../components/shared/BottomNav";
-import BackButton from "../components/shared/BackButton";
-import OrderCard from "../components/orders/OrderCard";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getOrders } from "../https";
+import { useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
+import { useState, useEffect } from "react";
+import OrderCard from "../components/orders/OrderCard";
+import BackButton from "../components/shared/BackButton";
+import { getfindOrders } from "../https";
+import { OrderTypes } from "../enum/orderTypes";
+import { useSelector } from "react-redux";
 
 const Orders = () => {
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState(OrderTypes.ALL);
+
+  const searchData = useSelector((state) => state.order.searchList);
 
   const { data: resData, isError } = useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => {
-      return await getOrders();
-    },
-    placeholderData: keepPreviousData,
+    queryKey: ["orders", status],
+    queryFn: () => getfindOrders({ id: "", status }),
+    keepPreviousData: true,
   });
 
-  if (isError) {
-    enqueueSnackbar("Something went wrong!", {
-      variant: "error",
-    });
-  }
+  useEffect(() => {
+    if (isError) {
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
+    }
+  }, [isError]);
+
+  const displayOrders =
+    searchData && Object.keys(searchData).length > 0
+      ? Array.isArray(searchData)
+        ? searchData
+        : [searchData]
+      : resData?.data?.data || [];
 
   return (
-    <section className="bg-[#1f1f1f] min-h-[calc(100vh-96px)]">
-      <div className="flex items-center justify-between px-10 py-4">
+    <section className="bg-[#1f1f1f] h-full flex flex-col">
+      {/* Header with filter buttons */}
+      <div className="shrink-0 flex items-center justify-between px-4 sm:px-10 py-4">
         <div className="flex items-center gap-4">
           <BackButton />
           <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wider">
             Orders
           </h1>
         </div>
-        <div className="flex items-center justify-around gap-4">
+        <div className="flex items-center gap-4">
           <button
-            onClick={() => setStatus("all")}
+            onClick={() => setStatus(OrderTypes.ALL)}
             className={`text-[#ababab] text-lg ${
-              status === "all" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.ALL ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             All
           </button>
           <button
-            onClick={() => setStatus("progress")}
+            onClick={() => setStatus(OrderTypes.INPROGRESS)}
             className={`text-[#ababab] text-lg ${
-              status === "progress" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.INPROGRESS ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             In Progress
           </button>
           <button
-            onClick={() => setStatus("ready")}
+            onClick={() => setStatus(OrderTypes.COMPLETE)}
             className={`text-[#ababab] text-lg ${
-              status === "ready" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
-          >
-            Ready
-          </button>
-          <button
-            onClick={() => setStatus("completed")}
-            className={`text-[#ababab] text-lg ${
-              status === "completed" && "bg-[#383838] rounded-lg px-5 py-2"
-            }  rounded-lg px-5 py-2 font-semibold`}
+              status === OrderTypes.COMPLETE ? "bg-[#383838]" : ""
+            } rounded-lg px-5 py-2 font-semibold`}
           >
             Completed
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4 sm:px-8 lg:px-16 py-4 overflow-y-auto">
-        {resData?.data?.data?.length > 0 ? (
-          resData.data.data.map((order) => (
-            <OrderCard key={order._id} order={order} />
-          ))
-        ) : (
-          <p className="col-span-3 text-gray-500">No orders available</p>
-        )}
+      {/* Scrollable content area */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-8">
+          {displayOrders?.length > 0 ? (
+            displayOrders.map((order) => (
+              <OrderCard key={order._id} order={order} />
+            ))
+          ) : (
+            <div className="col-span-3 flex items-center justify-center h-full">
+              <p className="text-gray-500">No orders available</p>
+            </div>
+          )}
+        </div>
       </div>
-
-      <BottomNav />
     </section>
   );
 };

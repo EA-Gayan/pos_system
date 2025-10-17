@@ -28,3 +28,6 @@ Thumbs.db
 # Build output (if any)
 dist/
 build/
+
+# Ignore generated public assets
+/public/

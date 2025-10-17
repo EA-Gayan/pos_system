@@ -57,6 +57,7 @@ const getCategories = async (req, res, next) => {
       success: true,
       message: "Categories retrieved successfully",
       data: categories,
+      type: "category",
     });
   } catch (error) {
     next(error);
@@ -95,7 +96,7 @@ const updateCategory = async (req, res, next) => {
 
     // Check if category already exists
     const existingCategory = await Category.findOne({ name: categoryName });
-    if (existingCategory) {
+    if (existingCategory && existingCategory._id.toString() !== id) {
       const error = createHttpError(400, "Category already exists!");
       return next(error);
     }
@@ -121,8 +122,38 @@ const updateCategory = async (req, res, next) => {
   }
 };
 
+const deleteCategory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return next(createHttpError(400, "Invalid Category ID!"));
+    }
+
+    // Check if the category exists
+    const category = await Category.findById(id);
+    if (!category) {
+      return next(createHttpError(404, "Category not found!"));
+    }
+
+    // Delete all products associated with this category
+    await Product.deleteMany({ category: id });
+
+    // Delete the category itself
+    await Category.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Category and its related products deleted successfully!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addCategory,
   getCategories,
   updateCategory,
+  deleteCategory,
 };

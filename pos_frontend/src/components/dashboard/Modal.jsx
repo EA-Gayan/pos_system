@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { IoMdClose } from "react-icons/io";
-import { enqueueSnackbar } from "notistack";
-import { addCategory, addProduct, getCategories, addTable } from "../../https";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { enqueueSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { addCategory, addProduct, addTable, getCategories } from "../../https";
 
 const Modal = ({ setIsTableModalOpen, labelType }) => {
   const [tableData, setTableData] = useState({
@@ -21,15 +21,25 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     price: "",
     description: "",
     categoryId: "",
+    sName: "",
   });
 
-  const { data: resData, isError } = useQuery({
+  const {
+    data: resData,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getCategories();
     },
     placeholderData: keepPreviousData,
+    enabled: labelType === "Product", // Only runs if labelType is "Product"
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (isError) {
@@ -70,8 +80,10 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
       tableMutation.mutate(tableData);
     } else if (labelType === "Category") {
       categoryMutation.mutate(categoryData);
-    } else {
+    } else if (labelType === "Product") {
       productMutation.mutate(productData);
+    } else {
+      return;
     }
   };
 
@@ -85,6 +97,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, { variant: "success" });
     },
     onError: (error) => {
@@ -99,6 +113,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, {
         variant: "success",
       });
@@ -116,6 +132,8 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
+      window.location.reload();
+
       enqueueSnackbar(data.message, {
         variant: "success",
       });
@@ -128,16 +146,16 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-[#262626] p-6 rounded-lg shadow-lg w-96"
+        className="bg-[#262626] p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[#f5f5f5] text-xl font-semibold">
+          <h2 className="text-[#f5f5f5] text-lg sm:text-xl font-semibold">
             Add {labelType}
           </h2>
           <button
@@ -148,39 +166,35 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-6">
           {labelType === "Table" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Table Number
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="tableNo"
-                    value={tableData.tableNo}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="number"
+                  name="tableNo"
+                  value={tableData.tableNo}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Number of Seats
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="noOfSeats"
-                    placeholder="0"
-                    value={tableData.seats}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="number"
+                  name="noOfSeats"
+                  placeholder="0"
+                  value={tableData.seats}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
             </>
           )}
@@ -188,122 +202,126 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           {labelType === "Category" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Category Name
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="categoryName"
-                    value={categoryData.categoryName}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="categoryName"
+                  value={categoryData.categoryName}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Session Type
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <select
-                    name="mealType"
-                    value={categoryData.mealType}
-                    onChange={handledropDownChange}
-                    className="bg-[#1f1f1f] text-white w-full focus:outline-none"
-                    required
-                  >
-                    {categoryData.mealType === 0 && (
-                      <option value={0} disabled>
-                        Select a session
-                      </option>
-                    )}
-                    <option value={1}>Breakfast</option>
-                    <option value={2}>Lunch</option>
-                    <option value={3}>Dinner</option>
-                    <option value={4}>Other</option>
-                  </select>
-                </div>
+                <select
+                  name="mealType"
+                  value={categoryData.mealType}
+                  onChange={handledropDownChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                >
+                  {categoryData.mealType === 0 && (
+                    <option value={0} disabled>
+                      Select a session
+                    </option>
+                  )}
+                  <option value={1}>Breakfast</option>
+                  <option value={2}>Lunch</option>
+                  <option value={3}>Dinner</option>
+                  <option value={4}>Other</option>
+                </select>
               </div>
             </>
           )}
 
-          {labelType === "Dishes" && (
+          {labelType === "Product" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Item Name
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="name"
-                    value={productData.productName}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="name"
+                  value={productData.productName}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                  Short Name
+                </label>
+                <input
+                  type="text"
+                  name="sName"
+                  value={productData.sName}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Item Price
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="number"
-                    name="price"
-                    value={productData.price}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    required
-                  />
-                </div>
-              </div>{" "}
+                <input
+                  type="number"
+                  name="price"
+                  value={productData.price}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                  inputMode="decimal"
+                />
+              </div>
+
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Description
                 </label>
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <input
-                    type="text"
-                    name="description"
-                    value={productData.description}
-                    onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                  />
-                </div>
+                <input
+                  type="text"
+                  name="description"
+                  value={productData.description}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                />
               </div>
+
               <div>
-                <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+                <label className="block text-[#ababab] mb-2 text-sm font-medium">
                   Category Type
                 </label>
-
-                <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-                  <select
-                    name="categoryId"
-                    value={productData.category}
-                    onChange={handleProductDownChange}
-                    className="bg-[#1f1f1f] text-white w-full focus:outline-none"
-                    required
-                  >
-                    <option value="">Select a Category</option>
-                    {resData?.data?.data.map((each) => (
-                      <option key={each._id} value={each._id}>
-                        {each.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <select
+                  name="categoryId"
+                  value={productData.category}
+                  onChange={handleProductDownChange}
+                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  required
+                >
+                  <option value="">Select a Category</option>
+                  {resData?.data?.data.map((each) => (
+                    <option key={each._id} value={each._id}>
+                      {each.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
           )}
 
           <button
             type="submit"
-            className="w-full rounded-lg mt-10 mb-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+            className="w-full rounded-lg mt-8 py-3 text-base sm:text-lg bg-yellow-400 text-gray-900 font-bold"
           >
             Add {labelType}
           </button>
