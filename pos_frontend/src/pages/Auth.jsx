@@ -30,7 +30,7 @@ const Auth = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 min-h-screen bg-[#1a1a1a] p-10">
+      <div className="w-1/2 max-h-screen overflow-y-auto bg-[#1a1a1a] p-10">
         <div className="flex flex-col items-center gap-2">
           <img
             src={logo}
