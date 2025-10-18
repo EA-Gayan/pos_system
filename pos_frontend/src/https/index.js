@@ -58,6 +58,8 @@ export const searchProduct = (data) => api.post(`/api/product/search`, data);
 export const getDashboardItemsData = () =>
   api.get("/api/dashboard/item-details");
 export const getWeeklyData = () => api.get("/api/dashboard/getWeeklyData");
+export const getBestSellingProducts = (period) =>
+  api.get(`/api/dashboard/best-selling`, { params: { period } });
 
 // Expenses Record Endpoints
 export const getExpenseRecords = () => api.get("/api/expenses");

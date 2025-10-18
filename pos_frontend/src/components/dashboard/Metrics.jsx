@@ -9,15 +9,20 @@ import {
   getOrdersCount,
   getTotalExpenses,
   exportExpenseRecord,
+  getBestSellingProducts,
 } from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Table from "../shared/Table";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
+  const [bestSellingProducts, setBestSellingProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [exportOpen, setExportOpen] = useState(false);
   const [expenseExport, setExpenseExport] = useState(false);
+
+  const headers = ["Product Name", "Price", "Quantity Sold", "Income"];
 
   const navigate = useNavigate();
   const handleClick = (sectionName) => {
@@ -27,7 +32,7 @@ const Metrics = () => {
   const periodData = { period: "today" };
 
   useEffect(() => {
-    fetchDashboardItemDetails();
+    fetchDashboardAndBestSelling();
   }, []);
 
   const { data: earningsData, isError: isEarningsError } = useQuery({
@@ -121,15 +126,20 @@ const Metrics = () => {
     },
   });
 
-  const fetchDashboardItemDetails = async () => {
+  const fetchDashboardAndBestSelling = async () => {
     try {
-      const data = await getDashboardItemsData();
-      setDashboardItemDetails(data.data);
+      // Run both API calls in parallel
+      const [dashboardRes, bestSellingRes] = await Promise.all([
+        getDashboardItemsData(),
+        getBestSellingProducts(periodData.period),
+      ]);
+
+      // Set state with the results
+      setDashboardItemDetails(dashboardRes.data);
+      setBestSellingProducts(bestSellingRes.data.data);
     } catch (error) {
-      console.error("Error fetching orders:", error);
-      enqueueSnackbar("Something went wrong!", {
-        variant: "error",
-      });
+      console.error("Error fetching data:", error);
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
     } finally {
       setIsLoading(false);
     }
@@ -145,122 +155,131 @@ const Metrics = () => {
     exportExpenseRecordMutation.mutate(type);
   };
 
+  const renderRow = (row, index) => (
+    <tr className={index % 2 === 0 ? "bg-[#1a1a1a]" : "bg-[#222]"} key={index}>
+      <td className="p-3">{row.productName}</td>
+      <td className="p-3">{row.productPrice}</td>
+      <td className="p-3">{row.sellingQty}</td>
+      <td className="p-3">{row.income}</td>
+    </tr>
+  );
   return (
-    <div className="container mx-auto py-2 px-6 md:px-4">
-      {isLoading ? (
-        <div className="flex justify-center items-center h-32 mt-30">
-          <FullScreenLoader />
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col justify-between ">
-            <div>
-              <h2 className="font-semibold text-[#f5f5f5] text-xl">
-                Item Details
-              </h2>
+    <div className="min-h-screen flex flex-col">
+      <div className="container mx-auto py-2 px-6 md:px-4 flex-1">
+        {isLoading ? (
+          <div className="flex justify-center items-center h-32 mt-30">
+            <FullScreenLoader />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col justify-between ">
+              <div>
+                <h2 className="font-semibold text-[#f5f5f5] text-xl">
+                  Item Details
+                </h2>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {dashboardItemDetails.length > 0 &&
+                  dashboardItemDetails.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="shadow-sm rounded-lg p-4"
+                        style={{ backgroundColor: item.color }}
+                        onClick={() => handleClick(item.title)}
+                      >
+                        <div className="flex justify-between items-center">
+                          <p className="font-medium text-xs text-[#f5f5f5]">
+                            {item.title}
+                          </p>
+                        </div>
+                        <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                          {item.count}
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-12">
+              <div>
+                <h2 className="font-semibold text-[#f5f5f5] text-xl ">
+                  Overall Performance
+                </h2>
+              </div>
+              {/* Export Dropdown */}
+              <div className="flex items-center space-x-4 relative">
+                {/* Export Income Button */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setExportOpen((prev) => !prev);
+                      setExpenseExport(false);
+                    }}
+                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                  >
+                    Export Income
+                  </button>
+                  {exportOpen && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                      <button
+                        onClick={() => handleExport("today")}
+                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                      >
+                        Today
+                      </button>
+                      <button
+                        onClick={() => handleExport("week")}
+                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                      >
+                        This Week
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Export Expense Button */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setExpenseExport((prev) => !prev);
+                      setExportOpen(false);
+                    }}
+                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                  >
+                    Export Expense
+                  </button>
+                  {expenseExport && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                      <button
+                        onClick={() => handleExpenseExport("today")}
+                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                      >
+                        Today
+                      </button>
+                      <button
+                        onClick={() => handleExpenseExport("week")}
+                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                      >
+                        This Week
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {dashboardItemDetails.length > 0 &&
-                dashboardItemDetails.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="shadow-sm rounded-lg p-4"
-                      style={{ backgroundColor: item.color }}
-                      onClick={() => handleClick(item.title)}
-                    >
-                      <div className="flex justify-between items-center">
-                        <p className="font-medium text-xs text-[#f5f5f5]">
-                          {item.title}
-                        </p>
-                      </div>
-                      <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
-                        {item.count}
-                      </p>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
-          <div className="flex justify-between items-center mt-12">
-            <div>
-              <h2 className="font-semibold text-[#f5f5f5] text-xl ">
-                Overall Performance
-              </h2>
-            </div>
-            {/* Export Dropdown */}
-            <div className="flex items-center space-x-4 relative">
-              {/* Export Income Button */}
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setExportOpen((prev) => !prev);
-                    setExpenseExport(false);
-                  }}
-                  className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
-                >
-                  Export Income
-                </button>
-                {exportOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
-                    <button
-                      onClick={() => handleExport("today")}
-                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                    >
-                      Today
-                    </button>
-                    <button
-                      onClick={() => handleExport("week")}
-                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                    >
-                      This Week
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              {/* Export Expense Button */}
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setExpenseExport((prev) => !prev);
-                    setExportOpen(false);
-                  }}
-                  className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
-                >
-                  Export Expense
-                </button>
-                {expenseExport && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
-                    <button
-                      onClick={() => handleExpenseExport("today")}
-                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                    >
-                      Today
-                    </button>
-                    <button
-                      onClick={() => handleExpenseExport("week")}
-                      className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
-                    >
-                      This Week
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div
-              className="shadow-sm rounded-lg p-4"
-              style={{ backgroundColor: "#025cca" }}
-            >
-              <div className="flex justify-between items-center">
-                <p className="font-medium text-xs text-[#f5f5f5]">
-                  Today Income
-                </p>
-                {/* <div className="flex items-center gap-1">
+              <div
+                className="shadow-sm rounded-lg p-4"
+                style={{ backgroundColor: "#025cca" }}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-xs text-[#f5f5f5]">
+                    Today Income
+                  </p>
+                  {/* <div className="flex items-center gap-1">
                       <svg
                         className="w-3 h-3"
                         viewBox="0 0 24 24"
@@ -284,40 +303,55 @@ const Metrics = () => {
                         {metric.percentage}
                       </p>
                     </div> */}
-              </div>
-              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
-                {totalEarning}
-              </p>
-            </div>
-            <div
-              className="shadow-sm rounded-lg p-4"
-              style={{ backgroundColor: "#02ca3a" }}
-            >
-              <div className="flex justify-between items-center">
-                <p className="font-medium text-xs text-[#f5f5f5]">
-                  Today Expense
+                </div>
+                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                  {totalEarning}
                 </p>
               </div>
-              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
-                {totalExpenses}
-              </p>
-            </div>
-            <div
-              className="shadow-sm rounded-lg p-4"
-              style={{ backgroundColor: "#be3e3f" }}
-            >
-              <div className="flex justify-between items-center">
-                <p className="font-medium text-xs text-[#f5f5f5]">
-                  Today Orders Count
+              <div
+                className="shadow-sm rounded-lg p-4"
+                style={{ backgroundColor: "#02ca3a" }}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-xs text-[#f5f5f5]">
+                    Today Expense
+                  </p>
+                </div>
+                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                  {totalExpenses}
                 </p>
               </div>
-              <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
-                {totalOrders}
-              </p>
+              <div
+                className="shadow-sm rounded-lg p-4"
+                style={{ backgroundColor: "#be3e3f" }}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-xs text-[#f5f5f5]">
+                    Today Orders Count
+                  </p>
+                </div>
+                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                  {totalOrders}
+                </p>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+
+            <div className="flex flex-col mt-15">
+              <h2 className="font-semibold text-[#f5f5f5] text-xl">
+                Product Details
+              </h2>
+
+              <div className="mt-10">
+                <Table
+                  headers={headers}
+                  data={bestSellingProducts}
+                  renderRow={renderRow}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };
