@@ -37,7 +37,6 @@ A full-featured **Restaurant POS System** built using the **MERN Stack** to stre
 | 🔙 **Backend**                 | Node.js, Express.js           |
 | 🗄️ **Database**                | MongoDB                       |
 | 🔐 **Authentication**          | JWT, bcrypt                   |
-| 💳 **Payment Integration**     | Razorpay                      |
 | 📊 **State Management**        | Redux Toolkit                 |
 | ⚡ **Data Fetching & Caching** | React Query                   |
 | 🔗 **APIs**                    | RESTful APIs                  |
