@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getWeeklyData } from "../../https";
 import {
   CartesianGrid,
   Legend,
@@ -11,9 +10,15 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { getWeeklyData } from "../../https";
+import FullScreenLoader from "../shared/FullScreenLoader";
 
 const WeeklyFinanceChart = () => {
-  const { data: resData, isError } = useQuery({
+  const {
+    data: resData,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ["weeklyOrders"],
     queryFn: getWeeklyData,
     keepPreviousData: true,
@@ -26,27 +31,35 @@ const WeeklyFinanceChart = () => {
 
   return (
     <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" /> {/* match backend */}
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="income"
-            stroke="#4CAF50"
-            strokeWidth={2}
-          />
-          <Line
-            type="monotone"
-            dataKey="expenses"
-            stroke="#F44336"
-            strokeWidth={2}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {isLoading ? (
+        <div className="flex justify-center items-center h-32 mt-30">
+          <FullScreenLoader />
+        </div>
+      ) : (
+        <>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" /> {/* match backend */}
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="income"
+                stroke="#4CAF50"
+                strokeWidth={2}
+              />
+              <Line
+                type="monotone"
+                dataKey="expenses"
+                stroke="#F44336"
+                strokeWidth={2}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </>
+      )}
     </div>
   );
 };

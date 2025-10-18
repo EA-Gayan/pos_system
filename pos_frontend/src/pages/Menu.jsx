@@ -1,8 +1,6 @@
 import { MdRestaurantMenu } from "react-icons/md";
 import { useSelector } from "react-redux";
-import Bill from "../components/menu/Bill";
 import CartInfo from "../components/menu/CartInfo";
-import CustomerInfo from "../components/menu/CustomerInfo";
 import MenuContainer from "../components/menu/MenuContainer";
 import BackButton from "../components/shared/BackButton";
 
@@ -27,14 +25,7 @@ const Menu = () => {
           <div className="flex items-center justify-around gap-4">
             <div className="flex items-center gap-3 cursor-pointer">
               <MdRestaurantMenu className="text-[#f5f5f5] text-4xl" />
-              <div className="flex flex-col items-start">
-                <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-                  {customerData.customerName || "Customer Name"}
-                </h1>
-                <p className="text-xs text-[#ababab] font-medium">
-                  Table : {customerData.table?.tableNo || "N/A"}
-                </p>
-              </div>
+              <div className="flex flex-col items-start"></div>
             </div>
           </div>
         </div>

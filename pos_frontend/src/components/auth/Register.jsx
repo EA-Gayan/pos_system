@@ -1,9 +1,11 @@
-import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { register } from "../../https";
 import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { register } from "../../https";
 
 const Register = (setIsRegister) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,7 +23,6 @@ const Register = (setIsRegister) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     registerMutataion.mutate(formData);
-    console.log(formData);
   };
 
   const registerMutataion = useMutation({
@@ -31,6 +32,7 @@ const Register = (setIsRegister) => {
       enqueueSnackbar(data.message, {
         variant: "success",
       });
+      window.location.reload();
       setFormData({
         name: "",
         email: "",
@@ -44,7 +46,7 @@ const Register = (setIsRegister) => {
       }, 1500);
     },
     onError: (err) => {
-      enqueueSnackbar(err.response.message, {
+      enqueueSnackbar(err.response.data.message, {
         variant: "error",
       });
     },
