@@ -19,13 +19,26 @@ const PORT = config.port;
 connectDB(); // Connect to the database
 
 // Middleware
+// Middleware
 app.use(
   cors({
     credentials: true,
-    origin: [
-      "http://localhost:5173",
-      process.env.FRONTEND_URL || "https://jayanthi-hotel-self.vercel.app/", // Add this line
-    ],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://jayanthi-hotel-self.vercel.app/",
+        process.env.FRONTEND_URL,
+      ];
+
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 app.use(express.json()); // Parse JSON requests
