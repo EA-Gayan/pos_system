@@ -43,14 +43,8 @@ const Header = () => {
   const logoutMutation = useMutation({
     mutationFn: () => logout(),
     onSuccess: () => {
-      localStorage.removeItem("selectedStatus");
-
       dispatch(removeUser());
-
-      // small delay ensures isAuth = false before navigation
-      setTimeout(() => {
-        navigate("/auth", { replace: true });
-      }, 50);
+      navigate("/auth");
     },
     onError: (error) => {
       console.error("Logout failed:", error);
