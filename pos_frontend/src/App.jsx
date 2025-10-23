@@ -116,17 +116,13 @@ function Layout() {
     </div>
   );
 }
-
 function ProtectedRoute({ children, adminOnly, redirectTo }) {
   const { isAuth, role } = useSelector((state) => state.user);
 
-  if (!isAuth) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  if (adminOnly && role !== "Admin") {
+  if (isAuth === null) return null; // Wait for state to settle
+  if (!isAuth) return <Navigate to="/auth" replace />;
+  if (adminOnly && role !== "Admin")
     return <Navigate to={redirectTo || "/menu"} replace />;
-  }
 
   return children;
 }
