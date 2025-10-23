@@ -47,10 +47,10 @@ const Header = () => {
 
       dispatch(removeUser());
 
-      // Add a small delay to let redux update before navigation
+      // small delay ensures isAuth = false before navigation
       setTimeout(() => {
         navigate("/auth", { replace: true });
-      }, 100);
+      }, 50);
     },
     onError: (error) => {
       console.error("Logout failed:", error);

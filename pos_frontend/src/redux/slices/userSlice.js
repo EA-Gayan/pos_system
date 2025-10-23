@@ -29,7 +29,7 @@ const userSlice = createSlice({
       state.name = "";
       state.phone = "";
       state.role = "";
-      state.isAuth = false;
+      state.isAuth = null;
     },
   },
 });
