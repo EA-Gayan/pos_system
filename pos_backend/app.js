@@ -26,7 +26,7 @@ app.use(
     origin: function (origin, callback) {
       const allowedOrigins = [
         "http://localhost:5173",
-        "https://jayanthi-hotel-self.vercel.app/",
+        "https://jayanthi-hotel-self.vercel.app",
         process.env.FRONTEND_URL,
       ];
 
