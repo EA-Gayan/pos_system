@@ -19,7 +19,15 @@ const PORT = config.port;
 connectDB(); // Connect to the database
 
 // Middleware
-app.use(cors({ credentials: true, origin: ["http://localhost:5173"] })); // Enable CORS with credentials
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL || "https://jayanthi-hotel-self.vercel.app/", // Add this line
+    ],
+  })
+);
 app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
 app.use(express.static("public"));
