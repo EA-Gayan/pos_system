@@ -18,6 +18,7 @@ import FullScreenLoader from "./components/shared/FullScreenLoader";
 import Dashboard from "./pages/Dashboard";
 import DashBoardTable from "./components/dashboard/DashBoardTable";
 import Expenses from "./pages/Expenses";
+import PublicRoute from "./https/PublicRoute";
 
 function Layout() {
   const location = useLocation();
@@ -55,7 +56,11 @@ function Layout() {
 
           <Route
             path="/auth"
-            element={isAuth ? <Navigate to="/" /> : <Auth />}
+            element={
+              <PublicRoute>
+                <Auth />
+              </PublicRoute>
+            }
           />
           <Route
             path="/orders"
