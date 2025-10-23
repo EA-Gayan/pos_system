@@ -43,7 +43,12 @@ app.use("/api/print", require("./routes/printInvoiceRoute"));
 // Global Error Handler
 app.use(globalErrorHandler);
 
-// Server
-app.listen(PORT, () => {
-  console.log(`POS Server is listening on port ${PORT}`);
-});
+// Only start server if not in Vercel (not being imported)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`POS Server is listening on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;
