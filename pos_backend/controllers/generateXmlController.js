@@ -35,7 +35,7 @@ const generateIncomeReport = async (req, res, next) => {
     if (orders.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No orders found for today",
+        message: "No orders found for the selected period",
       });
     }
 
@@ -65,18 +65,23 @@ const generateIncomeReport = async (req, res, next) => {
       }
     }
 
-    await generateIncomeReportService(
+    // Generate Excel buffer (not file)
+    const buffer = await generateIncomeReportService(
       type === "week" ? "Week Orders" : "Today Orders",
-      fileName,
       productSummary,
       grandTotal
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Report generated successfully",
-      fileUrl: `/reports/${fileName}`,
-    });
+    // Set headers for file download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.setHeader("Content-Length", buffer.length);
+
+    // Send the buffer
+    res.send(buffer);
   } catch (err) {
     next(err);
   }

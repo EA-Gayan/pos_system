@@ -4,7 +4,10 @@ import { useSelector } from "react-redux";
 const Greetings = () => {
   const [dateTime, setDateTime] = useState(new Date());
 
-  const userdata = useSelector((state) => state.user);
+  const userData = {
+    name: localStorage.getItem("name"),
+    role: localStorage.getItem("role"),
+  };
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -41,7 +44,7 @@ const Greetings = () => {
     <div className="flex justify-between items-center">
       <div>
         <h1 className="text-[#f5f5f5] text-2xl font-semibold tracking-wide ml-3">
-          Good Morning, {userdata.name || "Test User"} 👋
+          Hi, {userData.name || "Test User"} 👋
         </h1>
         <p className="text-[#ababab] text-sm ml-3">
           Give your best services for customers

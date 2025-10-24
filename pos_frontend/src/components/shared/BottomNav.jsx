@@ -9,7 +9,11 @@ const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const userData = useSelector((state) => state.user);
+  const userData = {
+    name: localStorage.getItem("name"),
+    role: localStorage.getItem("role"),
+  };
+
   const isActive = (path) => location.pathname === path;
 
   return (
