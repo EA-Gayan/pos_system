@@ -19,9 +19,14 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log("Submitting form with data:", formData);
     e.preventDefault();
     loginMutataion.mutate(formData);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   const loginMutataion = useMutation({
@@ -30,6 +35,12 @@ const Login = () => {
       const { data } = res;
       const { _id, name, email, phone, role } = data.data.user;
       dispatch(setUser({ _id, name, email, phone, role }));
+
+      //Set localStorage item
+      localStorage.setItem("isAuthorized", "true");
+      localStorage.setItem("role", data.data.user.role);
+      localStorage.setItem("name", data.data.user.name);
+
       navigate("/");
     },
     onError: (err) => {
@@ -53,6 +64,7 @@ const Login = () => {
               autoComplete="email"
               value={formData.email}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               placeholder="Enter employee email"
               className="bg-transparent flex-1 text-white focus:outline-none"
               required
@@ -70,6 +82,7 @@ const Login = () => {
               autoComplete="current-password"
               value={formData.password}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               placeholder="Enter password"
               className="bg-transparent flex-1 text-white focus:outline-none"
               required
