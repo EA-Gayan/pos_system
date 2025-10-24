@@ -62,34 +62,40 @@ const Metrics = () => {
   const totalExpenses = expensesData?.data?.totalExpenses ?? 0;
   const totalOrders = orderCountData?.data?.data ?? 0;
 
-  const exportRecordMutation = useMutation({
+  const exportIncomeRecordMutation = useMutation({
     mutationFn: (type) => exportIncomeRecord(type),
     onSuccess: (response) => {
-      const fileUrl = response?.data?.fileUrl;
-      if (!fileUrl) {
-        enqueueSnackbar("Exported but no file URL returned.", {
-          variant: "warning",
-        });
-        return;
-      }
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
 
-      const fullUrl = fileUrl.startsWith("/")
-        ? `${import.meta.env.VITE_API_URL}${fileUrl}`
-        : fileUrl;
-
-      // Trigger download
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = fullUrl;
-      link.setAttribute("download", "");
+      link.href = url;
+
+      // Generate filename with date and time
+      const now = new Date();
+      const dateStr = now.toISOString().split("T")[0];
+      const timeStr = now.toTimeString().split(" ")[0].replace(/:/g, "-");
+      const filename = `income_report_${dateStr}_${timeStr}.xlsx`;
+
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
-      link.remove();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
       enqueueSnackbar("Record exported successfully!", { variant: "success" });
-      refetch();
+      // Remove refetch() if you don't need it
     },
     onError: (error) => {
-      const errorMessage = error?.response?.data?.message;
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to export record";
+
       enqueueSnackbar(errorMessage, { variant: "error" });
     },
   });
@@ -147,7 +153,7 @@ const Metrics = () => {
 
   const handleExport = (type) => {
     setExportOpen(false);
-    exportRecordMutation.mutate(type);
+    exportIncomeRecordMutation.mutate(type);
   };
 
   const handleExpenseExport = (type) => {

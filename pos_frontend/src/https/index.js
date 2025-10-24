@@ -35,8 +35,13 @@ export const updateOrderStatus = ({ orderId, orderStatus }) =>
 export const getOrderEarning = (data) => api.post(`/api/order/earnings`, data);
 export const getOrdersCount = (data) => api.post(`/api/order/count`, data);
 export const getfindOrders = (data) => api.post(`/api/order/findOrders`, data);
-export const exportIncomeRecord = (query) =>
-  api.get(`/api/report/income/${query}`);
+export const exportIncomeRecord = async (type) => {
+  const response = await api.get(`/api/report/income/${type}`, {
+    responseType: "blob", //This tells axios to expect binary data
+  });
+
+  return response;
+};
 
 // category Endpoints
 export const addCategory = (data) => api.post("/api/category", data);
