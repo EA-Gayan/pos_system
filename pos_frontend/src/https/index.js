@@ -75,8 +75,14 @@ export const updateExpenseRecord = ({ recordId, ...recordData }) =>
   api.put(`/api/expenses/${recordId}`, recordData);
 export const searchExpenseRecord = (query) =>
   api.get(`/api/expenses/search`, { params: { query } });
-export const exportExpenseRecord = (query) =>
-  api.get(`/api/report/expenses/${query}`);
+export const exportExpenseRecord = async (type) => {
+  const response = await api.get(`/api/report/expenses/${type}`, {
+    responseType: "blob", //This tells axios to expect binary data
+  });
+
+  return response;
+};
+
 export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
 

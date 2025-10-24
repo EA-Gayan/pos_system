@@ -31,3 +31,6 @@ build/
 
 # Ignore generated public assets
 /public/
+
+# Ignore all environment files
+.env*
