@@ -119,7 +119,7 @@ const generateExpensesReport = async (req, res, next) => {
     if (expenses.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No expenses found for today",
+        message: "No expenses found for the selected period",
       });
     }
 
@@ -146,23 +146,27 @@ const generateExpensesReport = async (req, res, next) => {
       grandTotal += price;
     }
 
-    await generateExpensesReportService(
+    // Generate Excel buffer (not file)
+    const buffer = await generateExpensesReportService(
       type === "week" ? "Week Expenses" : "Today Expenses",
-      fileName,
       expensesSummary,
       grandTotal
     );
 
-    res.status(200).json({
-      success: true,
-      message: "Report generated successfully",
-      fileUrl: `/reports/${fileName}`,
-    });
+    // Set headers for file download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.setHeader("Content-Length", buffer.length);
+
+    // Send the buffer
+    res.send(buffer);
   } catch (err) {
     next(err);
   }
 };
-
 module.exports = {
   generateIncomeReport,
   generateExpensesReport,
