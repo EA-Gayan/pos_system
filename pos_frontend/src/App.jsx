@@ -1,32 +1,26 @@
-import Home from "./pages/Home";
-import Auth from "./pages/Auth";
-import Orders from "./pages/Orders";
-import Header from "./components/shared/Header";
-import BottomNav from "./components/shared/BottomNav";
+import { useSelector } from "react-redux";
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
   useLocation,
-  Navigate,
 } from "react-router-dom";
-import Tables from "./pages/Tables";
-import Menu from "./pages/Menu";
-import { useSelector } from "react-redux";
-import useLoadData from "./hooks/useLoadData";
-import FullScreenLoader from "./components/shared/FullScreenLoader";
-import Dashboard from "./pages/Dashboard";
 import DashBoardTable from "./components/dashboard/DashBoardTable";
+import BottomNav from "./components/shared/BottomNav";
+import Header from "./components/shared/Header";
+import Auth from "./pages/Auth";
+import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
-import PublicRoute from "./https/PublicRoute";
+import Home from "./pages/Home";
+import Menu from "./pages/Menu";
+import Orders from "./pages/Orders";
+import Tables from "./pages/Tables";
 
 function Layout() {
   const location = useLocation();
-  const isLoading = useLoadData();
   const hideHeader = ["/auth"];
   const { isAuth } = useSelector((state) => state.user);
-
-  if (isLoading) return <FullScreenLoader />;
 
   // Helper function to check if current path matches any hideBottomNav pattern
   const shouldHideBottomNav = () => {
@@ -54,14 +48,7 @@ function Layout() {
             }
           />
 
-          <Route
-            path="/auth"
-            element={
-              <PublicRoute>
-                <Auth />
-              </PublicRoute>
-            }
-          />
+          <Route path="/auth" element={<Auth />} />
           <Route
             path="/orders"
             element={

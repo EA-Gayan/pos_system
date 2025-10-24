@@ -19,6 +19,7 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
+    console.log("Submitting form with data:", formData);
     e.preventDefault();
     loginMutataion.mutate(formData);
   };
@@ -40,7 +41,7 @@ const Login = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div>
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Employee Email
@@ -77,8 +78,9 @@ const Login = () => {
         </div>
 
         <button
-          type="submit"
+          type="button"
           className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+          onClick={handleSubmit}
         >
           Sign in
         </button>
