@@ -133,7 +133,7 @@ const Expenses = () => {
           </button>
 
           {/* Export Dropdown */}
-          <div className="relative">
+          <div className="">
             <button
               onClick={() => setExportOpen((prev) => !prev)}
               className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"

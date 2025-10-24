@@ -103,13 +103,28 @@ function Layout() {
     </div>
   );
 }
-function ProtectedRoute({ children, adminOnly, redirectTo }) {
+function ProtectedRoute({ children, adminOnly = false, redirectTo = "/auth" }) {
   const { isAuth, role } = useSelector((state) => state.user);
 
-  if (isAuth === null) return null; // Wait for state to settle
-  if (!isAuth) return <Navigate to="/auth" replace />;
-  if (adminOnly && role !== "Admin")
+  // Check from Redux first, then fallback to localStorage
+  const isAuthorized =
+    isAuth || localStorage.getItem("isAuthorized") === "true";
+
+  // Get role from Redux or localStorage
+  const userRole = role || localStorage.getItem("role");
+
+  // Optional: wait for redux state to settle
+  if (isAuth === null) return null;
+
+  // If not authorized, redirect to login
+  if (!isAuthorized) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  // If adminOnly route and role doesn’t match, redirect
+  if (adminOnly && userRole !== "Admin") {
     return <Navigate to={redirectTo || "/menu"} replace />;
+  }
 
   return children;
 }

@@ -25,7 +25,10 @@ const meals = [
 ];
 
 const Header = () => {
-  const userData = useSelector((state) => state.user);
+  const userData = {
+    name: localStorage.getItem("name"),
+    role: localStorage.getItem("role"),
+  };
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,6 +47,7 @@ const Header = () => {
     mutationFn: () => logout(),
     onSuccess: () => {
       dispatch(removeUser());
+      localStorage.clear();
       navigate("/auth");
     },
     onError: (error) => {
