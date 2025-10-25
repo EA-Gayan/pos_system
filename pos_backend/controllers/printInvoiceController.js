@@ -8,7 +8,7 @@ const printInvoice = async (req, res, next) => {
     if (!orderId) {
       return res
         .status(400)
-        .json({ success: false, message: "Order ID is required in params." });
+        .json({ success: false, message: "Order ID is required." });
     }
 
     const order = await Order.findOne({ orderId })
@@ -21,21 +21,24 @@ const printInvoice = async (req, res, next) => {
         .json({ success: false, message: "Order not found." });
     }
 
-    await printInvoiceService(order); // Pass full order object
+    // Generate PDF
+    const pdfBuffer = await printInvoiceService(order);
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Invoice sent to printer." });
+    // Return PDF to client
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename=invoice-${orderId}.pdf`
+    );
+    res.send(pdfBuffer);
   } catch (error) {
-    console.error("Error printing invoice:", error);
+    console.error("Error generating invoice:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to print invoice.",
+      message: "Failed to generate invoice.",
       error: error.message,
     });
   }
 };
 
-module.exports = {
-  printInvoice,
-};
+module.exports = { printInvoice };

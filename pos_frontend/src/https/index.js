@@ -87,4 +87,9 @@ export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
 
 //print invoice endpoit
-export const printInvoice = (data) => api.post(`/api/print`, data);
+export const printInvoice = (data) =>
+  api
+    .post(`/api/print`, data, {
+      responseType: "blob", // Tell axios to expect a PDF blob
+    })
+    .then((response) => response.data); // Return just the blob

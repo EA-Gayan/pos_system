@@ -13,11 +13,56 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
   const dispatch = useDispatch();
 
   const printInvoiceMutation = useMutation({
-    mutationFn: (value) => printInvoice({ orderId: value }),
+    mutationFn: async (value) => {
+      const response = await printInvoice({ orderId: value });
+
+      // Check if response is a Blob (PDF)
+      if (response instanceof Blob) {
+        return response;
+      }
+
+      // If it's JSON, return as is
+      return response;
+    },
 
     onSuccess: (res) => {
-      enqueueSnackbar("Print successfully!", { variant: "success" });
+      // Check if response is a PDF Blob
+      if (res instanceof Blob) {
+        const url = window.URL.createObjectURL(res);
+
+        // Create hidden iframe for printing
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "fixed";
+        iframe.style.right = "0";
+        iframe.style.bottom = "0";
+        iframe.style.width = "0";
+        iframe.style.height = "0";
+        iframe.style.border = "none";
+        iframe.src = url;
+
+        document.body.appendChild(iframe);
+
+        // Wait for PDF to load, then print
+        iframe.onload = () => {
+          setTimeout(() => {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          }, 250);
+        };
+
+        // Cleanup after printing
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          window.URL.revokeObjectURL(url);
+        }, 2000);
+
+        enqueueSnackbar("Invoice sent to printer!", { variant: "success" });
+      } else {
+        // Handle JSON response (for backward compatibility)
+        enqueueSnackbar("Print successfully!", { variant: "success" });
+      }
     },
+
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || error?.message || "Request failed",

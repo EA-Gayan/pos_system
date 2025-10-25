@@ -1,21 +1,21 @@
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
-const { print } = require("pdf-to-printer");
 
 const printInvoiceService = async (order) => {
-  const filePath = path.join(__dirname, "invoice.pdf");
-
-  // Step 1: Create PDF
-  await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-      size: [210, 800], // 80mm width, dynamic height
+      size: [210, 800],
       margins: { top: 0, bottom: 10, left: 10, right: 10 },
     });
 
-    const writeStream = fs.createWriteStream(filePath);
-    doc.pipe(writeStream);
+    const chunks = [];
 
+    doc.on("data", (chunk) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    // === LOGO ===
     const logoPath = path.join(
       __dirname,
       "..",
@@ -23,10 +23,15 @@ const printInvoiceService = async (order) => {
       "images",
       "logo-modified.png"
     );
-    if (fs.existsSync(logoPath)) {
-      const logoWidth = 55;
-      const xCenter = (doc.page.width - logoWidth) / 2;
-      doc.image(logoPath, xCenter, doc.y, { width: logoWidth }).moveDown(5);
+
+    try {
+      if (fs.existsSync(logoPath)) {
+        const logoWidth = 55;
+        const xCenter = (doc.page.width - logoWidth) / 2;
+        doc.image(logoPath, xCenter, doc.y, { width: logoWidth }).moveDown(5);
+      }
+    } catch (err) {
+      console.log("Logo not found, skipping...");
     }
 
     // === CENTERED HEADER ===
@@ -111,26 +116,7 @@ const printInvoiceService = async (order) => {
       .moveDown(0.5);
 
     doc.end();
-
-    writeStream.on("finish", resolve);
-    writeStream.on("error", reject);
   });
-
-  // Step 2: Print the PDF
-  try {
-    await print(filePath, { printer: "XP-80C" });
-    console.log("Print job sent.");
-  } catch (err) {
-    console.error("Print error:", err);
-  }
-
-  // Step 3: Delete the PDF file
-  try {
-    fs.unlinkSync(filePath);
-    console.log("Temporary PDF deleted.");
-  } catch (err) {
-    console.error("Error deleting PDF:", err);
-  }
 };
 
 module.exports = printInvoiceService;
