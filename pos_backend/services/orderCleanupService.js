@@ -1,28 +1,43 @@
-const cron = require("node-cron");
-const Order = require("../models/orderModel");
+// api/cleanup-orders.js
+import connectDB from "../config/database.js";
+import Order from "../models/orderModel.js";
 
-// Schedule: Runs every minute (change to "0 0 * * *" for daily at midnight)
-cron.schedule("* * * * *", async () => {
+export default async function handler(req, res) {
+  // Security: Verify the request is from Vercel Cron
+  const authHeader = req.headers.authorization;
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   try {
+    // Connect to database
+    await connectDB();
+
+    // Calculate date 7 days ago
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // Check if all orders are older than 7 days
-    const newestOrder = await Order.findOne().sort({ orderDate: -1 });
+    // Delete only orders older than 7 days (keeping newer ones)
+    const result = await Order.deleteMany({
+      orderDate: { $lt: sevenDaysAgo },
+    });
 
-    if (newestOrder && newestOrder.orderDate < sevenDaysAgo) {
-      const result = await Order.deleteMany({});
-      console.log(
-        `[${new Date().toISOString()}] Deleted ALL ${
-          result.deletedCount
-        } orders (all older than 7 days).`
-      );
-    } else {
-      console.log(
-        `[${new Date().toISOString()}] Not deleting — some orders are newer than 7 days.`
-      );
-    }
-  } catch (err) {
-    console.error("Error deleting orders:", err);
+    const message = `Successfully deleted ${result.deletedCount} orders older than 7 days`;
+    console.log(`[${new Date().toISOString()}] ${message}`);
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: result.deletedCount,
+      message,
+      executedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error deleting old orders:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
-});
+}

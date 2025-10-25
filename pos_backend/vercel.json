@@ -11,5 +11,15 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
+  ],
+  "crons": [
+    {
+      "path": "/services/expenseCleanUpService.js",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/services/orderCleanupService.js",
+      "schedule": "0 1 * * *"
+    }
   ]
 }
