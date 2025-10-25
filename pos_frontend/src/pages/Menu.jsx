@@ -31,7 +31,7 @@ const Menu = () => {
         </div>
 
         {/* MenuContainer fills the rest */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
+        <div className="flex-1">
           <MenuContainer />
         </div>
       </div>

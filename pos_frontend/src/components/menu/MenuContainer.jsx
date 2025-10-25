@@ -156,39 +156,45 @@ const MenuContainer = () => {
         </>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
-            {filteredCategories.map((category) => {
-              const isSelected = selectedItem?.id === category.id;
-              return (
-                <div
-                  key={category.id}
-                  className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${
-                    isSelected ? "bg-[#1d2569]" : "bg-gray-700"
-                  }`}
-                  onClick={() => {
-                    setSelectedItem(category);
-                  }}
-                >
-                  <div className="flex items-center justify-between w-full mb-2">
-                    <h1 className="text-[#f5f5f5] text-lg font-semibold flex items-center gap-2">
-                      {/* {menu.icon} */}
-                      {category.name}
-                    </h1>
-                    {isSelected && (
-                      <GrRadialSelected className="text-white" size={20} />
-                    )}
+          {/* Scrollable category section */}
+          <div className="max-h-[35vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
+              {filteredCategories.map((category) => {
+                const isSelected = selectedItem?.id === category.id;
+                return (
+                  <div
+                    key={category.id}
+                    className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${
+                      isSelected ? "bg-[#1d2569]" : "bg-gray-700"
+                    }`}
+                    onClick={() => {
+                      setSelectedItem(category);
+                    }}
+                  >
+                    <div className="flex items-center justify-between w-full mb-2">
+                      <h1 className="text-[#f5f5f5] text-lg font-semibold flex items-center gap-2">
+                        {category.name}
+                      </h1>
+                      {isSelected && (
+                        <GrRadialSelected className="text-white" size={20} />
+                      )}
+                    </div>
+                    <p className="text-[#ababab] text-sm font-semibold">
+                      {category?.products.length} Items
+                    </p>
                   </div>
-                  <p className="text-[#ababab] text-sm font-semibold">
-                    {category?.products.length} Items
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-          <hr className="border-[#2a2a2a] border-t-2 mt-4" />
+
+          {/* Divider with spacing */}
+          <div className="my-6">
+            <hr className="border-[#2a2a2a] border-t-2" />
+          </div>
 
           {/* Scrollable product grid container */}
-          <div className="max-h-[45vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
+          <div className="max-h-[35vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
               {selectedItem?.products.map((item) => {
                 return (
