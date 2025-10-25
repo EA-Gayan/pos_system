@@ -1,28 +1,33 @@
-const cron = require("node-cron");
-const expense = require("../models/expensesModel");
+import connectDB from "../config/database.js";
+import expense from "../models/expensesModel.js";
 
-// Schedule: Runs every minute (change to "0 0 * * *" for daily at midnight)
-cron.schedule("* * * * *", async () => {
+export default async function handler(req, res) {
   try {
+    await connectDB();
+
+    // Calculate date 7 days ago
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // Get the most recent expense by creation date
-    const newestExpense = await expense.findOne().sort({ createdAt: -1 });
+    // Delete only expenses older than 7 days
+    const result = await expense.deleteMany({
+      createdAt: { $lt: sevenDaysAgo },
+    });
 
-    if (newestExpense && newestExpense.createdAt < sevenDaysAgo) {
-      const result = await expense.deleteMany({});
-      console.log(
-        `[${new Date().toISOString()}] Deleted ALL ${
-          result.deletedCount
-        } expenses (all older than 7 days).`
-      );
-    } else {
-      console.log(
-        `[${new Date().toISOString()}] Not deleting — some expenses are newer than 7 days.`
-      );
-    }
-  } catch (err) {
-    console.error("Error deleting expenses:", err);
+    const message = `Successfully deleted ${result.deletedCount} expenses older than 7 days`;
+    console.log(`[${new Date().toISOString()}] ${message}`);
+
+    return res.status(200).json({
+      success: true,
+      deletedCount: result.deletedCount,
+      message,
+      executedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error in cleanup job:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
-});
+}
