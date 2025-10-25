@@ -3,13 +3,11 @@ const mongoose = require("mongoose");
 let isConnected = false;
 
 const connectDB = async () => {
-  // Reuse connection in both dev and prod
   if (isConnected) {
     console.log("Using existing MongoDB connection");
     return;
   }
 
-  // Prevent multiple connections during hot reload
   if (mongoose.connection.readyState >= 1) {
     isConnected = true;
     return;
@@ -19,7 +17,7 @@ const connectDB = async () => {
     mongoose.set("strictQuery", false);
 
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: false,
+      // Remove bufferCommands: false
       maxPoolSize: 10,
     });
 
@@ -28,7 +26,7 @@ const connectDB = async () => {
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
     isConnected = false;
-    throw error; // Don't exit in dev or prod
+    throw error;
   }
 };
 
