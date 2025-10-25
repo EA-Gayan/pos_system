@@ -14,8 +14,12 @@ const addProduct = async (req, res, next) => {
       return error;
     }
 
-    // Check if product already exists
-    const existingProduct = await Product.findOne({ name: name });
+    // Check if product already exists (same name + same category)
+    const existingProduct = await Product.findOne({
+      name: name.trim(),
+      category: categoryId,
+    });
+
     if (existingProduct) {
       const error = createHttpError(400, "Product already exists!");
       return next(error);

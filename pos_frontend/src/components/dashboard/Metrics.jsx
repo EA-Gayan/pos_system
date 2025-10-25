@@ -176,8 +176,8 @@ const Metrics = () => {
     </tr>
   );
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="container mx-auto py-2 px-6 md:px-4 flex-1">
+    <div className="h-screen overflow-y-auto bg-[#121212] text-white">
+      <div className="container mx-auto py-6 px-6 md:px-4">
         {isLoading ? (
           <div className="flex justify-center items-center h-32 mt-30">
             <FullScreenLoader />
@@ -353,12 +353,43 @@ const Metrics = () => {
                 Product Details
               </h2>
 
-              <div className="mt-10">
-                <Table
-                  headers={headers}
-                  data={bestSellingProducts}
-                  renderRow={renderRow}
-                />
+              <div className="mt-10 overflow-x-auto">
+                <table className="w-full text-left text-[#f5f5f5] border-collapse">
+                  <thead className="bg-[#333] text-[#ababab] sticky top-0">
+                    <tr>
+                      <th className="p-3">Product Name</th>
+                      <th className="p-3">Price</th>
+                      <th className="p-3">Quantity Sold</th>
+                      <th className="p-3">Income</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bestSellingProducts.length > 0 ? (
+                      bestSellingProducts.map((row, index) => (
+                        <tr
+                          key={index}
+                          className={
+                            index % 2 === 0 ? "bg-[#1a1a1a]" : "bg-[#222]"
+                          }
+                        >
+                          <td className="p-3">{row.productName}</td>
+                          <td className="p-3">{row.productPrice}</td>
+                          <td className="p-3">{row.sellingQty}</td>
+                          <td className="p-3">{row.income}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="4"
+                          className="p-4 text-center text-gray-400"
+                        >
+                          No data available
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </>
