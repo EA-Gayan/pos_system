@@ -26,7 +26,7 @@ const printInvoiceService = async (order) => {
 
     try {
       if (fs.existsSync(logoPath)) {
-        const logoWidth = 50;
+        const logoWidth = 60;
         const xCenter = (doc.page.width - logoWidth) / 2;
         doc.image(logoPath, xCenter, doc.y, { width: logoWidth }).moveDown(5);
       }
@@ -88,40 +88,40 @@ const printInvoiceService = async (order) => {
       })
       .moveDown(0.5);
 
-    // === DATE & TIME ===
+    // === DATE & FAREWELL SECTION ===
     const formattedDate = new Date(order.orderDate).toLocaleString("en-LK", {
       dateStyle: "medium",
       timeStyle: "short",
       hour12: true,
     });
 
-    const leftMargin = doc.page.margins.left;
-
-    // Draw separator line ABOVE the date
+    // Draw line above
     doc
-      .moveTo(50, doc.y) // start at current y
-      .lineTo(doc.page.width - 50, doc.y) // horizontal line
+      .moveTo(50, doc.y)
+      .lineTo(doc.page.width - 50, doc.y)
       .stroke();
 
-    doc.moveDown(0.5); // add vertical space
+    doc.moveDown(0.5);
 
-    // Print ONLY the formatted date & time
-    doc.font("Helvetica-Bold").text(formattedDate, { align: "left" });
+    // Print formatted date
+    doc
+      .font("Helvetica")
+      .text(formattedDate, { align: "center" })
+      .moveDown(0.5);
 
-    doc.moveDown(0.5); // space below the date
+    // Print farewell message
+    doc
+      .font("Helvetica-Bold")
+      .text("See You Again !", { align: "center" })
+      .moveDown(0.5);
 
-    // Draw separator line BELOW the date
+    // Draw line below
     doc
       .moveTo(50, doc.y)
       .lineTo(doc.page.width - 50, doc.y)
       .stroke();
 
     doc.moveDown(1); // optional extra space after
-
-    doc
-      .font("Helvetica-Bold")
-      .text("See You Again !", doc.page.width / 2 - 30)
-      .moveDown(0.5);
 
     doc.end();
   });
