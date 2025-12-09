@@ -96,7 +96,7 @@ export const getTotalExpenses = (data) =>
 
 // Print server URL (local computer with printer)
 const PRINT_SERVER_URL =
-  import.meta.env.VITE_PRINT_SERVER_URL || "http://192.168.1.100:3001";
+  import.meta.env.VITE_PRINT_SERVER_URL || "http://192.168.1.12:3001";
 
 // Modified printInvoice function
 export const printInvoice = async (data) => {
