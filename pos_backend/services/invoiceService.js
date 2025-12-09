@@ -26,7 +26,7 @@ const printInvoiceService = async (order) => {
 
     try {
       if (fs.existsSync(logoPath)) {
-        const logoWidth = 120;
+        const logoWidth = 50;
         const xCenter = (doc.page.width - logoWidth) / 2;
         doc.image(logoPath, xCenter, doc.y, { width: logoWidth }).moveDown(5);
       }
@@ -97,17 +97,26 @@ const printInvoiceService = async (order) => {
 
     const leftMargin = doc.page.margins.left;
 
-    // Draw separator line
-    doc.moveTo(50, doc.y).stroke().moveDown(0.5);
+    // Draw separator line ABOVE the date
+    doc
+      .moveTo(50, doc.y) // start at current y
+      .lineTo(doc.page.width - 50, doc.y) // horizontal line
+      .stroke();
+
+    doc.moveDown(0.5); // add vertical space
 
     // Print ONLY the formatted date & time
-    doc
-      .font("Helvetica-Bold")
-      .text(formattedDate, { align: "left" })
-      .moveDown(0.5);
+    doc.font("Helvetica-Bold").text(formattedDate, { align: "left" });
 
-    // Draw ending separator line
-    doc.moveTo(50, doc.y).stroke().moveDown();
+    doc.moveDown(0.5); // space below the date
+
+    // Draw separator line BELOW the date
+    doc
+      .moveTo(50, doc.y)
+      .lineTo(doc.page.width - 50, doc.y)
+      .stroke();
+
+    doc.moveDown(1); // optional extra space after
 
     doc
       .font("Helvetica-Bold")
