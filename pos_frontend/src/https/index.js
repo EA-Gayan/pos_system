@@ -86,10 +86,57 @@ export const exportExpenseRecord = async (type) => {
 export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
 
-//print invoice endpoit
-export const printInvoice = (data) =>
-  api
-    .post(`/api/print`, data, {
-      responseType: "blob", // Tell axios to expect a PDF blob
-    })
-    .then((response) => response.data); // Return just the blob
+// //print invoice endpoit
+// export const printInvoice = (data) =>
+//   api
+//     .post(`/api/print`, data, {
+//       responseType: "blob", // Tell axios to expect a PDF blob
+//     })
+//     .then((response) => response.data); // Return just the blob
+
+// Print server URL (local computer with printer)
+const PRINT_SERVER_URL =
+  import.meta.env.VITE_PRINT_SERVER_URL || "http://192.168.1.100:3001";
+
+// Modified printInvoice function
+export const printInvoice = async (data) => {
+  try {
+    // Get PDF from your backend
+    const response = await api.post(`/api/print`, data, {
+      responseType: "blob",
+    });
+
+    const pdfBlob = response.data;
+
+    // Convert blob to base64
+    const arrayBuffer = await pdfBlob.arrayBuffer();
+    const base64 = btoa(
+      new Uint8Array(arrayBuffer).reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        ""
+      )
+    );
+
+    // Send to print server
+    const printResponse = await fetch(`${PRINT_SERVER_URL}/print`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        pdfBase64: base64,
+        printerName: "XP-80C", // Your printer name (optional)
+      }),
+    });
+
+    if (!printResponse.ok) {
+      throw new Error("Print server request failed");
+    }
+
+    const result = await printResponse.json();
+    return result;
+  } catch (error) {
+    console.error("Print error:", error);
+    throw error;
+  }
+};
