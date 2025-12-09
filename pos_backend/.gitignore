@@ -30,7 +30,7 @@ dist/
 build/
 
 # Ignore generated public assets
-/public/
+# /public/
 
 # Ignore all environment files
 .env*
