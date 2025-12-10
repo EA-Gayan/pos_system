@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # Ignore all environment files
-.env*
+pos_frontend/.env*

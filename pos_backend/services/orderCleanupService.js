@@ -3,25 +3,20 @@ import connectDB from "../config/database.js";
 import Order from "../models/orderModel.js";
 
 export default async function handler(req, res) {
-  // Security: Verify the request is from Vercel Cron
+  // Security: Verify it's actually Vercel's cron calling this
   const authHeader = req.headers.authorization;
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
-    // Connect to database
     await connectDB();
 
-    // Calculate date 7 days ago
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    // Delete only orders older than 7 days (keeping newer ones)
     const result = await Order.deleteMany({
-      orderDate: { $lt: sevenDaysAgo },
+      createdAt: { $lt: sevenDaysAgo },
     });
 
     const message = `Successfully deleted ${result.deletedCount} orders older than 7 days`;
@@ -34,7 +29,7 @@ export default async function handler(req, res) {
       executedAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Error deleting old orders:", error);
+    console.error("Error in order cleanup job:", error);
     return res.status(500).json({
       success: false,
       error: error.message,
