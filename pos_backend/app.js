@@ -1,6 +1,4 @@
 require("dotenv").config();
-require("./services/orderCleanupService");
-require("./services/expenseCleanUpService");
 
 const express = require("express");
 const cors = require("cors");
@@ -18,7 +16,6 @@ app.use(bodyParser.json());
 const PORT = config.port;
 connectDB(); // Connect to the database
 
-// Middleware
 // Middleware
 app.use(
   cors({
@@ -60,6 +57,9 @@ app.use("/api/dashboard", require("./routes/dashboardRoute"));
 app.use("/api/report", require("./routes/generateXmlRoute"));
 app.use("/api/expenses", require("./routes/expensesRoute"));
 app.use("/api/print", require("./routes/printInvoiceRoute"));
+
+//Cron job endpoints
+app.use("/api/cron", require("./routes/cronRoute"));
 
 // Global Error Handler
 app.use(globalErrorHandler);
