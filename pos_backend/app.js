@@ -48,7 +48,7 @@ app.use(express.json()); // Parse JSON requests
 app.use(cookieParser()); // Parse cookies
 app.use(express.static("public"));
 
-// Root Endpoint
+// Root Endpoints
 app.get("/", (req, res) => {
   res.json({ message: "Hello from POS Server!" });
 });
