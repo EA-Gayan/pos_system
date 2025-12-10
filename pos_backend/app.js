@@ -11,6 +11,12 @@ const globalErrorHandler = require("./middleware/globalErrorHandler");
 
 const app = express();
 
+const path = require("path");
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) => {
+  res.sendFile(path.join(__dirname, "favicon.png"));
+});
+
 app.use(bodyParser.json());
 
 const PORT = config.port;
