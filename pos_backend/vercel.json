@@ -15,11 +15,11 @@
   "crons": [
     {
       "path": "/services/expenseCleanUpService.js",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 0 * * *"
     },
     {
       "path": "/services/orderCleanupService.js",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
