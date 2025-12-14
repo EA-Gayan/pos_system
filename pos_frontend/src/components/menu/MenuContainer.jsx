@@ -61,9 +61,9 @@ const MenuContainer = () => {
   // all categories
   const categories = resData?.data?.data || [];
 
-  // filtered categories
   const filteredCategories = categories.filter(
-    (item) => item.mealType === selectedStatus || item.mealType === 4
+    (item) =>
+      item.mealType?.includes(selectedStatus) || item.mealType?.includes(4)
   );
 
   useEffect(() => {

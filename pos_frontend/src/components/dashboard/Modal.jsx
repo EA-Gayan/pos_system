@@ -4,6 +4,7 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { addCategory, addProduct, addTable, getCategories } from "../../https";
+import MultiSelectDropdown from "../shared/MultiSelectDropdown";
 
 const Modal = ({ setIsTableModalOpen, labelType }) => {
   const [tableData, setTableData] = useState({
@@ -13,7 +14,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
 
   const [categoryData, setCategoryData] = useState({
     categoryName: "",
-    mealType: 0,
+    mealType: [],
   });
 
   const [productData, setProductData] = useState({
@@ -56,14 +57,6 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     } else {
       setProductData((prev) => ({ ...prev, [name]: value }));
     }
-  };
-
-  const handledropDownChange = (e) => {
-    const { name, value } = e.target;
-    setCategoryData((prev) => ({
-      ...prev,
-      [name]: parseInt(value, 10),
-    }));
   };
 
   const handleProductDownChange = (e) => {
@@ -216,26 +209,19 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
-                  Session Type
-                </label>
-                <select
-                  name="mealType"
-                  value={categoryData.mealType}
-                  onChange={handledropDownChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
-                  required
-                >
-                  {categoryData.mealType === 0 && (
-                    <option value={0} disabled>
-                      Select a session
-                    </option>
-                  )}
-                  <option value={1}>Breakfast</option>
-                  <option value={2}>Lunch</option>
-                  <option value={3}>Dinner</option>
-                  <option value={4}>Other</option>
-                </select>
+                <MultiSelectDropdown
+                  label="Session Type"
+                  options={[
+                    { value: 1, label: "Breakfast" },
+                    { value: 2, label: "Lunch" },
+                    { value: 3, label: "Dinner" },
+                    { value: 4, label: "Common" },
+                  ]}
+                  selectedValues={categoryData.mealType}
+                  onChange={(selected) =>
+                    setCategoryData({ ...categoryData, mealType: selected })
+                  }
+                />
               </div>
             </>
           )}

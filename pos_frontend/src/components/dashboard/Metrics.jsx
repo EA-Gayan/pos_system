@@ -176,7 +176,7 @@ const Metrics = () => {
     </tr>
   );
   return (
-    <div className="h-screen overflow-y-auto bg-[#121212] text-white">
+    <div class="!h-auto overflow-y-auto bg-[#121212] text-white">
       <div className="container mx-auto py-6 px-6 md:px-4">
         {isLoading ? (
           <div className="flex justify-center items-center h-32 mt-30">
@@ -348,14 +348,14 @@ const Metrics = () => {
               </div>
             </div>
 
-            <div className="flex flex-col mt-15">
+            <div className="flex flex-col mt-16">
               <h2 className="font-semibold text-[#f5f5f5] text-xl">
                 Product Details
               </h2>
 
-              <div className="mt-10 overflow-x-auto">
+              <div className="mt-10 max-h-[400px] overflow-y-auto overflow-x-auto">
                 <table className="w-full text-left text-[#f5f5f5] border-collapse">
-                  <thead className="bg-[#333] text-[#ababab] sticky top-0">
+                  <thead className="bg-[#333] text-[#ababab] sticky top-0 z-10">
                     <tr>
                       <th className="p-3">Product Name</th>
                       <th className="p-3">Price</th>
@@ -363,6 +363,7 @@ const Metrics = () => {
                       <th className="p-3">Income</th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {bestSellingProducts.length > 0 ? (
                       bestSellingProducts.map((row, index) => (

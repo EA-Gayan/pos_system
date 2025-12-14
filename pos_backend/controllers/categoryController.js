@@ -1,27 +1,39 @@
 const Category = require("../models/categoryModel");
+const Product = require("../models/productModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
 const MealTypes = require("../enum/mealTypes");
 
+/**
+ * ADD CATEGORY
+ */
 const addCategory = async (req, res, next) => {
   try {
     const { categoryName, mealType } = req.body;
 
+    // Validate name
     if (!categoryName) {
-      const error = createHttpError(400, "Category name is required!");
-      return next(error);
-    }
-    if (mealType == null) {
-      return next(createHttpError(400, "mealType is required!"));
+      return next(createHttpError(400, "Category name is required!"));
     }
 
-    // Ensure mealType is one of our enum values
+    // Validate mealType (must be array)
+    if (!Array.isArray(mealType) || mealType.length === 0) {
+      return next(
+        createHttpError(400, "At least one session type is required!")
+      );
+    }
+
+    // Validate enum values
     const allowedValues = Object.values(MealTypes);
-    if (!allowedValues.includes(Number(mealType))) {
+    const invalidTypes = mealType.filter(
+      (type) => !allowedValues.includes(Number(type))
+    );
+
+    if (invalidTypes.length > 0) {
       return next(
         createHttpError(
           400,
-          `Invalid mealType. Allowed values are: ${allowedValues.join(", ")}`
+          `Invalid mealType values: ${invalidTypes.join(", ")}`
         )
       );
     }
@@ -29,14 +41,13 @@ const addCategory = async (req, res, next) => {
     // Check if category already exists
     const existingCategory = await Category.findOne({ name: categoryName });
     if (existingCategory) {
-      const error = createHttpError(400, "Category already exists!");
-      return next(error);
+      return next(createHttpError(400, "Category already exists!"));
     }
 
-    // Create new category
+    // Create category
     const newCategory = await Category.create({
       name: categoryName,
-      mealType: mealType,
+      mealType: mealType.map(Number),
     });
 
     res.status(201).json({
@@ -49,6 +60,9 @@ const addCategory = async (req, res, next) => {
   }
 };
 
+/**
+ * GET ALL CATEGORIES
+ */
 const getCategories = async (req, res, next) => {
   try {
     const categories = await Category.find().populate("products");
@@ -64,87 +78,101 @@ const getCategories = async (req, res, next) => {
   }
 };
 
+/**
+ * UPDATE CATEGORY
+ */
 const updateCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const { categoryName, mealType } = req.body;
 
+    // Validate ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      const error = createHttpError(400, "Invalid Category ID!");
-      return next(error);
+      return next(createHttpError(400, "Invalid Category ID!"));
     }
 
+    // Validate name
     if (!categoryName) {
-      const error = createHttpError(400, "Category name is required!");
-      return next(error);
+      return next(createHttpError(400, "Category name is required!"));
     }
 
-    if (mealType == null) {
-      return next(createHttpError(400, "mealType is required!"));
+    // Validate mealType
+    if (!Array.isArray(mealType) || mealType.length === 0) {
+      return next(
+        createHttpError(400, "At least one session type is required!")
+      );
     }
 
     const allowedMealTypes = Object.values(MealTypes);
-    if (!allowedMealTypes.includes(Number(mealType))) {
+    const invalidTypes = mealType.filter(
+      (type) => !allowedMealTypes.includes(Number(type))
+    );
+
+    if (invalidTypes.length > 0) {
       return next(
         createHttpError(
           400,
-          `Invalid mealType. Allowed values are: ${allowedMealTypes.join(", ")}`
+          `Invalid mealType values: ${invalidTypes.join(", ")}`
         )
       );
     }
 
-    // Check if category already exists
+    // Check duplicate name
     const existingCategory = await Category.findOne({ name: categoryName });
     if (existingCategory && existingCategory._id.toString() !== id) {
-      const error = createHttpError(400, "Category already exists!");
-      return next(error);
+      return next(createHttpError(400, "Category already exists!"));
     }
 
-    const categoryUpdate = await Category.findByIdAndUpdate(
+    // Update category
+    const updatedCategory = await Category.findByIdAndUpdate(
       id,
-      { name: categoryName, mealType: Number(mealType) },
+      {
+        name: categoryName,
+        mealType: mealType.map(Number),
+      },
       { new: true }
     );
 
-    if (!categoryUpdate) {
-      const error = createHttpError(404, "Category not found!");
-      return next(error);
+    if (!updatedCategory) {
+      return next(createHttpError(404, "Category not found!"));
     }
 
     res.status(200).json({
       success: true,
-      message: "Category updated!",
-      data: categoryUpdate,
+      message: "Category updated successfully!",
+      data: updatedCategory,
     });
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * DELETE CATEGORY
+ */
 const deleteCategory = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Validate ID format
+    // Validate ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(createHttpError(400, "Invalid Category ID!"));
     }
 
-    // Check if the category exists
     const category = await Category.findById(id);
     if (!category) {
       return next(createHttpError(404, "Category not found!"));
     }
 
-    // Delete all products associated with this category
-    await Product.deleteMany({ category: id });
+    // Remove category reference from products (SAFE)
+    await Product.updateMany({ categories: id }, { $pull: { categories: id } });
 
-    // Delete the category itself
+    // Delete category
     await Category.findByIdAndDelete(id);
 
     res.status(200).json({
-      message: "Category and its related products deleted successfully!",
+      success: true,
+      message: "Category deleted successfully!",
     });
   } catch (error) {
     next(error);

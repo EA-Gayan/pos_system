@@ -9,6 +9,7 @@ import {
   updateTable,
   getCategories,
 } from "../../https";
+import MultiSelectDropdown from "../shared/MultiSelectDropdown";
 
 const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
   const [tableData, setTableData] = useState({
@@ -20,7 +21,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
   const [categoryData, setCategoryData] = useState({
     categoryId: null,
     categoryName: "",
-    mealType: 0,
+    mealType: [],
   });
 
   const [productData, setProductData] = useState({
@@ -266,26 +267,19 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
-                  Session Type
-                </label>
-                <select
-                  name="mealType"
-                  value={categoryData.mealType}
-                  onChange={handledropDownChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
-                  required
-                >
-                  {categoryData.mealType === 0 && (
-                    <option value={0} disabled>
-                      Select a session
-                    </option>
-                  )}
-                  <option value={1}>Breakfast</option>
-                  <option value={2}>Lunch</option>
-                  <option value={3}>Dinner</option>
-                  <option value={4}>Other</option>
-                </select>
+                <MultiSelectDropdown
+                  label="Session Type"
+                  options={[
+                    { value: 1, label: "Breakfast" },
+                    { value: 2, label: "Lunch" },
+                    { value: 3, label: "Dinner" },
+                    { value: 4, label: "Common" },
+                  ]}
+                  selectedValues={categoryData.mealType}
+                  onChange={(selected) =>
+                    setCategoryData({ ...categoryData, mealType: selected })
+                  }
+                />
               </div>
             </>
           )}
@@ -372,7 +366,15 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
 
           <button
             type="submit"
-            className="w-full rounded-lg mt-8 py-3 text-base sm:text-lg bg-yellow-400 text-gray-900 font-bold"
+            className="
+    w-full rounded-lg mt-8 py-3
+    text-base sm:text-lg
+    bg-yellow-400 text-gray-900 font-bold
+    hover:bg-yellow-500
+    active:bg-yellow-600
+    active:scale-95
+    transition-all duration-150
+  "
           >
             Update {labelType}
           </button>
