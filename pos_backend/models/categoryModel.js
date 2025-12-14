@@ -5,8 +5,9 @@ const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     mealType: {
-      type: Number,
+      type: [Number],
       enum: Object.values(MealTypes),
+      required: true,
     },
   },
   { timestamps: true }

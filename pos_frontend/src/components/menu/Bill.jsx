@@ -125,9 +125,19 @@ const Bill = () => {
         </div>
 
         <button
-          className={`bg-[#f6b100] py-3 w-full rounded-lg text-[#1f1f1f] text-sm sm:text-lg font-semibold mt-4 ${
-            orderMutation.isLoading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`
+    bg-[#f6b100] py-3 w-full rounded-lg
+    text-[#1f1f1f] text-sm sm:text-lg font-semibold mt-4
+    transition-all duration-150
+    hover:bg-[#e5a400]
+    active:bg-[#d99a00]
+    active:scale-95
+    ${
+      orderMutation.isLoading
+        ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
+        : ""
+    }
+  `}
           onClick={handlePlaceOrder}
           disabled={orderMutation.isLoading}
         >
