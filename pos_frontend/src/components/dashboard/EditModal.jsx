@@ -62,7 +62,12 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
       setCategoryData({
         categoryId: currentData.id,
         categoryName: currentData.name,
-        mealType: currentData.mealType.toString(),
+        // ensure mealType stays as an array for the multiselect
+        mealType: Array.isArray(currentData.mealType)
+          ? currentData.mealType
+          : currentData.mealType != null
+          ? [currentData.mealType]
+          : [],
       });
     } else if (labelType === "Product") {
       setProductData({
