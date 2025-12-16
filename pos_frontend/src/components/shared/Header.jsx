@@ -45,13 +45,13 @@ const Header = () => {
 
   const logoutMutation = useMutation({
     mutationFn: () => logout(),
-    onSuccess: () => {
+    onError: (error) => {
+      console.error("Logout failed:", error);
+    },
+    onSettled: () => {
       dispatch(removeUser());
       localStorage.clear();
       navigate("/auth");
-    },
-    onError: (error) => {
-      console.error("Logout failed:", error);
     },
   });
 
