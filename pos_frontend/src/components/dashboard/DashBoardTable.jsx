@@ -153,19 +153,26 @@ const DashBoardTable = () => {
     }
   };
 
-  const statusGetting = (number) => {
-    switch (number) {
-      case 1:
-        return "Breakfast";
-      case 2:
-        return "Lunch";
-      case 3:
-        return "Dinner";
-      case 4:
-        return "Common";
-      default:
-        return "Unknown";
+  const statusGetting = (value) => {
+    const toLabel = (num) => {
+      switch (num) {
+        case 1:
+          return "Breakfast";
+        case 2:
+          return "Lunch";
+        case 3:
+          return "Dinner";
+        case 4:
+          return "Common";
+        default:
+          return "Unknown";
+      }
+    };
+
+    if (Array.isArray(value)) {
+      return value.map(toLabel).join(", ");
     }
+    return toLabel(value);
   };
 
   const renderRow = (row, index) => (
