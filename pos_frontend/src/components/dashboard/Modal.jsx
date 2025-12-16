@@ -153,7 +153,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           </h2>
           <button
             onClick={handleCloseModal}
-            className="text-[#f5f5f5] hover:text-red-500"
+            className="text-[#f5f5f5] hover:text-red-500 cursor-pointer"
           >
             <IoMdClose size={24} />
           </button>
@@ -307,7 +307,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
 
           <button
             type="submit"
-            className="w-full rounded-lg mt-8 py-3 text-base sm:text-lg bg-yellow-400 text-gray-900 font-bold"
+            className="w-full rounded-lg mt-8 py-3 text-base sm:text-lg bg-yellow-400 text-gray-900 font-bold cursor-pointer hover:bg-yellow-500 active:bg-yellow-600 transition-colors"
           >
             Add {labelType}
           </button>

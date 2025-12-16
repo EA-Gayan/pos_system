@@ -19,7 +19,8 @@ const Login = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    if (loginMutataion.isPending) return; // prevent duplicate clicks
     loginMutataion.mutate(formData);
   };
   const handleKeyDown = (e) => {
@@ -92,10 +93,11 @@ const Login = () => {
 
         <button
           type="button"
-          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={handleSubmit}
+          disabled={loginMutataion.isPending}
         >
-          Sign in
+          {loginMutataion.isPending ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </div>

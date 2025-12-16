@@ -20,7 +20,7 @@ const CustomerInfo = () => {
           {formatDate(dateTime)}
         </p>
       </div>
-      <button className="bg-[#F6B100] font-bold rounded-lg p-3 text-xl">
+      <button className="bg-[#F6B100] font-bold rounded-lg p-3 text-xl cursor-pointer hover:bg-[#e5a400]">
         {getAvatarName(customerData.customerName)}
       </button>
     </div>

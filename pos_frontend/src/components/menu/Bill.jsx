@@ -128,7 +128,7 @@ const Bill = () => {
           className={`
     bg-[#f6b100] py-3 w-full rounded-lg
     text-[#1f1f1f] text-sm sm:text-lg font-semibold mt-4
-    transition-all duration-150
+    transition-all duration-150 cursor-pointer
     hover:bg-[#e5a400]
     active:bg-[#d99a00]
     active:scale-95

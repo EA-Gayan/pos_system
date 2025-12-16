@@ -35,7 +35,7 @@ const Dashboard = () => {
                 id={id}
                 key={action}
                 onClick={() => handleOpenModal(action)}
-                className="bg-[#1a1a1a] hover:bg-[#262626] px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2"
+                className="bg-[#1a1a1a] hover:bg-[#262626] px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2 cursor-pointer"
               >
                 {label} {icon}
               </button>
@@ -48,12 +48,11 @@ const Dashboard = () => {
             return (
               <button
                 key={id}
-                className={`
-            px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2 ${
-              activeTab === tab
-                ? "bg-[#262626]"
-                : "bg-[#1a1a1a] hover:bg-[#262626]"
-            }`}
+                className={`px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2 cursor-pointer ${
+                  activeTab === tab
+                    ? "bg-[#262626]"
+                    : "bg-[#1a1a1a] hover:bg-[#262626]"
+                }`}
                 onClick={() => setActiveTab(tab)}
               >
                 {tab}

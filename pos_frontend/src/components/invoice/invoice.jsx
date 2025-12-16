@@ -100,13 +100,13 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
           <button
             onClick={handlePrint}
             disabled={printInvoiceMutation.isPending}
-            className="text-blue-500 hover:underline text-xs px-4 py-2 rounded-lg disabled:opacity-50"
+            className="text-blue-500 hover:underline hover:text-blue-600 text-xs px-4 py-2 rounded-lg disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
           >
             {printInvoiceMutation.isPending ? "Printing..." : "Print Receipt"}
           </button>
           <button
             onClick={handleInvoiceClose}
-            className="text-red-500 hover:underline text-xs px-4 py-2 rounded-lg"
+            className="text-red-500 hover:underline hover:text-red-600 text-xs px-4 py-2 rounded-lg cursor-pointer"
           >
             Close
           </button>

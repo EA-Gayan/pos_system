@@ -235,7 +235,7 @@ const Header = () => {
                   <button
                     key={meal.value}
                     onClick={() => handleMealSelect(meal.value)}
-                    className={`block w-full text-left px-4 py-2 text-sm transition ${
+                    className={`block w-full text-left px-4 py-2 text-sm transition cursor-pointer ${
                       selectedMeal === meal.value
                         ? "bg-[#333] text-white font-semibold"
                         : "text-[#f5f5f5] hover:bg-[#333]"
@@ -270,7 +270,7 @@ const Header = () => {
           <div className="absolute top-full right-0 mt-2 bg-[#1f1f1f] shadow-lg rounded-lg py-2 w-40 z-50">
             <button
               onClick={handleLogOut}
-              className="block w-full text-left px-4 py-2 text-sm text-[#f5f5f5] hover:bg-[#333] transition"
+              className="block w-full text-left px-4 py-2 text-sm text-[#f5f5f5] hover:bg-[#333] transition cursor-pointer"
             >
               Logout
             </button>

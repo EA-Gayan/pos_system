@@ -8,7 +8,7 @@ const MiniCard = ({ title, icon, number, footerNum }) => {
         <button
           className={`${
             title === "Total Earnings" ? "bg-[#02ca3a]" : "bg-[#f6b100]"
-          } p-3 rounded-lg text-[#f5f5f5] text-2xl`}
+          } p-3 rounded-lg text-[#f5f5f5] text-2xl cursor-pointer hover:opacity-90`}
         >
           {icon}
         </button>

@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../https";
 
-const Register = (setIsRegister) => {
-  const navigate = useNavigate();
+const Register = ({ setIsRegister }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,6 +21,7 @@ const Register = (setIsRegister) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (registerMutataion.isPending) return; // prevent duplicate clicks
     registerMutataion.mutate(formData);
   };
 
@@ -32,7 +32,6 @@ const Register = (setIsRegister) => {
       enqueueSnackbar(data.message, {
         variant: "success",
       });
-      window.location.reload();
       setFormData({
         name: "",
         email: "",
@@ -130,7 +129,7 @@ const Register = (setIsRegister) => {
                   key={role}
                   type="button"
                   onClick={() => handleRoleSelection(role)}
-                  className={`bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] ${
+                  className={`bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] cursor-pointer ${
                     formData.role === role ? "bg-indigo-700" : ""
                   }`}
                 >
@@ -143,9 +142,10 @@ const Register = (setIsRegister) => {
 
         <button
           type="submit"
-          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={registerMutataion.isPending}
         >
-          Sign up
+          {registerMutataion.isPending ? "Signing up..." : "Sign up"}
         </button>
       </form>
     </div>

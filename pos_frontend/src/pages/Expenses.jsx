@@ -127,7 +127,7 @@ const Expenses = () => {
               setModalOpen(true);
               setRowData(null);
             }}
-            className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+            className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
           >
             Add Expense
           </button>
@@ -136,7 +136,7 @@ const Expenses = () => {
           <div className="">
             <button
               onClick={() => setExportOpen((prev) => !prev)}
-              className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+              className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
             >
               Export Expense
             </button>
@@ -146,13 +146,13 @@ const Expenses = () => {
               <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
                 <button
                   onClick={() => handleExport("today")}
-                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000] cursor-pointer"
                 >
                   Today
                 </button>
                 <button
                   onClick={() => handleExport("week")}
-                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000] cursor-pointer"
                 >
                   This Week
                 </button>

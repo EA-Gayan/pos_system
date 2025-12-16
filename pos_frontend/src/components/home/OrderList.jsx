@@ -11,7 +11,7 @@ const OrderList = (orderList) => {
       >
         {/* Left: Avatar + Name/Items */}
         <div className="flex items-center gap-4 min-w-0">
-          <button className="bg-[#f6b100] w-12 h-12 text-xl font-bold rounded-full flex items-center justify-center shrink-0">
+          <button className="bg-[#f6b100] w-12 h-12 text-xl font-bold rounded-full flex items-center justify-center shrink-0 cursor-pointer hover:bg-[#e5a400]">
             {getAvatarName(orderList?.order?.orderId || "N/A")}
           </button>
           <div className="flex flex-col">
