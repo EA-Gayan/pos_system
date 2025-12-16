@@ -210,7 +210,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
           </h2>
           <button
             onClick={handleCloseModal}
-            className="text-[#f5f5f5] hover:text-red-500"
+            className="text-[#f5f5f5] hover:text-red-500 cursor-pointer"
           >
             <IoMdClose size={24} />
           </button>
@@ -374,6 +374,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     active:bg-yellow-600
     active:scale-95
     transition-all duration-150
+    cursor-pointer
   "
           >
             Update {labelType}

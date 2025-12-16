@@ -121,7 +121,7 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
             {currentData != null ? "Update Expenses" : "Add Expenses"}
           </h2>
           <button
-            className="text-gray-500 text-2xl hover:text-gray-800"
+            className="text-gray-500 text-2xl hover:text-gray-800 cursor-pointer"
             onClick={handleClose}
           >
             &times;
@@ -165,14 +165,14 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
           {currentData != null ? (
             <button
               onClick={handleUpdateRecord}
-              className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#1a1a1a] font-semibold hover:bg-yellow-400 transition-colors"
+              className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#1a1a1a] font-semibold hover:bg-yellow-400 transition-colors cursor-pointer"
             >
               Update Expenses
             </button>
           ) : (
             <button
               onClick={handleCreateRecord}
-              className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#1a1a1a] font-semibold hover:bg-yellow-400 transition-colors"
+              className="w-full bg-[#f6B100] py-3 mt-8 rounded-lg text-[#1a1a1a] font-semibold hover:bg-yellow-400 transition-colors cursor-pointer"
             >
               Add Expenses
             </button>

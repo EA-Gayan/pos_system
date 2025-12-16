@@ -65,7 +65,7 @@ const Tables = () => {
         <div className="flex items-center justify-around gap-4">
           <button
             onClick={() => setStatus("all")}
-            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg cursor-pointer hover:bg-[#2f2f2f] ${
               status === "all" ? "bg-[#383838]" : ""
             }`}
           >
@@ -73,7 +73,7 @@ const Tables = () => {
           </button>
           <button
             onClick={() => setStatus("booked")}
-            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg cursor-pointer hover:bg-[#2f2f2f] ${
               status === "booked" ? "bg-[#383838]" : ""
             }`}
           >
@@ -81,7 +81,7 @@ const Tables = () => {
           </button>
           <button
             onClick={() => setStatus("available")}
-            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg ${
+            className={`text-[#ababab] text-lg font-semibold px-5 py-2 rounded-lg cursor-pointer hover:bg-[#2f2f2f] ${
               status === "available" ? "bg-[#383838]" : ""
             }`}
           >

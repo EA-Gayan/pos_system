@@ -98,7 +98,7 @@ const MenuContainer = () => {
                         e.stopPropagation();
                         handleAddToCart(item);
                       }}
-                      className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"
+                      className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg cursor-pointer hover:bg-[#385b50]"
                     >
                       <FaShoppingCart />
                     </button>
@@ -115,7 +115,7 @@ const MenuContainer = () => {
                           e.stopPropagation();
                           decrement(item._id)();
                         }}
-                        className="text-yellow-500 text-xl"
+                        className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
                       >
                         &minus;
                       </button>
@@ -143,7 +143,7 @@ const MenuContainer = () => {
                           e.stopPropagation();
                           increment(item._id)();
                         }}
-                        className="text-yellow-500 text-xl"
+                        className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
                       >
                         &#43;
                       </button>
@@ -212,7 +212,7 @@ const MenuContainer = () => {
                           e.stopPropagation();
                           handleAddToCart(item);
                         }}
-                        className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"
+                        className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg cursor-pointer hover:bg-[#385b50]"
                       >
                         <FaShoppingCart />
                       </button>
@@ -229,7 +229,7 @@ const MenuContainer = () => {
                             e.stopPropagation();
                             decrement(item._id)();
                           }}
-                          className="text-yellow-500 text-xl"
+                          className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
                         >
                           &minus;
                         </button>
@@ -257,7 +257,7 @@ const MenuContainer = () => {
                             e.stopPropagation();
                             increment(item._id)();
                           }}
-                          className="text-yellow-500 text-xl"
+                          className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
                         >
                           &#43;
                         </button>

@@ -59,13 +59,13 @@ const CommonTable = ({ data, columns, onEdit, onDelete }) => {
                     <div className="flex gap-12 justify-end">
                       <button
                         onClick={() => onEdit?.(item)}
-                        className="text-blue-500 hover:text-blue-400"
+                        className="text-blue-500 hover:text-blue-400 cursor-pointer"
                       >
                         <FaEdit />
                       </button>
                       <button
                         onClick={() => onDelete?.(item)}
-                        className="text-red-500 hover:text-red-400"
+                        className="text-red-500 hover:text-red-400 cursor-pointer"
                       >
                         <FaTrash />
                       </button>

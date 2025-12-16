@@ -93,7 +93,7 @@ const Login = () => {
 
         <button
           type="button"
-          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           onClick={handleSubmit}
           disabled={loginMutataion.isPending}
         >

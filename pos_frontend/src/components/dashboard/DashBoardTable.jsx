@@ -194,13 +194,13 @@ const DashBoardTable = () => {
         <div className="gap-10 flex justify-center">
           <button
             onClick={() => handleEdit(row)}
-            className="text-blue-500 hover:text-blue-400"
+            className="text-blue-500 hover:text-blue-400 cursor-pointer"
           >
             <FaEdit />
           </button>
           <button
             onClick={() => handleDelete(row)}
-            className="text-red-500 hover:text-red-400 ml-4"
+            className="text-red-500 hover:text-red-400 ml-4 cursor-pointer"
           >
             <FaTrash />
           </button>

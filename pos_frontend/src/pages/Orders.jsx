@@ -44,25 +44,25 @@ const Orders = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setStatus(OrderTypes.ALL)}
-            className={`text-[#ababab] text-lg ${
+            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
               status === OrderTypes.ALL ? "bg-[#383838]" : ""
-            } rounded-lg px-5 py-2 font-semibold`}
+            }`}
           >
             All
           </button>
           <button
             onClick={() => setStatus(OrderTypes.INPROGRESS)}
-            className={`text-[#ababab] text-lg ${
+            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
               status === OrderTypes.INPROGRESS ? "bg-[#383838]" : ""
-            } rounded-lg px-5 py-2 font-semibold`}
+            }`}
           >
             In Progress
           </button>
           <button
             onClick={() => setStatus(OrderTypes.COMPLETE)}
-            className={`text-[#ababab] text-lg ${
+            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
               status === OrderTypes.COMPLETE ? "bg-[#383838]" : ""
-            } rounded-lg px-5 py-2 font-semibold`}
+            }`}
           >
             Completed
           </button>
