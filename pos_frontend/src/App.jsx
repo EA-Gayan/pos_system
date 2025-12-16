@@ -16,6 +16,7 @@ import Home from "./pages/Home";
 import Menu from "./pages/Menu";
 import Orders from "./pages/Orders";
 import Tables from "./pages/Tables";
+import BestSelling from "./components/dashboard/BestSelling";
 
 function Layout() {
   const location = useLocation();
@@ -78,6 +79,14 @@ function Layout() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/best-selling"
+            element={
+              <ProtectedRoute>
+                <BestSelling />
               </ProtectedRoute>
             }
           />

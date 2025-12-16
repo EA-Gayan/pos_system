@@ -1,7 +1,6 @@
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { metricsData } from "../../constants";
 import {
   exportIncomeRecord,
   getDashboardItemsData,
@@ -13,7 +12,6 @@ import {
 } from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import Table from "../shared/Table";
 
 const Metrics = () => {
   const [dashboardItemDetails, setDashboardItemDetails] = useState([]);
@@ -139,6 +137,7 @@ const Metrics = () => {
   });
 
   const fetchDashboardAndBestSelling = async () => {
+    setIsLoading(true);
     try {
       // Run both API calls in parallel
       const [dashboardRes, bestSellingRes] = await Promise.all([
@@ -146,9 +145,11 @@ const Metrics = () => {
         getBestSellingProducts(periodData.period),
       ]);
 
-      // Set state with the results
-      setDashboardItemDetails(dashboardRes.data);
-      setBestSellingProducts(bestSellingRes.data.data);
+      // Set state with the results (defensive fallbacks)
+      setDashboardItemDetails(
+        dashboardRes?.data?.data ?? dashboardRes?.data ?? []
+      );
+      setBestSellingProducts(bestSellingRes?.data?.data ?? []);
     } catch (error) {
       console.error("Error fetching data:", error);
       enqueueSnackbar("Something went wrong!", { variant: "error" });
@@ -156,6 +157,12 @@ const Metrics = () => {
       setIsLoading(false);
     }
   };
+
+  const bestSellingCount = bestSellingProducts.length;
+  const bestSellingQtyTotal = bestSellingProducts.reduce(
+    (sum, item) => sum + (Number(item.sellingQty) || 0),
+    0
+  );
 
   const handleExport = (type) => {
     setExportOpen(false);
@@ -167,16 +174,8 @@ const Metrics = () => {
     exportExpenseRecordMutation.mutate(type);
   };
 
-  const renderRow = (row, index) => (
-    <tr className={index % 2 === 0 ? "bg-[#1a1a1a]" : "bg-[#222]"} key={index}>
-      <td className="p-3">{row.productName}</td>
-      <td className="p-3">{row.productPrice}</td>
-      <td className="p-3">{row.sellingQty}</td>
-      <td className="p-3">{row.income}</td>
-    </tr>
-  );
   return (
-    <div class="!h-auto overflow-y-auto bg-[#121212] text-white">
+    <div className="min-h-screen overflow-y-auto bg-[#121212] text-white">
       <div className="container mx-auto py-6 px-6 md:px-4">
         {isLoading ? (
           <div className="flex justify-center items-center h-32 mt-30">
@@ -346,51 +345,19 @@ const Metrics = () => {
                   {totalOrders}
                 </p>
               </div>
-            </div>
-
-            <div className="flex flex-col mt-16">
-              <h2 className="font-semibold text-[#f5f5f5] text-xl">
-                Product Details
-              </h2>
-
-              <div className="mt-10 max-h-[400px] overflow-y-auto overflow-x-auto">
-                <table className="w-full text-left text-[#f5f5f5] border-collapse">
-                  <thead className="bg-[#333] text-[#ababab] sticky top-0 z-10">
-                    <tr>
-                      <th className="p-3">Product Name</th>
-                      <th className="p-3">Price</th>
-                      <th className="p-3">Quantity Sold</th>
-                      <th className="p-3">Income</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {bestSellingProducts.length > 0 ? (
-                      bestSellingProducts.map((row, index) => (
-                        <tr
-                          key={index}
-                          className={
-                            index % 2 === 0 ? "bg-[#1a1a1a]" : "bg-[#222]"
-                          }
-                        >
-                          <td className="p-3">{row.productName}</td>
-                          <td className="p-3">{row.productPrice}</td>
-                          <td className="p-3">{row.sellingQty}</td>
-                          <td className="p-3">{row.income}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="p-4 text-center text-gray-400"
-                        >
-                          No data available
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+              <div
+                className="shadow-sm rounded-lg p-4 cursor-pointer hover:opacity-90 transition"
+                style={{ backgroundColor: "#999400" }}
+                onClick={() => navigate("/dashboard/best-selling")}
+              >
+                <div className="flex justify-between items-center">
+                  <p className="font-medium text-xs text-[#f5f5f5]">
+                    Best Selling Products
+                  </p>
+                </div>
+                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                  {bestSellingCount} items
+                </p>
               </div>
             </div>
           </>
