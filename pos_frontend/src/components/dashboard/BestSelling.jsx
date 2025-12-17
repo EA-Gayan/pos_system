@@ -22,12 +22,6 @@ const BestSelling = ({ products }) => {
         const resToday = await getBestSellingProducts("today");
         let rows = resToday?.data?.data ?? [];
 
-        // Fallback: load weekly if today has no rows
-        if (rows.length === 0) {
-          const resWeek = await getBestSellingProducts("week");
-          rows = resWeek?.data?.data ?? [];
-        }
-
         if (isMounted) setFetchedProducts(rows);
       } catch (error) {
         console.error("Best selling fetch error:", error);

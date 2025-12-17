@@ -159,10 +159,6 @@ const Metrics = () => {
   };
 
   const bestSellingCount = bestSellingProducts.length;
-  const bestSellingQtyTotal = bestSellingProducts.reduce(
-    (sum, item) => sum + (Number(item.sellingQty) || 0),
-    0
-  );
 
   const handleExport = (type) => {
     setExportOpen(false);
