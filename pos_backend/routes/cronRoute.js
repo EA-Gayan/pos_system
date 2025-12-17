@@ -19,7 +19,7 @@ const verifyCronSecret = (req, res, next) => {
 };
 
 // Expense cleanup endpoint
-router.post("/expense-cleanup", verifyCronSecret, async (req, res) => {
+router.get("/expense-cleanup", verifyCronSecret, async (req, res) => {
   try {
     await connectDB();
 
@@ -49,7 +49,7 @@ router.post("/expense-cleanup", verifyCronSecret, async (req, res) => {
 });
 
 // Order cleanup endpoint
-router.post("/order-cleanup", verifyCronSecret, async (req, res) => {
+router.get("/order-cleanup", verifyCronSecret, async (req, res) => {
   try {
     await connectDB();
 
