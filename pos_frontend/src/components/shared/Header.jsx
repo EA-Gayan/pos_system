@@ -42,6 +42,7 @@ const Header = () => {
 
   const dropdownRef = useRef();
   const calendarDropdownRef = useRef();
+  const latestSearchRef = useRef("");
 
   const logoutMutation = useMutation({
     mutationFn: () => logout(),
@@ -63,7 +64,9 @@ const Header = () => {
       );
       return searchProduct({ value, selectedStatus });
     },
-    onSuccess: (res) => {
+    onSuccess: (res, value) => {
+      // Ignore stale responses (e.g. user cleared/changed input quickly)
+      if (latestSearchRef.current !== value) return;
       dispatch(setSearchProductList(res?.data?.data));
     },
     onError: (error) => {
@@ -78,7 +81,8 @@ const Header = () => {
 
   const searchOrderMutation = useMutation({
     mutationFn: (value) => getfindOrders({ id: value, status: OrderTypes.ALL }),
-    onSuccess: (res) => {
+    onSuccess: (res, value) => {
+      if (latestSearchRef.current !== value) return;
       dispatch(setSearchOrderList(res?.data?.data));
     },
     onError: (error) => {
@@ -93,7 +97,8 @@ const Header = () => {
 
   const searchRecordMutation = useMutation({
     mutationFn: (query) => searchExpenseRecord(query),
-    onSuccess: (res) => {
+    onSuccess: (res, query) => {
+      if (latestSearchRef.current !== query) return;
       dispatch(setSearchExpensesList(res?.data?.data));
     },
     onError: (error) => {
@@ -164,6 +169,7 @@ const Header = () => {
   };
 
   const handleSearchChange = (value) => {
+    latestSearchRef.current = value;
     if (pageName === "menu" && value != "") {
       searchProductMutation.mutate(value);
     }

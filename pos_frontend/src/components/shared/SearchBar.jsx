@@ -12,13 +12,14 @@ const SearchBar = ({ onSearchChange }) => {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
+    setSearchValue(value);
+    onSearchChange(value);
 
+    // If user cleared the input, immediately reset all search lists.
     if (value === "") {
-      handleClear();
-      onSearchChange("");
-    } else {
-      setSearchValue(value);
-      onSearchChange(value);
+      dispatch(setClearSearchProductList());
+      dispatch(setClearSearchOrderList());
+      dispatch(setClearSearchExpensesList());
     }
   };
 
