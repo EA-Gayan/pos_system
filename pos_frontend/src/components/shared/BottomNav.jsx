@@ -2,10 +2,9 @@ import { BiSolidDish } from "react-icons/bi";
 import { CiCircleMore } from "react-icons/ci";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar } from "react-icons/md";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const BottomNav = () => {
+const BottomNav = ({ isVisible = true }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,7 +16,14 @@ const BottomNav = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#262626] p-2 h-16 flex justify-around z-50">
+    <div
+      className={[
+        "fixed bottom-0 left-0 right-0 bg-[#262626] p-2 h-16 flex justify-around z-50",
+        "transition-transform duration-300 ease-out will-change-transform",
+        isVisible ? "translate-y-0" : "translate-y-16",
+      ].join(" ")}
+      style={{ pointerEvents: isVisible ? "auto" : "none" }}
+    >
       {userData.role === "Admin" && (
         <button
           onClick={() => navigate("/")}

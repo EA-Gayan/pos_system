@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Navigate,
@@ -22,6 +23,8 @@ function Layout() {
   const location = useLocation();
   const hideHeader = ["/auth"];
   const { isAuth } = useSelector((state) => state.user);
+  const [isBottomNavVisible, setIsBottomNavVisible] = useState(true);
+  const hideTimerRef = useRef(null);
 
   // Helper function to check if current path matches any hideBottomNav pattern
   const shouldHideBottomNav = () => {
@@ -33,6 +36,51 @@ function Layout() {
       prefixHide.some((prefix) => location.pathname.startsWith(prefix))
     );
   };
+
+  useEffect(() => {
+    // If device doesn't support hover (touch), keep nav visible.
+    const noHover = window.matchMedia?.("(hover: none)")?.matches;
+    if (noHover) {
+      setIsBottomNavVisible(true);
+      return;
+    }
+
+    const triggerZoneHeightPx = 48; // how close to bottom to reveal
+    const hideDelayMs = 600; // slight delay like taskbar
+
+    const clearHideTimer = () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+    };
+
+    const scheduleHide = () => {
+      clearHideTimer();
+      hideTimerRef.current = setTimeout(() => {
+        setIsBottomNavVisible(false);
+      }, hideDelayMs);
+    };
+
+    const onMouseMove = (e) => {
+      const nearBottom = e.clientY >= window.innerHeight - triggerZoneHeightPx;
+      if (nearBottom) {
+        clearHideTimer();
+        setIsBottomNavVisible(true);
+      } else {
+        scheduleHide();
+      }
+    };
+
+    // Start hidden until user approaches the bottom.
+    setIsBottomNavVisible(false);
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+
+    return () => {
+      clearHideTimer();
+      window.removeEventListener("mousemove", onMouseMove);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -108,7 +156,7 @@ function Layout() {
           />
         </Routes>
       </main>
-      {!shouldHideBottomNav() && <BottomNav />}
+      {!shouldHideBottomNav() && <BottomNav isVisible={isBottomNavVisible} />}
     </div>
   );
 }
