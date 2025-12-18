@@ -118,7 +118,7 @@ const getWeeklyIncomeExpenses = async (req, res, next) => {
 
 const getBestSellingProducts = async (req, res, next) => {
   try {
-    const { period } = "today"; // "today" or "week"
+    const { period = "today" } = req.query; // "today" or "week"
 
     if (!["today", "week"].includes(period)) {
       return res.status(400).json({
