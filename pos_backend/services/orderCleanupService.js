@@ -12,14 +12,16 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Get start of today (midnight)
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
 
+    // Delete all orders created before today
     const result = await Order.deleteMany({
-      createdAt: { $lt: sevenDaysAgo },
+      createdAt: { $lt: startOfToday },
     });
 
-    const message = `Successfully deleted ${result.deletedCount} orders older than 7 days`;
+    const message = `Successfully deleted ${result.deletedCount} orders from past dates`;
     console.log(`[${new Date().toISOString()}] ${message}`);
 
     return res.status(200).json({
