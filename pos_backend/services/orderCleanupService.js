@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    // Get start of today (midnight)
+    // Get start of today ( at midnight)
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
