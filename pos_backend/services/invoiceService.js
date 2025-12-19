@@ -38,10 +38,10 @@ const printInvoiceService = async (order) => {
     doc
       .fontSize(18)
       .font("Helvetica-Bold")
-      .text("Jayanthi Hotel", { align: "center" })
+      .text("ජයන්ති හෝටලය", { align: "center" })
       .fontSize(9)
       .font("Helvetica")
-      .text("Thank you for your order!", { align: "center" })
+      .text("ඔබගේ ඇණවුමට ස්තූතියි!", { align: "center" })
       .moveDown(1);
 
     // === ORDER ID ===
@@ -112,7 +112,7 @@ const printInvoiceService = async (order) => {
     // Print farewell message
     doc
       .font("Helvetica-Bold")
-      .text("See You Again !", { align: "center" })
+      .text("නැවත හමුවෙමු!", { align: "center" })
       .moveDown(0.5);
 
     // Draw line below
