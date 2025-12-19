@@ -1,4 +1,7 @@
+const serverless = require("serverless-http");
 const app = require("./app");
+
+const handler = serverless(app);
 
 module.exports = async (req, res) => {
   try {
@@ -9,7 +12,6 @@ module.exports = async (req, res) => {
     if (isCron) {
       console.log("[CRON] Triggered at", new Date().toISOString());
 
-      // 🔽 CALL YOUR CRON SERVICES HERE
       const expenseCleanup = require("./services/expenseCleanupService");
       const orderCleanup = require("./services/orderCleanupService");
 
@@ -19,10 +21,10 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: true });
     }
 
-    // Normal API traffic
-    return app(req, res);
+    // ✅ Properly forward to Express
+    return handler(req, res);
   } catch (err) {
-    console.error("[INDEX ERROR]", err);
+    console.error("[FUNCTION CRASH]", err);
     return res.status(500).json({ error: err.message });
   }
 };
