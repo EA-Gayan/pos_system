@@ -15,16 +15,21 @@ const printInvoiceService = async (order) => {
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      /* ================= FONT ================= */
-      const iskoolaPotaPath = path.join(
-        process.cwd(), // ROOT of project (Vercel safe)
+      /* ================= FONT SETUP ================= */
+      const iskoolaFontPath = path.join(
+        process.cwd(),
         "public",
         "fonts",
         "iskpota.ttf"
       );
 
-      if (fs.existsSync(iskoolaPotaPath)) {
-        doc.registerFont("IskoolaPota", iskoolaPotaPath);
+      let sinhalaFont = "Helvetica"; // fallback
+
+      if (fs.existsSync(iskoolaFontPath)) {
+        doc.registerFont("IskoolaPota", iskoolaFontPath);
+        sinhalaFont = "IskoolaPota";
+      } else {
+        console.warn("⚠️ Iskoola Pota font not found, using Helvetica");
       }
 
       /* ================= LOGO ================= */
@@ -44,7 +49,7 @@ const printInvoiceService = async (order) => {
 
       /* ================= HEADER ================= */
       doc
-        .font("IskoolaPota")
+        .font(sinhalaFont)
         .fontSize(18)
         .text("ජයන්ති හෝටලය", { align: "center" })
         .moveDown(0.2)
@@ -116,15 +121,16 @@ const printInvoiceService = async (order) => {
         .fontSize(8)
         .text(formattedDate, { align: "center" })
         .moveDown(0.4)
-        .font("IskoolaPota")
+        .font(sinhalaFont)
         .fontSize(10)
         .text("නැවත හමුවෙමු!", { align: "center" });
 
       drawLine(doc);
 
       doc.end();
-    } catch (err) {
-      reject(err);
+    } catch (error) {
+      console.error("Invoice generation error:", error);
+      reject(error);
     }
   });
 };
