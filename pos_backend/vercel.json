@@ -8,13 +8,17 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/index.js"
+      "src": "/(.*)",
+      "dest": "index.js"
     }
   ],
   "crons": [
     {
       "path": "/api/cron/expenseCleanUpService",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/orderCleanupService",
       "schedule": "0 0 * * *"
     }
   ]
