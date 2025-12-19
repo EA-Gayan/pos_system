@@ -20,7 +20,7 @@ app.get("/favicon.png", (req, res) => {
 app.use(bodyParser.json());
 
 const PORT = config.port;
-// connectDB(); // Connect to the database
+connectDB(); // Connect to the database
 
 // Middleware
 app.use(

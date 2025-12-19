@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
+const runDailyCleanup = require("../services/runDailyCleanup");
 
 const register = async (req, res, next) => {
   try {
@@ -62,6 +63,9 @@ const login = async (req, res, next) => {
       const error = createHttpError(401, "Invalid password!");
       return next(error);
     }
+
+    // Fire-and-forget cleanup (DO NOT await)
+    runDailyCleanup().catch((err) => console.error("[CLEANUP ERROR]", err));
 
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
