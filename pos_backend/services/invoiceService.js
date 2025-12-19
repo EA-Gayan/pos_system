@@ -1,7 +1,6 @@
 const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
-const sinhalaTextToImage = require("./sinhalaTextImage");
 
 const printInvoiceService = async (order) => {
   return new Promise((resolve, reject) => {
@@ -36,28 +35,14 @@ const printInvoiceService = async (order) => {
     }
 
     // === CENTERED HEADER ===
-    // === CENTERED HEADER (Sinhala as Image) ===
-    const titleImage = sinhalaTextToImage("ජයන්ති හෝටලය", {
-      fontSize: 28,
-      width: 300,
-    });
-
-    const thanksImage = sinhalaTextToImage("ඔබගේ ඇණවුමට ස්තූතියි!", {
-      fontSize: 14,
-      width: 300,
-    });
-
-    doc.image(titleImage, {
-      align: "center",
-    });
-
-    doc.moveDown(0.3);
-
-    doc.image(thanksImage, {
-      align: "center",
-    });
-
-    doc.moveDown(1);
+    doc
+      .fontSize(18)
+      .font("Helvetica-Bold")
+      .text("Jayanthi Hotel", { align: "center" })
+      .fontSize(9)
+      .font("Helvetica")
+      .text("Thank you for your order!", { align: "center" })
+      .moveDown(1);
 
     // === ORDER ID ===
     doc
@@ -125,16 +110,10 @@ const printInvoiceService = async (order) => {
       .moveDown(0.5);
 
     // Print farewell message
-    const byeImage = sinhalaTextToImage("නැවත හමුවෙමු!", {
-      fontSize: 16,
-      width: 250,
-    });
-
-    doc.image(byeImage, {
-      align: "center",
-    });
-
-    doc.moveDown(0.5);
+    doc
+      .font("Helvetica-Bold")
+      .text("See You Again !", { align: "center" })
+      .moveDown(0.5);
 
     // Draw line below
     doc
