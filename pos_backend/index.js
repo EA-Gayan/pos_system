@@ -1,47 +1,28 @@
 const app = require("./app");
-const config = require("./config/config");
-const {
-  runExpenseCleanup,
-  runOrderCleanup,
-} = require("./services/cleanupService");
 
-const PORT = config.port;
-
-/* Local dev only */
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
-/* Vercel entry */
 module.exports = async (req, res) => {
-  const isCron =
-    req.headers["x-vercel-cron"] === "1" ||
-    req.headers["x-vercel-cron"] === "true";
+  try {
+    const isCron =
+      req.headers["x-vercel-cron"] === "1" ||
+      req.headers["x-vercel-cron"] === "true";
 
-  if (isCron) {
-    console.log("[CRON] Triggered");
+    if (isCron) {
+      console.log("[CRON] Triggered at", new Date().toISOString());
 
-    // Optional extra security
-    if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
-      return res.status(401).json({ error: "Unauthorized cron" });
+      // 🔽 CALL YOUR CRON SERVICES HERE
+      const expenseCleanup = require("./services/expenseCleanupService");
+      const orderCleanup = require("./services/orderCleanupService");
+
+      await expenseCleanup();
+      await orderCleanup();
+
+      return res.status(200).json({ success: true });
     }
 
-    try {
-      await runExpenseCleanup();
-      await runOrderCleanup();
-
-      return res.status(200).json({
-        success: true,
-        message: "Cron jobs executed successfully",
-      });
-    } catch (err) {
-      console.error("[CRON] Failed", err);
-      return res.status(500).json({ error: err.message });
-    }
+    // Normal API traffic
+    return app(req, res);
+  } catch (err) {
+    console.error("[INDEX ERROR]", err);
+    return res.status(500).json({ error: err.message });
   }
-
-  // Normal API / frontend request
-  return app(req, res);
 };
