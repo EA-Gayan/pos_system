@@ -15,6 +15,20 @@ const printInvoiceService = async (order) => {
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
 
+    // === REGISTER SINHALA FONT ===
+    const sinhalaFontPath = path.join(
+      __dirname,
+      "..",
+      "fonts",
+      "NotoSansSinhala-Regular.ttf"
+    );
+    const sinhalaBoldFontPath = path.join(
+      __dirname,
+      "..",
+      "fonts",
+      "NotoSansSinhala-Bold.ttf"
+    );
+
     // === LOGO ===
     const logoPath = path.join(
       __dirname,
@@ -60,14 +74,24 @@ const printInvoiceService = async (order) => {
       .stroke()
       .moveDown();
 
-    // === ITEMS ===
+    // === ITEMS (Use Sinhala font if available) ===
     doc.font("Helvetica-Bold").text("Items Ordered").moveDown(0.5);
 
     order.items.forEach((item) => {
       const itemText = `${item.name} x${item.quantity}`;
+
+      // Use Sinhala font for item name if font exists
+      try {
+        if (fs.existsSync(sinhalaFontPath)) {
+          doc.font(sinhalaFontPath);
+        }
+      } catch (err) {
+        doc.font("Helvetica");
+      }
+
       doc
-        .font("Helvetica")
         .text(itemText, 50, doc.y, { continued: true })
+        .font("Helvetica") // Switch back for numbers
         .text(`Rs ${item.price.toFixed(2)}`, { align: "right" });
     });
 
@@ -95,7 +119,6 @@ const printInvoiceService = async (order) => {
       hour12: true,
     });
 
-    // Draw line above
     doc
       .moveTo(50, doc.y)
       .lineTo(doc.page.width - 50, doc.y)
@@ -103,25 +126,22 @@ const printInvoiceService = async (order) => {
 
     doc.moveDown(0.5);
 
-    // Print formatted date
     doc
       .font("Helvetica")
       .text(formattedDate, { align: "center" })
       .moveDown(0.5);
 
-    // Print farewell message
     doc
       .font("Helvetica-Bold")
       .text("See You Again !", { align: "center" })
       .moveDown(0.5);
 
-    // Draw line below
     doc
       .moveTo(50, doc.y)
       .lineTo(doc.page.width - 50, doc.y)
       .stroke();
 
-    doc.moveDown(1); // optional extra space after
+    doc.moveDown(1);
 
     doc.end();
   });
