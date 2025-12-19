@@ -1,39 +1,44 @@
-import connectDB from "../config/database.js";
-import expense from "../models/expensesModel.js";
+import connectDB from "../../../config/database.js";
+import expense from "../../../models/expensesModel.js";
 
 export default async function handler(req, res) {
-  // Security: Verify it's actually Vercel's cron calling this
-  const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Auth check
+  if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+    console.warn(
+      `[EXPENSE CLEANUP] Unauthorized access attempt at ${new Date().toISOString()}`
+    );
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   try {
+    console.log(`[EXPENSE CLEANUP] Job started at ${new Date().toISOString()}`);
+
     await connectDB();
 
-    // Get start of today (midnight)
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
-    // Delete all expenses created before today
     const result = await expense.deleteMany({
       createdAt: { $lt: startOfToday },
     });
 
-    const message = `Successfully deleted ${result.deletedCount} expenses from past dates`;
-    console.log(`[${new Date().toISOString()}] ${message}`);
+    console.log(
+      `[EXPENSE CLEANUP] Successfully deleted ${
+        result.deletedCount
+      } expenses | Executed at ${new Date().toISOString()}`
+    );
 
     return res.status(200).json({
       success: true,
       deletedCount: result.deletedCount,
-      message,
       executedAt: new Date().toISOString(),
     });
-  } catch (error) {
-    console.error("Error in expense cleanup job:", error);
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-    });
+  } catch (err) {
+    console.error(
+      `[EXPENSE CLEANUP] Job failed at ${new Date().toISOString()}`,
+      err
+    );
+
+    return res.status(500).json({ error: err.message });
   }
 }

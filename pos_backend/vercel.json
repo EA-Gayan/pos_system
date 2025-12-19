@@ -14,11 +14,11 @@
   ],
   "crons": [
     {
-      "path": "/api/cron/expense-cleanup",
+      "path": "/services/expenseCleanUpService",
       "schedule": "0 0 * * *"
     },
     {
-      "path": "/api/cron/order-cleanup",
+      "path": "/services/orderCleanupService",
       "schedule": "0 0 * * *"
     }
   ]
