@@ -15,21 +15,21 @@ const printInvoiceService = async (order) => {
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      /* ================= FONT SETUP ================= */
-      const iskoolaFontPath = path.join(
+      /* ================= FONT ================= */
+      const fontPath = path.join(
         process.cwd(),
         "public",
         "fonts",
         "iskpota.ttf"
       );
 
-      let sinhalaFont = "Helvetica"; // fallback
+      let SIN_FONT = "Helvetica";
 
-      if (fs.existsSync(iskoolaFontPath)) {
-        doc.registerFont("IskoolaPota", iskoolaFontPath);
-        sinhalaFont = "IskoolaPota";
+      if (fs.existsSync(fontPath)) {
+        doc.registerFont("IskoolaPota", fontPath);
+        SIN_FONT = "IskoolaPota";
       } else {
-        console.warn("⚠️ Iskoola Pota font not found, using Helvetica");
+        console.warn("Iskoola Pota font not found. Using Helvetica.");
       }
 
       /* ================= LOGO ================= */
@@ -42,71 +42,82 @@ const printInvoiceService = async (order) => {
 
       if (fs.existsSync(logoPath)) {
         const logoWidth = 60;
-        const xCenter = (doc.page.width - logoWidth) / 2;
-        doc.image(logoPath, xCenter, doc.y, { width: logoWidth });
+        const x = (doc.page.width - logoWidth) / 2;
+        doc.image(logoPath, x, doc.y, { width: logoWidth });
         doc.moveDown(1);
       }
 
-      /* ================= HEADER ================= */
-      doc
-        .font(sinhalaFont)
-        .fontSize(18)
-        .text("ජයන්ති හෝටලය", { align: "center" })
-        .moveDown(0.2)
-        .fontSize(9)
-        .text("ඔබගේ ඇණවුමට ස්තූතියි!", { align: "center" })
-        .moveDown(0.8);
+      /* ================= HEADER (SINHALA) ================= */
+      doc.font(SIN_FONT).fontSize(18).text("ජයන්ති හෝටලය", {
+        align: "center",
+        lineGap: 2,
+      });
 
-      /* ================= ORDER ID ================= */
+      doc.font(SIN_FONT).fontSize(9).text("ඔබගේ ඇණවුමට ස්තූතියි!", {
+        align: "center",
+        lineGap: 2,
+      });
+
+      doc.moveDown(0.8);
       drawLine(doc);
 
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(9)
-        .text("Order ID:", { continued: true })
-        .font("Helvetica")
-        .text(` ${order.orderId}`);
+      /* ================= ORDER INFO ================= */
+      doc.font("Helvetica-Bold").fontSize(9).text("Order ID");
+
+      doc.font("Helvetica").fontSize(9).text(order.orderId);
 
       drawLine(doc);
 
       /* ================= ITEMS ================= */
-      doc
-        .moveDown(0.5)
-        .font("Helvetica-Bold")
-        .fontSize(10)
-        .text("Items Ordered")
-        .moveDown(0.5);
+      doc.font("Helvetica-Bold").fontSize(10).text("Items Ordered");
+
+      doc.moveDown(0.4);
 
       order.items.forEach((item) => {
         doc
           .font("Helvetica")
           .fontSize(9)
-          .text(`${item.name} x${item.quantity}`, 10, doc.y, {
-            continued: true,
-          })
-          .text(`Rs ${item.price.toFixed(2)}`, { align: "right" });
+          .text(`${item.name} x${item.quantity}`, {
+            align: "left",
+          });
+
+        doc
+          .font("Helvetica")
+          .fontSize(9)
+          .text(`Rs ${item.price.toFixed(2)}`, {
+            align: "right",
+          });
+
+        doc.moveDown(0.2);
       });
 
-      /* ================= TOTALS ================= */
-      doc.moveDown(0.5);
       drawLine(doc);
 
+      /* ================= TOTALS ================= */
       doc
         .font("Helvetica")
         .fontSize(9)
         .text(`Subtotal: Rs ${order.bills.total.toFixed(2)}`, {
           align: "right",
-        })
+        });
+
+      doc
+        .font("Helvetica")
+        .fontSize(9)
         .text(`Tax: Rs ${order.bills.tax.toFixed(2)}`, {
           align: "right",
-        })
-        .moveDown(0.3)
+        });
+
+      doc.moveDown(0.3);
+
+      doc
         .font("Helvetica-Bold")
+        .fontSize(10)
         .text(`Grand Total: Rs ${order.bills.totalPayable.toFixed(2)}`, {
           align: "right",
         });
 
-      /* ================= DATE & FAREWELL ================= */
+      /* ================= DATE ================= */
       doc.moveDown(0.6);
       drawLine(doc);
 
@@ -119,18 +130,22 @@ const printInvoiceService = async (order) => {
       doc
         .font("Helvetica")
         .fontSize(8)
-        .text(formattedDate, { align: "center" })
-        .moveDown(0.4)
-        .font(sinhalaFont)
-        .fontSize(10)
-        .text("නැවත හමුවෙමු!", { align: "center" });
+        .text(formattedDate, { align: "center" });
+
+      /* ================= FAREWELL (SINHALA) ================= */
+      doc.moveDown(0.4);
+
+      doc.font(SIN_FONT).fontSize(10).text("නැවත හමුවෙමු!", {
+        align: "center",
+        lineGap: 2,
+      });
 
       drawLine(doc);
 
       doc.end();
-    } catch (error) {
-      console.error("Invoice generation error:", error);
-      reject(error);
+    } catch (err) {
+      console.error("Invoice error:", err);
+      reject(err);
     }
   });
 };
@@ -138,11 +153,11 @@ const printInvoiceService = async (order) => {
 /* ================= HELPER ================= */
 function drawLine(doc) {
   doc
-    .moveDown(0.3)
+    .moveDown(0.4)
     .moveTo(10, doc.y)
     .lineTo(doc.page.width - 10, doc.y)
     .stroke()
-    .moveDown(0.3);
+    .moveDown(0.4);
 }
 
 module.exports = printInvoiceService;
