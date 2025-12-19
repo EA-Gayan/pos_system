@@ -4,127 +4,139 @@ const path = require("path");
 
 const printInvoiceService = async (order) => {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({
-      size: [210, 800],
-      margins: { top: 0, bottom: 10, left: 10, right: 10 },
-    });
-
-    const chunks = [];
-
-    doc.on("data", (chunk) => chunks.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(chunks)));
-    doc.on("error", reject);
-
-    // === LOGO ===
-    const logoPath = path.join(
-      __dirname,
-      "..",
-      "public",
-      "images",
-      "logo-modified.png"
-    );
-
     try {
+      const doc = new PDFDocument({
+        size: [210, 800],
+        margins: { top: 10, bottom: 10, left: 10, right: 10 },
+      });
+
+      const chunks = [];
+      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
+      doc.on("error", reject);
+
+      /* ================= FONT ================= */
+      const iskoolaPotaPath = path.join(
+        process.cwd(), // ROOT of project (Vercel safe)
+        "public",
+        "fonts",
+        "iskpota.ttf"
+      );
+
+      if (fs.existsSync(iskoolaPotaPath)) {
+        doc.registerFont("IskoolaPota", iskoolaPotaPath);
+      }
+
+      /* ================= LOGO ================= */
+      const logoPath = path.join(
+        process.cwd(),
+        "public",
+        "images",
+        "logo-modified.png"
+      );
+
       if (fs.existsSync(logoPath)) {
         const logoWidth = 60;
         const xCenter = (doc.page.width - logoWidth) / 2;
-        doc.image(logoPath, xCenter, doc.y, { width: logoWidth }).moveDown(5);
+        doc.image(logoPath, xCenter, doc.y, { width: logoWidth });
+        doc.moveDown(1);
       }
-    } catch (err) {
-      console.log("Logo not found, skipping...");
-    }
 
-    // === CENTERED HEADER ===
-    doc
-      .fontSize(18)
-      .font("Helvetica-Bold")
-      .text("ජයන්ති හෝටලය", { align: "center" })
-      .fontSize(9)
-      .font("Helvetica")
-      .text("ඔබගේ ඇණවුමට ස්තූතියි!", { align: "center" })
-      .moveDown(1);
+      /* ================= HEADER ================= */
+      doc
+        .font("IskoolaPota")
+        .fontSize(18)
+        .text("ජයන්ති හෝටලය", { align: "center" })
+        .moveDown(0.2)
+        .fontSize(9)
+        .text("ඔබගේ ඇණවුමට ස්තූතියි!", { align: "center" })
+        .moveDown(0.8);
 
-    // === ORDER ID ===
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
-      .stroke()
-      .moveDown(0.5)
-      .font("Helvetica-Bold")
-      .text("Order ID:", { continued: true })
-      .font("Helvetica")
-      .text(` ${order.orderId}`)
-      .moveDown(0.5)
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
-      .stroke()
-      .moveDown();
+      /* ================= ORDER ID ================= */
+      drawLine(doc);
 
-    // === ITEMS ===
-    doc.font("Helvetica-Bold").text("Items Ordered").moveDown(0.5);
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(9)
+        .text("Order ID:", { continued: true })
+        .font("Helvetica")
+        .text(` ${order.orderId}`);
 
-    order.items.forEach((item) => {
-      const itemText = `${item.name} x${item.quantity}`;
+      drawLine(doc);
+
+      /* ================= ITEMS ================= */
+      doc
+        .moveDown(0.5)
+        .font("Helvetica-Bold")
+        .fontSize(10)
+        .text("Items Ordered")
+        .moveDown(0.5);
+
+      order.items.forEach((item) => {
+        doc
+          .font("Helvetica")
+          .fontSize(9)
+          .text(`${item.name} x${item.quantity}`, 10, doc.y, {
+            continued: true,
+          })
+          .text(`Rs ${item.price.toFixed(2)}`, { align: "right" });
+      });
+
+      /* ================= TOTALS ================= */
+      doc.moveDown(0.5);
+      drawLine(doc);
+
       doc
         .font("Helvetica")
-        .text(itemText, 50, doc.y, { continued: true })
-        .text(`Rs ${item.price.toFixed(2)}`, { align: "right" });
-    });
+        .fontSize(9)
+        .text(`Subtotal: Rs ${order.bills.total.toFixed(2)}`, {
+          align: "right",
+        })
+        .text(`Tax: Rs ${order.bills.tax.toFixed(2)}`, {
+          align: "right",
+        })
+        .moveDown(0.3)
+        .font("Helvetica-Bold")
+        .text(`Grand Total: Rs ${order.bills.totalPayable.toFixed(2)}`, {
+          align: "right",
+        });
 
-    // === TOTALS ===
-    doc
-      .moveDown()
-      .moveTo(50, doc.y)
-      .lineTo(550, doc.y)
-      .stroke()
-      .moveDown(0.5)
-      .font("Helvetica")
-      .text(`Subtotal: Rs ${order.bills.total.toFixed(2)}`, { align: "right" })
-      .text(`Tax: Rs ${order.bills.tax.toFixed(2)}`, { align: "right" })
-      .moveDown(0.5)
-      .font("Helvetica-Bold")
-      .text(`Grand Total: Rs ${order.bills.totalPayable.toFixed(2)}`, {
-        align: "right",
-      })
-      .moveDown(0.5);
+      /* ================= DATE & FAREWELL ================= */
+      doc.moveDown(0.6);
+      drawLine(doc);
 
-    // === DATE & FAREWELL SECTION ===
-    const formattedDate = new Date(order.orderDate).toLocaleString("en-LK", {
-      dateStyle: "medium",
-      timeStyle: "short",
-      hour12: true,
-    });
+      const formattedDate = new Date(order.orderDate).toLocaleString("en-LK", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        hour12: true,
+      });
 
-    // Draw line above
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(doc.page.width - 50, doc.y)
-      .stroke();
+      doc
+        .font("Helvetica")
+        .fontSize(8)
+        .text(formattedDate, { align: "center" })
+        .moveDown(0.4)
+        .font("IskoolaPota")
+        .fontSize(10)
+        .text("නැවත හමුවෙමු!", { align: "center" });
 
-    doc.moveDown(0.5);
+      drawLine(doc);
 
-    // Print formatted date
-    doc
-      .font("Helvetica")
-      .text(formattedDate, { align: "center" })
-      .moveDown(0.5);
-
-    // Print farewell message
-    doc
-      .font("Helvetica-Bold")
-      .text("නැවත හමුවෙමු!", { align: "center" })
-      .moveDown(0.5);
-
-    // Draw line below
-    doc
-      .moveTo(50, doc.y)
-      .lineTo(doc.page.width - 50, doc.y)
-      .stroke();
-
-    doc.moveDown(1); // optional extra space after
-
-    doc.end();
+      doc.end();
+    } catch (err) {
+      reject(err);
+    }
   });
 };
+
+/* ================= HELPER ================= */
+function drawLine(doc) {
+  doc
+    .moveDown(0.3)
+    .moveTo(10, doc.y)
+    .lineTo(doc.page.width - 10, doc.y)
+    .stroke()
+    .moveDown(0.3);
+}
 
 module.exports = printInvoiceService;
