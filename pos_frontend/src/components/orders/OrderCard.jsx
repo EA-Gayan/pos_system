@@ -8,8 +8,7 @@ const OrderCard = ({ order }) => {
   const [showInvoice, setShowInvoice] = useState(false);
   const [orderInfo, setOrderInfo] = useState(null);
 
-  const hanleorderclick = () => {
-    console.log(order);
+  const handleorderclick = () => {
     setOrderInfo(order);
     setShowInvoice(true);
   };
@@ -18,7 +17,7 @@ const OrderCard = ({ order }) => {
     <>
       <div
         className="w-full bg-[#262626] p-4 rounded-lg mb-4 mx-auto"
-        onClick={hanleorderclick}
+        onClick={handleorderclick}
       >
         <div className="flex items-center gap-5">
           <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg cursor-pointer hover:bg-[#e5a400]">
