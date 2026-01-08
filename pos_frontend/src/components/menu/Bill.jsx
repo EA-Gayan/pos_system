@@ -20,7 +20,49 @@ const Bill = () => {
   const [showInvoice, setShowInvoice] = React.useState(false);
   const [orderInfo, setOrderInfo] = React.useState(null);
 
-  const handlePlaceOrder = () => {
+  const orderMutation = useMutation({
+    mutationFn: (reqData) => addOrder(reqData),
+    onSuccess: (resData) => {
+      const { data } = resData.data;
+      setOrderInfo(data);
+
+      // Update table status
+      const tableData = {
+        status: "Booked",
+        orderId: data._id,
+        tableId: data.table,
+      };
+      if (tableData.tableId != null) {
+        tableUpdateMutation.mutate(tableData);
+      }
+
+      enqueueSnackbar("Order Placed!", {
+        variant: "success",
+      });
+    },
+    onError: (error) => {
+      enqueueSnackbar("Failed to place order", {
+        variant: "error",
+      });
+      console.error("Order placement error:", error);
+    },
+  });
+
+  const tableUpdateMutation = useMutation({
+    mutationFn: (reqData) => updateTable(reqData),
+    onSuccess: () => {
+      dispatch(removeCustomer());
+      dispatch(removeAllItems());
+    },
+    onError: (error) => {
+      enqueueSnackbar("Table update failed", {
+        variant: "error",
+      });
+      console.error("Table update error:", error);
+    },
+  });
+
+  const handlePlaceOrder = async () => {
     if (!cartData.length) {
       enqueueSnackbar(
         "Cart is empty. Please add items before placing an order.",
@@ -48,62 +90,81 @@ const Bill = () => {
       paymentMethod: "Cash",
     };
 
-    orderMutation.mutate(orderData);
+    try {
+      // Wait for the order mutation to complete
+      await orderMutation.mutateAsync(orderData);
+
+      // After successful order creation, show invoice
+      setShowInvoice(true);
+    } catch (error) {
+      console.error("Order creation failed:", error);
+    }
   };
 
-  const handlePrintReceipt = () => {
-    if (!orderInfo) {
-      enqueueSnackbar("No order info available to print.", {
-        variant: "warning",
-      });
+  const handlePrintReceipt = async () => {
+    if (!cartData.length) {
+      enqueueSnackbar(
+        "Cart is empty. Please add items before placing an order.",
+        {
+          variant: "warning",
+        }
+      );
       return;
     }
-    setShowInvoice(true);
-  };
 
-  const orderMutation = useMutation({
-    mutationFn: (reqData) => addOrder(reqData),
-    onSuccess: (resData) => {
-      const { data } = resData.data;
-      setOrderInfo(data);
+    const orderData = {
+      customerDetails: {
+        name: customerData.customerName,
+        phone: customerData.customerPhone,
+        guests: customerData.guests,
+      },
+      orderStatus: OrderTypes.COMPLETE,
+      bills: {
+        total: total,
+        tax: tax,
+        totalPayable: grandTotal,
+      },
+      items: cartData,
+      table: customerData.table,
+      paymentMethod: "Cash",
+    };
 
-      // Update table status
-      const tableData = {
-        status: "Booked",
-        orderId: data._id,
-        tableId: data.table,
-      };
-      if (tableData.tableId != null) {
-        tableUpdateMutation.mutate(tableData);
+    try {
+      // Wait for the order mutation to complete
+      const response = await orderMutation.mutateAsync(orderData);
+      const { data } = response.data;
+
+      // After successful order creation, send to print
+      const printResponse = await fetch("http://localhost:3001/print", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderInfo: data }),
+      });
+
+      const result = await printResponse.json();
+
+      if (result.success) {
+        enqueueSnackbar("Print sent successfully!", { variant: "success" });
+        dispatch(removeAllItems());
+      } else {
+        enqueueSnackbar("Print failed: " + (result.error || "Unknown error"), {
+          variant: "error",
+        });
+        dispatch(removeAllItems());
       }
-
-      enqueueSnackbar("Order Placed!", {
-        variant: "success",
-      });
-
-      setShowInvoice(true);
-    },
-    onError: (error) => {
-      enqueueSnackbar("Failed to place order", {
-        variant: "error",
-      });
-      console.error("Order placement error:", error);
-    },
-  });
-
-  const tableUpdateMutation = useMutation({
-    mutationFn: (reqData) => updateTable(reqData),
-    onSuccess: () => {
-      dispatch(removeCustomer());
+    } catch (error) {
+      console.error("Print error:", error);
+      enqueueSnackbar(
+        "Failed to connect to print server. Make sure the print server is running.",
+        {
+          variant: "error",
+        }
+      );
       dispatch(removeAllItems());
-    },
-    onError: (error) => {
-      enqueueSnackbar("Table update failed", {
-        variant: "error",
-      });
-      console.error("Table update error:", error);
-    },
-  });
+    }
+  };
 
   return (
     <>
@@ -124,6 +185,25 @@ const Bill = () => {
           </div>
         </div>
 
+        <button
+          className={`
+    bg-[#f6b100] py-3 w-full rounded-lg
+    text-[#1f1f1f] text-sm sm:text-lg font-semibold mt-4
+    transition-all duration-150 cursor-pointer
+    hover:bg-[#e5a400]
+    active:bg-[#d99a00]
+    active:scale-95
+    ${
+      orderMutation.isLoading
+        ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
+        : ""
+    }
+  `}
+          onClick={handlePrintReceipt}
+          disabled={orderMutation.isLoading}
+        >
+          {orderMutation.isLoading ? "Printing..." : "Print Order"}
+        </button>
         <button
           className={`
     bg-[#f6b100] py-3 w-full rounded-lg

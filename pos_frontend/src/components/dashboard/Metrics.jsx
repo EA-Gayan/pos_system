@@ -23,10 +23,15 @@ const Metrics = () => {
   const headers = ["Product Name", "Price", "Quantity Sold", "Income"];
 
   const navigate = useNavigate();
+
   const handleClick = (sectionName) => {
-    if (sectionName === "Active Orders") return null;
-    navigate(`/dashboard/${sectionName}`);
+    if (sectionName === "Active Orders") return;
+
+    const safeSection = sectionName.trim().toLowerCase().replace(/\s+/g, "-");
+
+    navigate(`/dashboard/${safeSection}`);
   };
+
   const periodData = { period: "today" };
 
   useEffect(() => {

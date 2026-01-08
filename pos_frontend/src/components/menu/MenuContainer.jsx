@@ -56,7 +56,7 @@ const MenuContainer = () => {
     if (resData) {
       dispatch(setProductList(resData?.data?.data));
     }
-  }, [resData]);
+  }, [resData, dispatch]);
 
   // all categories
   const categories = resData?.data?.data || [];
@@ -73,7 +73,7 @@ const MenuContainer = () => {
     if (isError) {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  }, [categories, filteredCategories, selectedItem, isError]);
+  }, [categories, selectedItem, isError, selectedStatus]);
 
   return (
     <>
@@ -164,9 +164,8 @@ const MenuContainer = () => {
                 return (
                   <div
                     key={category.id}
-                    className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${
-                      isSelected ? "bg-[#1d2569]" : "bg-gray-700"
-                    }`}
+                    className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${isSelected ? "bg-[#1d2569]" : "bg-gray-700"
+                      }`}
                     onClick={() => {
                       setSelectedItem(category);
                     }}

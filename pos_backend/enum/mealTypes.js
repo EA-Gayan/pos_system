@@ -1,5 +1,6 @@
 // mealTypes.js
 const MealTypes = Object.freeze({
+  ALL: 0,
   BREAKFAST: 1,
   LUNCH: 2,
   DINNER: 3,

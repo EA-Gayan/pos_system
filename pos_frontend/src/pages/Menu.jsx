@@ -9,14 +9,14 @@ const Menu = () => {
   const customerData = useSelector((state) => state.customer);
 
   return (
-    <section className="bg-[#1f1f1f] flex gap-3 h-screen">
+    <section className="bg-gradient-to-br from-[#1f1f1f] via-[#1a1a1a] to-[#262626] flex gap-3 h-screen">
       {/* Left side */}
       <div className="flex-[3] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-10 py-4 flex-none">
+        <div className="flex items-center justify-between px-10 py-6 flex-none bg-[#1a1a1a] shadow-lg">
           <div className="flex items-center gap-4">
             <BackButton />
-            <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wider">
+            <h1 className="text-[#f5f5f5] text-3xl font-bold tracking-wider">
               Menu
             </h1>
           </div>

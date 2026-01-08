@@ -179,9 +179,44 @@ const deleteCategory = async (req, res, next) => {
   }
 };
 
+/**
+ * SEARCH CATEGORY
+ */
+const searchCategory = async (req, res, next) => {
+  try {
+    const { value, selectedStatus } = req.body;
+
+    if (!value || value.trim() === "") {
+      return next(createHttpError(400, "Search query is required!"));
+    }
+
+    const regex = new RegExp(value, "i");
+    //if mealtype is not 0 consider it also
+    if (selectedStatus !== null) {
+      const categories = await Category.find({ name: regex, mealType: selectedStatus });
+      return res.status(200).json({
+        success: true,
+        message: "Search results",
+        data: categories,
+      });
+    } else {
+      const categories = await Category.find({ name: regex });
+      return res.status(200).json({
+        success: true,
+        message: "Search results",
+        data: categories,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 module.exports = {
   addCategory,
   getCategories,
   updateCategory,
   deleteCategory,
+  searchCategory,
 };

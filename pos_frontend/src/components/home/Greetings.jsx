@@ -41,20 +41,20 @@ const Greetings = () => {
     ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center bg-gradient-to-r from-[#1a1a1a] to-[#262626] p-6 rounded-xl shadow-lg mb-2">
       <div>
-        <h1 className="text-[#f5f5f5] text-2xl font-semibold tracking-wide ml-3">
+        <h1 className="text-[#f5f5f5] text-3xl font-bold tracking-wide ml-3">
           Hi, {userData.name || "Test User"} 👋
         </h1>
-        <p className="text-[#ababab] text-sm ml-3">
+        <p className="text-[#ababab] text-sm ml-3 mt-1">
           Give your best services for customers
         </p>
       </div>
-      <div>
-        <h1 className="text-[#f5f5f5] text-3xl font-bold tracking-wide w-[130px]">
+      <div className="text-right">
+        <h1 className="text-[#f6b100] text-3xl font-bold tracking-wide w-[130px]">
           {formatTime(dateTime)}
         </h1>
-        <p className="text-[#ababab] text-sm">{formatDate(dateTime)}</p>
+        <p className="text-[#ababab] text-sm mt-1">{formatDate(dateTime)}</p>
       </div>
     </div>
   );

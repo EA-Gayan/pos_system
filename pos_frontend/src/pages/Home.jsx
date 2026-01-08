@@ -41,7 +41,7 @@ const Home = () => {
   const recentOrders = recentOrdersData?.data?.data ?? [];
 
   return (
-    <section className="bg-[#1f1f1f] h-screen p-6 overflow-y-auto">
+    <section className="bg-gradient-to-br from-[#1f1f1f] via-[#1a1a1a] to-[#262626] h-screen p-6 overflow-y-auto">
       <div className="flex-[3] space-y-6">
         <Greetings />
 

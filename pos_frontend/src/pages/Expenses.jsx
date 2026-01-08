@@ -115,8 +115,8 @@ const Expenses = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#262626]">
-      <div className="flex-none px-4 sm:px-10 py-4 flex items-center justify-between">
+    <div className="flex flex-col h-full bg-gradient-to-br from-[#262626] via-[#1f1f1f] to-[#1a1a1a]">
+      <div className="flex-none px-4 sm:px-10 py-6 flex items-center justify-between bg-[#1a1a1a] shadow-lg">
         <BackButton />
 
         {/* Right-side Buttons */}
@@ -127,16 +127,16 @@ const Expenses = () => {
               setModalOpen(true);
               setRowData(null);
             }}
-            className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
+            className="bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
           >
             Add Expense
           </button>
 
           {/* Export Dropdown */}
-          <div className="">
+          <div className="relative">
             <button
               onClick={() => setExportOpen((prev) => !prev)}
-              className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
+              className="bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
             >
               Export Expense
             </button>
