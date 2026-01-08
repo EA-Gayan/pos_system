@@ -1,5 +1,6 @@
 const Order = require("../models/orderModel");
 const Expenses = require("../models/expensesModel");
+const Product = require("../models/productModel");
 const generateExpensesReportService = require("../services/generateExpensesReport");
 const generateIncomeReportService = require("../services/generateIncomeReport");
 
@@ -30,13 +31,40 @@ const generateIncomeReport = async (req, res, next) => {
 
     const orders = await Order.find({
       orderDate: { $gte: startDate, $lte: endDate },
-    }).populate("items.product");
+    });
 
     if (orders.length === 0) {
       return res.status(404).json({
         success: false,
         message: "No orders found for the selected period",
       });
+    }
+
+    // Get all unique product names from orders
+    const productNames = new Set();
+    for (const order of orders) {
+      for (const item of order.items) {
+        productNames.add(item.name);
+      }
+    }
+
+    // Fetch all products with their categories
+    const products = await Product.find({
+      name: { $in: Array.from(productNames) },
+    }).populate("category", "name");
+
+    // Create a map of product name to category name
+    const productCategoryMap = {};
+    for (const product of products) {
+      productCategoryMap[product.name] = product.category?.name || "Uncategorized";
+    }
+
+
+    // Attach category info to order items
+    for (const order of orders) {
+      for (const item of order.items) {
+        item.categoryName = productCategoryMap[item.name] || "Uncategorized";
+      }
     }
 
     const fileName =
@@ -69,7 +97,9 @@ const generateIncomeReport = async (req, res, next) => {
     const buffer = await generateIncomeReportService(
       type === "week" ? "Week Orders" : "Today Orders",
       productSummary,
-      grandTotal
+      grandTotal,
+      type,
+      orders
     );
 
     // Set headers for file download
