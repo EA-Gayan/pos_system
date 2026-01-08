@@ -32,37 +32,34 @@ const Orders = () => {
       : resData?.data?.data || [];
 
   return (
-    <section className="bg-[#1f1f1f] h-full flex flex-col">
+    <section className="bg-gradient-to-br from-[#1f1f1f] via-[#1a1a1a] to-[#262626] h-full flex flex-col">
       {/* Header with filter buttons */}
-      <div className="shrink-0 flex items-center justify-between px-4 sm:px-10 py-4">
+      <div className="shrink-0 flex items-center justify-between px-4 sm:px-10 py-6 bg-[#1a1a1a] shadow-lg">
         <div className="flex items-center gap-4">
           <BackButton />
-          <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wider">
+          <h1 className="text-[#f5f5f5] text-3xl font-bold tracking-wider">
             Orders
           </h1>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setStatus(OrderTypes.ALL)}
-            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
-              status === OrderTypes.ALL ? "bg-[#383838]" : ""
-            }`}
+            className={`text-[#f5f5f5] text-sm rounded-lg px-6 py-2.5 font-semibold cursor-pointer transition-all duration-200 ${status === OrderTypes.ALL ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] shadow-lg scale-105" : "bg-[#2a2a2a] hover:bg-[#333]"
+              }`}
           >
             All
           </button>
           <button
             onClick={() => setStatus(OrderTypes.INPROGRESS)}
-            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
-              status === OrderTypes.INPROGRESS ? "bg-[#383838]" : ""
-            }`}
+            className={`text-[#f5f5f5] text-sm rounded-lg px-6 py-2.5 font-semibold cursor-pointer transition-all duration-200 ${status === OrderTypes.INPROGRESS ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] shadow-lg scale-105" : "bg-[#2a2a2a] hover:bg-[#333]"
+              }`}
           >
             In Progress
           </button>
           <button
             onClick={() => setStatus(OrderTypes.COMPLETE)}
-            className={`text-[#ababab] text-lg rounded-lg px-5 py-2 font-semibold cursor-pointer hover:bg-[#2f2f2f] ${
-              status === OrderTypes.COMPLETE ? "bg-[#383838]" : ""
-            }`}
+            className={`text-[#f5f5f5] text-sm rounded-lg px-6 py-2.5 font-semibold cursor-pointer transition-all duration-200 ${status === OrderTypes.COMPLETE ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] shadow-lg scale-105" : "bg-[#2a2a2a] hover:bg-[#333]"
+              }`}
           >
             Completed
           </button>

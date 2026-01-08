@@ -50,6 +50,7 @@ export const deleteCategory = (categoryId) =>
   api.delete(`/api/category/delete/${categoryId}`);
 export const updateCategory = ({ categoryId, ...categoryData }) =>
   api.put(`/api/category/${categoryId}`, categoryData);
+export const searchCategory = (data) => api.post(`/api/category/search`, data);
 
 // product Endpoints
 export const addProduct = (data) => api.post("/api/product", data);

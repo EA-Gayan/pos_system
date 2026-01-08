@@ -23,25 +23,24 @@ const TableCard = ({ id, name, status, initials, seats }) => {
     <div
       onClick={() => handleClick(name)}
       key={id}
-      className="hover:bg-[#2c2c2c] bg-[#262626] p-4 rounded-lg cursor-pointer"
+      className="hover:bg-[#2c2c2c] bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-5 rounded-xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#333]"
     >
       <div className="flex items-center justify-between px-1">
-        <h1 className="text-[#f5f5f5] text-xl font-semibold">
+        <h1 className="text-[#f5f5f5] text-xl font-bold">
           <p className="text-[#ababab] ml-2 inline" /> Table {name}
         </h1>
         <p
-          className={`${
-            status === "Booked"
-              ? "text-green-600 bg-[#2e4a40]"
-              : "bg-[#664a04] text-white"
-          } px-2 py-1 rounded-lg`}
+          className={`${status === "Booked"
+              ? "text-green-400 bg-green-500 bg-opacity-20"
+              : "bg-yellow-500 bg-opacity-20 text-yellow-400"
+            } px-3 py-1.5 rounded-lg font-semibold text-sm`}
         >
           {status}
         </p>
       </div>
-      <div className="flex items-center justify-center mt-5 mb-8">
+      <div className="flex items-center justify-center mt-6 mb-8">
         <h1
-          className={`text-white rounded-full p-5 text-xl`}
+          className={`text-white rounded-full p-6 text-2xl font-bold shadow-lg`}
           style={{ backgroundColor: initials ? getBgColor() : "#1f1f1f" }}
         >
           {getAvatarName(initials) || "N/A"}

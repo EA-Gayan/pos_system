@@ -6,7 +6,7 @@ import { RiCalendarScheduleFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo-modified.png";
-import { logout } from "../../https";
+import { logout, searchCategory } from "../../https";
 import { removeUser } from "../../redux/slices/userSlice";
 import SearchBar from "./SearchBar";
 import { searchProduct } from "../../https";
@@ -17,6 +17,7 @@ import { OrderTypes } from "../../enum/orderTypes";
 import { enqueueSnackbar } from "notistack";
 import { searchExpenseRecord } from "../../https";
 import { setSearchExpensesList } from "../../redux/slices/expensesSlice";
+import { setSearchCategoryList } from "../../redux/slices/CategorySlice";
 
 const meals = [
   { name: "Breakfast", value: 1 },
@@ -68,6 +69,26 @@ const Header = () => {
       // Ignore stale responses (e.g. user cleared/changed input quickly)
       if (latestSearchRef.current !== value) return;
       dispatch(setSearchProductList(res?.data?.data));
+    },
+    onError: (error) => {
+      enqueueSnackbar(
+        error?.response?.data?.message || error?.message || "Request failed",
+        {
+          variant: "error",
+        }
+      );
+    },
+  });
+
+  const searchCategoryMutation = useMutation({
+    mutationFn: (value) => {
+      const selectedStatus = selectedMeal;
+      return searchCategory({ value, selectedStatus });
+    },
+    onSuccess: (res, value) => {
+      // Ignore stale responses (e.g. user cleared/changed input quickly)
+      if (latestSearchRef.current !== value) return;
+      dispatch(setSearchCategoryList(res?.data?.data));
     },
     onError: (error) => {
       enqueueSnackbar(
@@ -152,7 +173,7 @@ const Header = () => {
       setIsShowMenuTypeIcon(false);
     }
     // Hide search only on root path ("/")
-    if (path === "/" || path.includes("dashboard")) {
+    if (path === "/dashboard" || path === "/") {
       setIsShowSearch(false);
     } else {
       setIsShowSearch(true);
@@ -170,8 +191,14 @@ const Header = () => {
 
   const handleSearchChange = (value) => {
     latestSearchRef.current = value;
-    if (pageName === "menu" && value != "") {
+    if (
+      (pageName === "menu" && value != "") ||
+      (pageName === "total-items" && value != "")
+    ) {
       searchProductMutation.mutate(value);
+    }
+    if (pageName === "total-categories" && value != "") {
+      searchCategoryMutation.mutate(value);
     }
     if (pageName === "orders" && value != "") {
       searchOrderMutation.mutate(value);
@@ -241,11 +268,10 @@ const Header = () => {
                   <button
                     key={meal.value}
                     onClick={() => handleMealSelect(meal.value)}
-                    className={`block w-full text-left px-4 py-2 text-sm transition cursor-pointer ${
-                      selectedMeal === meal.value
-                        ? "bg-[#333] text-white font-semibold"
-                        : "text-[#f5f5f5] hover:bg-[#333]"
-                    }`}
+                    className={`block w-full text-left px-4 py-2 text-sm transition cursor-pointer ${selectedMeal === meal.value
+                      ? "bg-[#333] text-white font-semibold"
+                      : "text-[#f5f5f5] hover:bg-[#333]"
+                      }`}
                   >
                     {meal.name}
                   </button>

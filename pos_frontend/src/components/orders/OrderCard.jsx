@@ -16,11 +16,11 @@ const OrderCard = ({ order }) => {
   return (
     <>
       <div
-        className="w-full bg-[#262626] p-4 rounded-lg mb-4 mx-auto"
+        className="w-full bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-5 rounded-xl mb-4 mx-auto shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer border border-[#333]"
         onClick={handleorderclick}
       >
         <div className="flex items-center gap-5">
-          <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg cursor-pointer hover:bg-[#e5a400]">
+          <button className="bg-gradient-to-br from-[#f6b100] to-[#e5a400] p-3 text-xl font-bold rounded-xl cursor-pointer hover:scale-110 transition-transform duration-200 shadow-md">
             {getAvatarName(order?.customerDetails?.name ?? "N/A")}
           </button>
           <div className="flex items-center justify-between w-[100%]">
@@ -38,21 +38,21 @@ const OrderCard = ({ order }) => {
             <div className="flex flex-col items-end gap-2">
               {order?.orderStatus === OrderTypes.COMPLETE ? (
                 <>
-                  <p className="text-green-600 bg-[#2e4a40] px-2 py-1 rounded-lg">
+                  <p className="text-green-400 bg-green-500 bg-opacity-20 px-3 py-1.5 rounded-lg font-semibold">
                     <FaCheckDouble className="inline" />
                   </p>
                   <p className="text-[#ababab] text-sm">
-                    <FaCircle className="inline mr-2 text-green-600" /> Order
+                    <FaCircle className="inline mr-2 text-green-400 text-xs" /> Order
                     Delivered
                   </p>
                 </>
               ) : (
                 <>
-                  <p className="text-yellow-600 bg-[#4a452e] px-2 py-1 rounded-lg">
+                  <p className="text-yellow-400 bg-yellow-500 bg-opacity-20 px-3 py-1.5 rounded-lg font-semibold">
                     <FaCircle className="inline" />
                   </p>
                   <p className="text-[#ababab] text-sm">
-                    <FaCircle className="inline mr-2 text-yellow-600" /> Still
+                    <FaCircle className="inline mr-2 text-yellow-400 text-xs" /> Still
                     Inprogress
                   </p>
                 </>

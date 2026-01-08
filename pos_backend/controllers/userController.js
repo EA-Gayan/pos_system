@@ -3,7 +3,6 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const runDailyCleanup = require("../services/runDailyCleanup");
 
 const register = async (req, res, next) => {
   try {
@@ -64,8 +63,7 @@ const login = async (req, res, next) => {
       return next(error);
     }
 
-    // Fire-and-forget cleanup (DO NOT await)
-    runDailyCleanup().catch((err) => console.error("[CLEANUP ERROR]", err));
+    // Cleanup is now handled by cron job (see /api/cron/cleanup)
 
     const accessToken = jwt.sign(
       { id: user._id, role: user.role },
