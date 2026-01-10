@@ -76,200 +76,135 @@ const MenuContainer = () => {
   }, [categories, selectedItem, isError, selectedStatus]);
 
   return (
-    <>
-      {searchData != null && searchData.length > 0 ? (
-        <>
-          <hr className="border-[#2a2a2a] border-t-2 mt-4" />
+    <div className="flex flex-col md:flex-row w-full h-full gap-4 p-4 overflow-hidden">
+      {/* Sidebar - Categories */}
+      <div className="w-full md:w-1/4 h-[35%] md:h-full flex flex-col gap-4 bg-[#1f1f1f] rounded-2xl p-4 shadow-xl overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent flex-shrink-0">
+        <h2 className="text-xl font-bold text-white mb-2 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">Categories</h2>
+        <div className="flex flex-col gap-3 pb-20">
+          {filteredCategories.map((category) => {
+            const isSelected = selectedItem?._id === category._id;
+            return (
+              <div
+                key={category._id}
+                onClick={() => setSelectedItem(category)}
+                className={`
+                  relative overflow-hidden group cursor-pointer p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-95
+                  ${isSelected
+                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] shadow-lg shadow-[#f6b100]/20"
+                    : "bg-[#2a2a2a] hover:bg-[#333]"
+                  }
+                `}
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <h3 className={`font-bold text-base ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
+                    {category.name}
+                  </h3>
+                  {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-xl" />}
+                </div>
+                <p className={`text-xs mt-1 font-medium ${isSelected ? "text-[#1a1a1a]/70" : "text-gray-500"}`}>
+                  {category?.products?.length || 0} Items
+                </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
-            {searchData.map((item) => {
+                {/* Decorative background element */}
+                <div className={`absolute -right-4 -bottom-4 w-20 h-20 rounded-full opacity-10 ${isSelected ? "bg-white" : "bg-white/5"}`} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Main Content - Products */}
+      <div className="w-full md:w-3/4 h-[65%] md:h-full bg-[#1f1f1f] rounded-2xl p-6 shadow-xl overflow-hidden flex flex-col min-h-0">
+        {/* Header Area */}
+        {searchData?.length > 0 ? (
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span className="text-[#f6b100]">Search Results</span>
+            <span className="text-sm font-normal text-gray-500 bg-[#2a2a2a] px-3 py-1 rounded-full">
+              Found {searchData.length} items
+            </span>
+          </h2>
+        ) : (
+          <div className="mb-6 pb-4 border-b border-[#333]">
+            <h2 className="text-3xl font-bold text-white tracking-tight">
+              {selectedItem?.name || "Select a Category"}
+            </h2>
+          </div>
+        )}
+
+        {/* Product Grid */}
+        <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-20">
+            {(searchData?.length > 0 ? searchData : selectedItem?.products || []).map((item) => {
+              const qty = quantities[item._id] || 0;
               return (
                 <div
                   key={item._id}
-                  className="flex flex-col justify-between p-4 rounded-lg min-h-[150px] hover:bg-[#494949] bg-[#1a1a1a] transition duration-200"
                   onClick={() => handleAddToCart(item)}
+                  className="group relative bg-[#2a2a2a] rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:bg-[#333] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-[#f6b100]/30 overflow-hidden"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-[#f5f5f5] text-lg font-semibold">
-                      {item.name}
-                    </h1>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(item);
-                      }}
-                      className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg cursor-pointer hover:bg-[#385b50]"
-                    >
-                      <FaShoppingCart />
-                    </button>
-                  </div>
+                  <div className="flex flex-col h-full justify-between gap-4 relative z-10">
+                    <div>
+                      <h3 className="text-white text-base font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
+                        {item.name}
+                      </h3>
+                      <p className="text-[#f6b100] font-bold text-l">
+                        <span className="text-gray-500">Rs. </span>
+                        {item.price}
+                      </p>
+                    </div>
 
-                  <div className="flex items-center justify-between">
-                    <p className="text-[#f5f5f5] text-lg font-bold">
-                      Rs {item.price}
-                    </p>
-
-                    <div className="flex items-center justify-between bg-[#1f1f1f] px-3 py-2 rounded-lg gap-4 w-32">
+                    <div className="flex items-center justify-between bg-[#1a1a1a] rounded-xl p-1.5 shadow-inner">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           decrement(item._id)();
                         }}
-                        className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-[#333] hover:text-white transition-colors text-lg"
                       >
                         &minus;
                       </button>
+
                       <input
                         type="number"
                         min="0"
-                        className="bg-transparent text-white text-center w-10 outline-none no-spinner"
-                        value={quantities[item._id] || ""}
+                        className="w-10 bg-transparent text-center text-white font-bold outline-none no-spinner"
+                        value={qty}
                         onChange={(e) => {
                           e.stopPropagation();
-                          const value = parseInt(e.target.value, 10);
-                          setQuantities((prev) => ({
-                            ...prev,
-                            [item._id]: isNaN(value) ? 0 : value,
-                          }));
+                          const val = parseInt(e.target.value, 10);
+                          setQuantities(p => ({ ...p, [item._id]: isNaN(val) ? 0 : val }));
                         }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.target.select();
-                        }}
-                        inputMode="numeric"
+                        onClick={(e) => e.stopPropagation()}
                       />
+
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           increment(item._id)();
                         }}
-                        className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-[#f6b100] hover:bg-[#f6b100]/20 transition-colors text-lg"
                       >
                         &#43;
                       </button>
                     </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(item);
+                      }}
+                      className="absolute top-0 right-0 p-2 text-[#02ca3a] opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0"
+                    >
+                      <FaShoppingCart size={20} />
+                    </button>
                   </div>
                 </div>
               );
             })}
           </div>
-        </>
-      ) : (
-        <>
-          {/* Scrollable category section */}
-          <div className="max-h-[35vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
-              {filteredCategories.map((category) => {
-                const isSelected = selectedItem?.id === category.id;
-                return (
-                  <div
-                    key={category.id}
-                    className={`flex flex-col justify-between p-4 rounded-lg min-h-[100px] cursor-pointer hover:opacity-90 transition duration-200 ${isSelected ? "bg-[#1d2569]" : "bg-gray-700"
-                      }`}
-                    onClick={() => {
-                      setSelectedItem(category);
-                    }}
-                  >
-                    <div className="flex items-center justify-between w-full mb-2">
-                      <h1 className="text-[#f5f5f5] text-lg font-semibold flex items-center gap-2">
-                        {category.name}
-                      </h1>
-                      {isSelected && (
-                        <GrRadialSelected className="text-white" size={20} />
-                      )}
-                    </div>
-                    <p className="text-[#ababab] text-sm font-semibold">
-                      {category?.products.length} Items
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Divider with spacing */}
-          <div className="my-6">
-            <hr className="border-[#2a2a2a] border-t-2" />
-          </div>
-
-          {/* Scrollable product grid container */}
-          <div className="max-h-[35vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-[#1a1a1a]">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 py-6 w-full">
-              {selectedItem?.products.map((item) => {
-                return (
-                  <div
-                    key={item._id}
-                    className="flex flex-col justify-between p-4 rounded-lg min-h-[150px] hover:bg-[#494949] bg-[#1a1a1a] transition duration-200"
-                    onClick={() => handleAddToCart(item)}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h1 className="text-[#f5f5f5] text-lg font-semibold">
-                        {item.name}
-                      </h1>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddToCart(item);
-                        }}
-                        className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg cursor-pointer hover:bg-[#385b50]"
-                      >
-                        <FaShoppingCart />
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <p className="text-[#f5f5f5] text-lg font-bold">
-                        Rs {item.price}
-                      </p>
-
-                      <div className="flex items-center justify-between bg-[#1f1f1f] px-3 py-2 rounded-lg gap-4 w-32">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            decrement(item._id)();
-                          }}
-                          className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
-                        >
-                          &minus;
-                        </button>
-                        <input
-                          type="number"
-                          min="0"
-                          className="bg-transparent text-white text-center w-10 outline-none no-spinner"
-                          value={quantities[item._id] || ""}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            const value = parseInt(e.target.value, 10);
-                            setQuantities((prev) => ({
-                              ...prev,
-                              [item._id]: isNaN(value) ? 0 : value,
-                            }));
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.target.select();
-                          }}
-                          inputMode="numeric"
-                        />
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            increment(item._id)();
-                          }}
-                          className="text-yellow-500 text-xl cursor-pointer hover:text-yellow-400"
-                        >
-                          &#43;
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </>
-      )}
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
