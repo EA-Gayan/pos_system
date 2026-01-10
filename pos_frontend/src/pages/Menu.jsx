@@ -31,7 +31,7 @@ const Menu = () => {
         </div>
 
         {/* MenuContainer fills the rest */}
-        <div className="flex-1">
+        <div className="flex-1 min-h-0 overflow-hidden">
           <MenuContainer />
         </div>
       </div>
