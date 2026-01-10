@@ -66,6 +66,36 @@ const MenuContainer = () => {
       item.mealType?.includes(selectedStatus) || item.mealType?.includes(4)
   );
 
+  // Custom sort order
+  const priorityOrder = [
+    "rice and curry",
+    "rice and curry b",
+    "kottu",
+    "fried rice",
+    "paratha",
+    "string hoppers",
+  ];
+
+  filteredCategories.sort((a, b) => {
+    const normalize = (name) => name.toLowerCase().replace("&", "and").trim();
+    const nameA = normalize(a.name);
+    const nameB = normalize(b.name);
+
+    const indexA = priorityOrder.indexOf(nameA);
+    const indexB = priorityOrder.indexOf(nameB);
+
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+    if (indexA !== -1) {
+      return -1;
+    }
+    if (indexB !== -1) {
+      return 1;
+    }
+    return 0;
+  });
+
   useEffect(() => {
     if (filteredCategories.length && !selectedItem) {
       setSelectedItem(filteredCategories[0]);
@@ -96,7 +126,7 @@ const MenuContainer = () => {
                 `}
               >
                 <div className="flex items-center justify-between relative z-10">
-                  <h3 className={`font-bold text-base ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
+                  <h3 className={`font-bold text-sm ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
                     {category.name}
                   </h3>
                   {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-xl" />}
@@ -144,7 +174,7 @@ const MenuContainer = () => {
                 >
                   <div className="flex flex-col h-full justify-between gap-4 relative z-10">
                     <div>
-                      <h3 className="text-white text-base font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
+                      <h3 className="text-white text-xl font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
                         {item.name}
                       </h3>
                       <p className="text-[#f6b100] font-bold text-l">
@@ -195,7 +225,6 @@ const MenuContainer = () => {
                       }}
                       className="absolute top-0 right-0 p-2 text-[#02ca3a] opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0"
                     >
-                      <FaShoppingCart size={20} />
                     </button>
                   </div>
                 </div>
