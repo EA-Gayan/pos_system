@@ -51,48 +51,59 @@ const addOrder = async (req, res, next) => {
 
 const findOrders = async (req, res, next) => {
   try {
-    const { id, status } = req.body;
+    const { id, status, page = 1, limit = 10, date } = req.body;
 
+    // Build the query object
+    const query = {};
+
+    // 1. Filter by ID (if provided)
     if (id) {
-      const order = await Order.findOne({ orderId: id })
-        .sort({ createdAt: -1 })
-        .limit(9);
-
-      if (!order) {
-        return next(createHttpError(404, "Order not found!"));
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Order retrieved successfully",
-        data: order,
-      });
+      query.orderId = id;
     }
 
+    // 2. Filter by Status (if provided)
     if (status !== undefined) {
-      let queryStatus;
       if (status === 3) {
-        queryStatus = [OrderTypes.INPROGRESS, OrderTypes.COMPLETE];
+        query.orderStatus = { $in: [OrderTypes.INPROGRESS, OrderTypes.COMPLETE] };
       } else {
-        queryStatus = [status];
+        query.orderStatus = status;
       }
-
-      const orders = await Order.find({
-        orderStatus: { $in: queryStatus },
-      })
-        .sort({ createdAt: -1 })
-        .limit(9);
-
-      return res.status(200).json({
-        success: true,
-        message: "Orders retrieved successfully",
-        data: orders,
-      });
     }
 
-    return next(
-      createHttpError(400, "Please provide order ID or status in request body.")
-    );
+    // 3. Filter by Date (e.g., 'today')
+    if (date === 'today') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      query.createdAt = { $gte: today, $lt: tomorrow };
+    }
+
+    // Calculate pagination values
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Execute query with pagination
+    const totalOrders = await Order.countDocuments(query);
+    const orders = await Order.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limitNumber);
+
+    return res.status(200).json({
+      success: true,
+      message: "Orders retrieved successfully",
+      data: orders,
+      pagination: {
+        totalOrders,
+        currentPage: pageNumber,
+        totalPages: Math.ceil(totalOrders / limitNumber),
+        limit: limitNumber,
+      },
+    });
+
   } catch (error) {
     next(error);
   }

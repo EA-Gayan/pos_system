@@ -9,12 +9,13 @@ import { useSelector } from "react-redux";
 
 const Orders = () => {
   const [status, setStatus] = useState(OrderTypes.ALL);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const searchData = useSelector((state) => state.order.searchList);
 
   const { data: resData, isError } = useQuery({
-    queryKey: ["orders", status],
-    queryFn: () => getfindOrders({ id: "", status }),
+    queryKey: ["orders", status, currentPage],
+    queryFn: () => getfindOrders({ id: "", status, page: currentPage, limit: 9, date: "today" }),
     keepPreviousData: true,
   });
 
@@ -80,6 +81,40 @@ const Orders = () => {
           )}
         </div>
       </div>
+      {/* Pagination Controls */}
+      {resData?.data?.pagination && (
+        <div className="pt-4 pb-8 px-4 bg-[#1a1a1a] border-t border-[#333] flex items-center justify-center gap-4 shrink-0">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${currentPage === 1
+              ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"
+              : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+              }`}
+          >
+            Previous
+          </button>
+          <span className="text-[#f5f5f5] text-sm font-medium">
+            Page {currentPage} of {resData.data.pagination.totalPages || 1}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) =>
+              Math.min(prev + 1, resData.data.pagination.totalPages || 1)
+            )}
+            disabled={
+              !resData.data.pagination.totalPages ||
+              currentPage === resData.data.pagination.totalPages
+            }
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${!resData.data.pagination.totalPages ||
+              currentPage === resData.data.pagination.totalPages
+              ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"
+              : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+              }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </section>
   );
 };
