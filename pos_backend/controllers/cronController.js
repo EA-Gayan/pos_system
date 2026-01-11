@@ -1,16 +1,17 @@
-const incomeCleanup = require("../../services/incomeCleanup");
+const incomeCleanup = require("../services/incomeCleanup");
 
-module.exports = async (req, res) => {
+exports.cleanup = async (req, res) => {
     try {
         // Verify authorization header to prevent unauthorized access
         const authHeader = req.headers.authorization;
-        const expectedAuth = `Bearer ${process.env.CRON_SECRET || "your-secret-key"}`;
+        const expectedAuth = `Bearer ${process.env.CRON_SECRET || "your-secret-key"
+            }`;
 
         if (authHeader !== expectedAuth) {
             console.error("[CRON] Unauthorized access attempt");
             return res.status(401).json({
                 success: false,
-                error: "Unauthorized"
+                error: "Unauthorized",
             });
         }
 
@@ -21,13 +22,13 @@ module.exports = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "Cleanup completed successfully",
-            result
+            result,
         });
     } catch (error) {
         console.error("[CRON ERROR]", error);
         return res.status(500).json({
             success: false,
-            error: error.message
+            error: error.message,
         });
     }
 };
