@@ -29,11 +29,11 @@ const addOrder = async (req, res, next) => {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
-    const todayOrders = await Order.find({
+    // Use countDocuments for better performance - doesn't load all docs into memory
+    const count = await Order.countDocuments({
       orderDate: { $gte: startOfDay, $lte: endOfDay },
     });
 
-    const count = todayOrders.length;
     order.orderId = `${datePrefix} - ${count + 1}`;
     order.orderStatus = body.orderStatus || OrderTypes.INPROGRESS;
 

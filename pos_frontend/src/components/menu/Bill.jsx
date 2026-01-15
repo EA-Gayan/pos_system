@@ -134,35 +134,41 @@ const Bill = () => {
       const response = await orderMutation.mutateAsync(orderData);
       const { data } = response.data;
 
-      // After successful order creation, send to print
-      const printResponse = await fetch("http://localhost:3001/print", {
+      // Clean up cart and customer data immediately
+      dispatch(removeAllItems());
+
+      // Show success message right away
+      enqueueSnackbar("Order placed successfully!", { variant: "success" });
+
+      // Send to print in the background (non-blocking)
+      fetch("http://localhost:3001/print", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderInfo: data }),
-      });
-
-      const result = await printResponse.json();
-
-      if (result.success) {
-        enqueueSnackbar("Print sent successfully!", { variant: "success" });
-        dispatch(removeAllItems());
-      } else {
-        enqueueSnackbar("Print failed: " + (result.error || "Unknown error"), {
-          variant: "error",
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.success) {
+            enqueueSnackbar("Receipt printed!", { variant: "success" });
+          } else {
+            enqueueSnackbar("Print failed: " + (result.error || "Unknown error"), {
+              variant: "warning",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Print error:", error);
+          enqueueSnackbar("Print server unavailable", {
+            variant: "warning",
+          });
         });
-        dispatch(removeAllItems());
-      }
     } catch (error) {
-      console.error("Print error:", error);
-      enqueueSnackbar(
-        "Failed to connect to print server. Make sure the print server is running.",
-        {
-          variant: "error",
-        }
-      );
-      dispatch(removeAllItems());
+      console.error("Order creation error:", error);
+      enqueueSnackbar("Failed to create order", {
+        variant: "error",
+      });
     }
   };
 
@@ -193,11 +199,10 @@ const Bill = () => {
     hover:bg-[#e5a400]
     active:bg-[#d99a00]
     active:scale-95
-    ${
-      orderMutation.isLoading
-        ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
-        : ""
-    }
+    ${orderMutation.isLoading
+              ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
+              : ""
+            }
   `}
           onClick={handlePrintReceipt}
           disabled={orderMutation.isLoading}
@@ -212,11 +217,10 @@ const Bill = () => {
     hover:bg-[#e5a400]
     active:bg-[#d99a00]
     active:scale-95
-    ${
-      orderMutation.isLoading
-        ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
-        : ""
-    }
+    ${orderMutation.isLoading
+              ? "opacity-50 cursor-not-allowed active:scale-100 hover:bg-[#f6b100]"
+              : ""
+            }
   `}
           onClick={handlePlaceOrder}
           disabled={orderMutation.isLoading}
