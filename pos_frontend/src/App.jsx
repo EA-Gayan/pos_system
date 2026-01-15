@@ -7,6 +7,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import DashBoardTable from "./components/dashboard/DashBoardTable";
 import BottomNav from "./components/shared/BottomNav";
 import Header from "./components/shared/Header";
@@ -190,6 +191,7 @@ function App() {
   return (
     <Router>
       <Layout />
+      <SpeedInsights />
     </Router>
   );
 }
