@@ -22,7 +22,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
   const addProductToCombo = (product) => {
     const existing = selectedProducts.find(p => p._id === product._id);
     if (!existing) {
-      setSelectedProducts([...selectedProducts, product]);
+      setSelectedProducts([...selectedProducts, { ...product, quantity: 1 }]);
     }
   };
 
@@ -30,13 +30,33 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
     setSelectedProducts(selectedProducts.filter(p => p._id !== productId));
   };
 
+  const incrementProductQuantity = (productId) => {
+    setSelectedProducts(selectedProducts.map(p => 
+      p._id === productId ? { ...p, quantity: (p.quantity || 1) + 1 } : p
+    ));
+  };
+
+  const decrementProductQuantity = (productId) => {
+    setSelectedProducts(selectedProducts.map(p => {
+      if (p._id === productId) {
+        const newQty = (p.quantity || 1) - 1;
+        if (newQty <= 0) {
+          return p; // Keep at minimum 1
+        }
+        return { ...p, quantity: newQty };
+      }
+      return p;
+    }));
+  };
+
   const calculateTotalPrice = () => {
-    const basePrice = selectedProducts.reduce((total, p) => total + p.price, 0);
+    const basePrice = selectedProducts.reduce((total, p) => total + (p.price * (p.quantity || 1)), 0);
     return basePrice * (multiplier || 0);
   };
 
   const calculateTotalItems = () => {
-    return selectedProducts.length * (multiplier || 0);
+    const baseItems = selectedProducts.reduce((total, p) => total + (p.quantity || 1), 0);
+    return baseItems * (multiplier || 0);
   };
 
   const handleCreateCombo = () => {
@@ -53,12 +73,14 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
     // Create products array with multiplier applied
     const productsWithMultiplier = selectedProducts.map(p => ({
       ...p,
-      quantity: multiplier
+      quantity: (p.quantity || 1) * multiplier
     }));
 
     // Create name by concatenating product names
-    const productNames = selectedProducts.map(p => p.name).join(" + ");
-    const comboName = `${productNames} × ${multiplier}`;
+    const productNames = selectedProducts.map(p => 
+      (p.quantity || 1) > 1 ? `${p.quantity}x ${p.name}` : p.name
+    ).join(" + ");
+    const comboName = `(${productNames}) × ${multiplier}`;
 
     const comboData = {
       name: comboName,
@@ -151,18 +173,37 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                   selectedProducts.map(product => (
                     <div
                       key={product._id}
-                      className="bg-[#2a2a2a] p-4 rounded-xl border border-[#333] hover:border-[#f6b100]/30 transition-all"
+                      className="bg-[#2a2a2a] p-3 rounded-xl border border-[#333] hover:border-[#f6b100]/30 transition-all"
                     >
-                      <div className="flex items-center justify-between">
-                        <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex-1">
                           <h4 className="text-white font-semibold">{product.name}</h4>
                           <p className="text-gray-500 text-sm">Rs. {product.price}</p>
                         </div>
                         <button
                           onClick={() => removeProductFromCombo(product._id)}
-                          className="text-red-500 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
+                          className="text-red-500 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg ml-2"
                         >
-                          <MdClose size={20} />
+                          <MdClose size={18} />
+                        </button>
+                      </div>
+                      
+                      {/* Quantity Controls */}
+                      <div className="flex items-center gap-2 bg-[#1a1a1a] rounded-lg p-1.5">
+                        <button
+                          onClick={() => decrementProductQuantity(product._id)}
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-[#2a2a2a] hover:bg-[#333] text-gray-400 hover:text-white transition-colors text-lg font-bold"
+                        >
+                          −
+                        </button>
+                        <div className="flex-1 text-center">
+                          <span className="text-white font-bold text-sm">{product.quantity || 1}</span>
+                        </div>
+                        <button
+                          onClick={() => incrementProductQuantity(product._id)}
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-[#f6b100] hover:bg-[#e0a100] text-[#1a1a1a] transition-colors text-lg font-bold"
+                        >
+                          +
                         </button>
                       </div>
                     </div>
