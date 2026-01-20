@@ -64,8 +64,13 @@ const CartInfo = () => {
           cartData.map((item) => (
             <div
               key={item.id}
-              className="bg-[#1f1f1f] rounded-xl px-4 py-4 mb-3 shadow-sm border border-[#2c2c2c] hover:border-[#3a3a3a] transition-all"
+              className={`bg-[#1f1f1f] rounded-xl px-4 py-4 mb-3 shadow-sm border ${
+                item.isCombo 
+                  ? "border-[#f6b100]/30 bg-gradient-to-br from-[#1f1f1f] to-[#2a2a2a]" 
+                  : "border-[#2c2c2c] hover:border-[#3a3a3a]"
+              } transition-all`}
             >
+
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-[#f5f5f5] font-semibold tracking-wide text-md">
@@ -74,6 +79,16 @@ const CartInfo = () => {
                   <p className="text-[#bcbcbc] font-medium text-sm">
                     Quantity: x{item.quantity}
                   </p>
+                  {item.isCombo && item.comboProducts && (
+                    <div className="mt-2 pl-2 border-l-2 border-[#f6b100]/30">
+                      <p className="text-[#f6b100] text-xs font-semibold mb-1">Includes:</p>
+                      {item.comboProducts.map((product, index) => (
+                        <p key={index} className="text-[#9a9a9a] text-xs">
+                          • {product.quantity}x {product.name}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <p className="text-[#F6B100] text-md font-bold">
                   Rs {item.price}
