@@ -11,8 +11,19 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     sName: { type: String },
+    // Combo/Bundle product fields
+    isCombo: { type: Boolean, default: false },
+    comboItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Product", productSchema);

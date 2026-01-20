@@ -4,19 +4,25 @@ import { FaShoppingCart } from "react-icons/fa";
 import { GrRadialSelected } from "react-icons/gr";
 import { useDispatch } from "react-redux";
 import { getCategories } from "../../https";
-import { addItems } from "../../redux/slices/cartSlice";
+import { addItems, addCombo } from "../../redux/slices/cartSlice";
 import { setProductList } from "../../redux/slices/productSlice";
 import { useSelector } from "react-redux";
+import ComboModal from "./ComboModal";
 
 const MenuContainer = () => {
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantities, setQuantities] = useState({});
+  const [isComboModalOpen, setIsComboModalOpen] = useState(false);
 
   const selectedStatus = parseInt(localStorage.getItem("selectedStatus"), 10);
 
   const searchData = useSelector((state) => state?.product?.searchList);
+
+  const handleCreateCombo = (comboData) => {
+    dispatch(addCombo(comboData));
+  };
 
   const increment = (id) => () => {
     setQuantities((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
@@ -154,10 +160,17 @@ const MenuContainer = () => {
             </span>
           </h2>
         ) : (
-          <div className="mb-6 pb-4 border-b border-[#333]">
+          <div className="mb-6 pb-4 border-b border-[#333] flex items-center justify-between">
             <h2 className="text-3xl font-bold text-white tracking-tight">
               {selectedItem?.name || "Select a Category"}
             </h2>
+            <button
+              onClick={() => setIsComboModalOpen(true)}
+              className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] hover:from-[#e0a100] hover:to-[#f6b100] text-[#1a1a1a] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+            >
+              <FaShoppingCart size={18} />
+              Create Combo
+            </button>
           </div>
         )}
 
@@ -233,6 +246,13 @@ const MenuContainer = () => {
           </div>
         </div>
       </div>
+
+      {/* Combo Modal */}
+      <ComboModal
+        isOpen={isComboModalOpen}
+        onClose={() => setIsComboModalOpen(false)}
+        onCreateCombo={handleCreateCombo}
+      />
     </div>
   );
 };
