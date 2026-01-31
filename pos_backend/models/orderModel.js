@@ -43,4 +43,7 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Add index on orderDate for better query performance
+orderSchema.index({ orderDate: 1 });
+
 module.exports = mongoose.model("Order", orderSchema);

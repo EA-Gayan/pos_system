@@ -1,4 +1,5 @@
 const Order = require("../models/orderModel");
+const OrderCounter = require("../models/orderCounterModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
 const OrderTypes = require("../enum/orderTypes");
@@ -24,17 +25,15 @@ const addOrder = async (req, res, next) => {
     const dd = String(today.getDate()).padStart(2, "0");
     const datePrefix = `${yy}${mm}${dd}`;
 
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    // Use atomic counter increment instead of counting documents
+    // This is much faster, especially on Vercel serverless functions
+    const counter = await OrderCounter.findOneAndUpdate(
+      { date: datePrefix },
+      { $inc: { count: 1 } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
-    // Use countDocuments for better performance - doesn't load all docs into memory
-    const count = await Order.countDocuments({
-      orderDate: { $gte: startOfDay, $lte: endOfDay },
-    });
-
-    order.orderId = `${datePrefix} - ${count + 1}`;
+    order.orderId = `${datePrefix} - ${counter.count}`;
     order.orderStatus = body.orderStatus || OrderTypes.INPROGRESS;
 
     await order.save();
