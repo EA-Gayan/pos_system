@@ -187,7 +187,7 @@ const MenuContainer = () => {
                 >
                   <div className="flex flex-col h-full justify-between gap-4 relative z-10">
                     <div>
-                      <h3 className="text-white text-xl font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
+                      <h3 className="text-white text-lg font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
                         {item.name}
                       </h3>
                       <p className="text-[#f6b100] font-bold text-l">

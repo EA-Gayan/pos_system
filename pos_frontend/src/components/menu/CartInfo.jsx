@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { RiDeleteBin2Fill, RiProhibitedLine } from "react-icons/ri";
 import { FaNotesMedical } from "react-icons/fa";
+import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem, removeAllItems } from "../../redux/slices/cartSlice";
+import { removeItem, removeAllItems, incrementQuantity, decrementQuantity } from "../../redux/slices/cartSlice";
 import Bill from "./Bill";
 
 const CartInfo = () => {
@@ -16,6 +17,14 @@ const CartInfo = () => {
 
   const handleClearCart = () => {
     dispatch(removeAllItems());
+  };
+
+  const handleIncrement = (itemId) => {
+    dispatch(incrementQuantity(itemId));
+  };
+
+  const handleDecrement = (itemId) => {
+    dispatch(decrementQuantity(itemId));
   };
 
   useEffect(() => {
@@ -47,9 +56,8 @@ const CartInfo = () => {
 
       {/* Scrollable Cart Items */}
       <div
-        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl ${
-          cartData.length === 0 ? "flex items-center justify-center" : ""
-        }`}
+        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl ${cartData.length === 0 ? "flex items-center justify-center" : ""
+          }`}
         style={{ maxHeight: "60vh" }} // responsive height
         ref={scrollRef}
       >
@@ -64,21 +72,17 @@ const CartInfo = () => {
           cartData.map((item) => (
             <div
               key={item.id}
-              className={`bg-[#1f1f1f] rounded-xl px-4 py-4 mb-3 shadow-sm border ${
-                item.isCombo 
-                  ? "border-[#f6b100]/30 bg-gradient-to-br from-[#1f1f1f] to-[#2a2a2a]" 
-                  : "border-[#2c2c2c] hover:border-[#3a3a3a]"
-              } transition-all`}
+              className={`bg-[#1f1f1f] rounded-xl px-4 py-4 mb-3 shadow-sm border ${item.isCombo
+                ? "border-[#f6b100]/30 bg-gradient-to-br from-[#1f1f1f] to-[#2a2a2a]"
+                : "border-[#2c2c2c] hover:border-[#3a3a3a]"
+                } transition-all`}
             >
 
               <div className="flex items-center justify-between">
-                <div>
+                <div className="flex-1">
                   <h1 className="text-[#f5f5f5] font-semibold tracking-wide text-md">
                     {item.name}
                   </h1>
-                  <p className="text-[#bcbcbc] font-medium text-sm">
-                    Quantity: x{item.quantity}
-                  </p>
                   {item.isCombo && item.comboProducts && (
                     <div className="mt-2 pl-2 border-l-2 border-[#f6b100]/30">
                       <p className="text-[#f6b100] text-xs font-semibold mb-1">Includes:</p>
@@ -90,15 +94,39 @@ const CartInfo = () => {
                     </div>
                   )}
                 </div>
-                <p className="text-[#F6B100] text-md font-bold">
+                <p className="text-[#F6B100] text-md font-bold ml-4">
                   Rs {item.price}
                 </p>
               </div>
+
               <div className="flex items-center justify-between mt-3">
+                {/* Quantity Controls */}
+                <div className="flex items-center gap-4 bg-[#262626] rounded-lg px-4 py-2.5">
+                  <HiMinusCircle
+                    onClick={() => handleDecrement(item.id)}
+                    className={`cursor-pointer transition-all ${item.quantity <= 1
+                      ? "text-[#4a4a4a] cursor-not-allowed"
+                      : "text-[#F6B100] hover:text-[#ffcc33]"
+                      }`}
+                    size={32}
+                    title="Decrease Quantity"
+                  />
+                  <span className="text-[#f5f5f5] font-semibold text-base min-w-[40px] text-center">
+                    x{item.quantity}
+                  </span>
+                  <HiPlusCircle
+                    onClick={() => handleIncrement(item.id)}
+                    className="text-[#F6B100] cursor-pointer hover:text-[#ffcc33] transition-all"
+                    size={32}
+                    title="Increase Quantity"
+                  />
+                </div>
+
+                {/* Delete Button */}
                 <RiDeleteBin2Fill
                   onClick={() => handleRemove(item.id)}
                   className="text-[#ac1b1b] cursor-pointer hover:text-red-500 transition-all"
-                  size={20}
+                  size={28}
                   title="Remove Item"
                 />
               </div>
