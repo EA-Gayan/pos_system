@@ -16,7 +16,6 @@ import FullScreenLoader from "../shared/FullScreenLoader";
 const WeeklyFinanceChart = () => {
   const {
     data: resData,
-    isError,
     isLoading,
   } = useQuery({
     queryKey: ["weeklyOrders"],

@@ -2,12 +2,12 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GrRadialSelected } from "react-icons/gr";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { getCategories } from "../../https";
 import { addItems, addCombo } from "../../redux/slices/cartSlice";
 import { setProductList } from "../../redux/slices/productSlice";
-import { useSelector } from "react-redux";
 import ComboModal from "./ComboModal";
+import { enqueueSnackbar } from "notistack";
 
 const MenuContainer = () => {
   const dispatch = useDispatch();

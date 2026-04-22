@@ -20,10 +20,8 @@ import EditModal from "./EditModal";
 import ConfirmationPopup from "../shared/ConfirmationPopup";
 import { enqueueSnackbar } from "notistack";
 import FullScreenLoader from "../shared/FullScreenLoader";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setProductList } from "../../redux/slices/productSlice";
-import { useDispatch } from "react-redux";
-import { MealTypes as MealTypeEnum } from "../../enum/mealTypes";
 import { setCategoryList } from "../../redux/slices/CategorySlice";
 
 const DashBoardTable = () => {
@@ -38,7 +36,6 @@ const DashBoardTable = () => {
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [selectedRow, setSelectedRow] = useState({});
-  const [selectedMealType, setSelectedMealType] = useState(MealTypeEnum.ALL);
 
   const searchProductList = useSelector((state) => state.product.searchList);
   const searchCategoryList = useSelector((state) => state.category.searchList);
