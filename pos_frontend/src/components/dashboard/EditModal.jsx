@@ -1,4 +1,5 @@
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ import {
 import MultiSelectDropdown from "../shared/MultiSelectDropdown";
 
 const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
+  const queryClient = useQueryClient();
+
   const [tableData, setTableData] = useState({
     tableId: null,
     tableNo: "",
@@ -98,14 +101,6 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     }
   };
 
-  const handledropDownChange = (e) => {
-    const { name, value } = e.target;
-    setCategoryData((prev) => ({
-      ...prev,
-      [name]: parseInt(value, 10),
-    }));
-  };
-
   const handleProductDownChange = (e) => {
     const { name, value } = e.target;
     setProductData((prev) => ({
@@ -152,7 +147,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-tables"]);
 
       enqueueSnackbar(data.message, { variant: "success" });
     },
@@ -168,7 +163,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-categories"]);
 
       enqueueSnackbar(data.message, {
         variant: "success",
@@ -187,7 +182,7 @@ const EditModal = ({ setIsTableModalOpen, labelType, currentData }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-items"]);
 
       enqueueSnackbar(data.message, {
         variant: "success",

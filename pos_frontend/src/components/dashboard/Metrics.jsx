@@ -20,7 +20,6 @@ const Metrics = () => {
   const [exportOpen, setExportOpen] = useState(false);
   const [expenseExport, setExpenseExport] = useState(false);
 
-  const headers = ["Product Name", "Price", "Quantity Sold", "Income"];
 
   const navigate = useNavigate();
 
@@ -38,29 +37,39 @@ const Metrics = () => {
     fetchDashboardAndBestSelling();
   }, []);
 
-  const { data: earningsData, isError: isEarningsError } = useQuery({
-    queryKey: ["orderEarnings", periodData],
-    queryFn: () => getOrderEarning(periodData),
-    onError: () => {
-      enqueueSnackbar("Failed to fetch earnings!", { variant: "error" });
-    },
-  });
+const { data: earningsData, isError: isEarningsError } = useQuery({
+  queryKey: ["orderEarnings", periodData],
+  queryFn: () => getOrderEarning(periodData),
+});
 
-  const { data: expensesData, isError: isExpensesError } = useQuery({
-    queryKey: ["orderExpenses", periodData],
-    queryFn: () => getTotalExpenses(periodData),
-    onError: () => {
-      enqueueSnackbar("Failed to fetch expenses!", { variant: "error" });
-    },
-  });
+useEffect(() => {
+  if (isEarningsError) {
+    enqueueSnackbar("Failed to fetch earnings!", { variant: "error" });
+  }
+}, [isEarningsError]);
 
-  const { data: orderCountData, isError: isOrderCountError } = useQuery({
-    queryKey: ["orderCount", periodData],
-    queryFn: () => getOrdersCount(periodData),
-    onError: () => {
-      enqueueSnackbar("Failed to fetch orders count!", { variant: "error" });
-    },
-  });
+const { data: expensesData, isError: isExpensesError } = useQuery({
+  queryKey: ["orderExpenses", periodData],
+  queryFn: () => getTotalExpenses(periodData),
+});
+
+useEffect(() => {
+  if (isExpensesError) {
+    enqueueSnackbar("Failed to fetch expenses!", { variant: "error" });
+  }
+}, [isExpensesError]);
+
+const { data: orderCountData, isError: isOrderCountError } = useQuery({
+  queryKey: ["orderCount", periodData],
+  queryFn: () => getOrdersCount(periodData),
+});
+
+useEffect(() => {
+  if (isOrderCountError) {
+    enqueueSnackbar("Failed to fetch orders count!", { variant: "error" });
+  }
+}, [isOrderCountError]);
+  
   const totalEarning = earningsData?.data?.totalEarnings ?? 0;
   const totalExpenses = expensesData?.data?.totalExpenses ?? 0;
   const totalOrders = orderCountData?.data?.data ?? 0;

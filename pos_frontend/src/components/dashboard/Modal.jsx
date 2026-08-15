@@ -1,4 +1,5 @@
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -7,6 +8,7 @@ import { addCategory, addProduct, addTable, getCategories } from "../../https";
 import MultiSelectDropdown from "../shared/MultiSelectDropdown";
 
 const Modal = ({ setIsTableModalOpen, labelType }) => {
+  const queryClient = useQueryClient();
   const [tableData, setTableData] = useState({
     tableNo: "",
     noOfSeats: null,
@@ -90,7 +92,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-tables"]);
 
       enqueueSnackbar(data.message, { variant: "success" });
     },
@@ -106,7 +108,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-categories"]);
 
       enqueueSnackbar(data.message, {
         variant: "success",
@@ -125,7 +127,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
     onSuccess: (res) => {
       setIsTableModalOpen(false);
       const { data } = res;
-      window.location.reload();
+      queryClient.invalidateQueries(["total-items"]);
 
       enqueueSnackbar(data.message, {
         variant: "success",
