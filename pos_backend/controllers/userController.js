@@ -71,11 +71,13 @@ const login = async (req, res, next) => {
       { expiresIn: "1d" }
     );
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 30,
-      secure: true,
-      sameSite: "none",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
     });
 
     res.status(200).json({
@@ -84,6 +86,7 @@ const login = async (req, res, next) => {
       data: {
         user: {
           id: user._id,
+          _id: user._id,
           name: user.name,
           email: user.email,
           phone: user.phone,
@@ -117,8 +120,11 @@ const getUserData = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("accessToken", {
-      secure: true,
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
     });
     res.status(200).json({
       success: true,
