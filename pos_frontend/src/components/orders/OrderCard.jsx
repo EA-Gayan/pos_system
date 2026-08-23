@@ -38,7 +38,7 @@ const OrderCard = ({ order }) => {
             <div className="flex flex-col items-end gap-2">
               {order?.orderStatus === OrderTypes.COMPLETE ? (
                 <>
-                  <p className="text-green-400 bg-green-500 bg-opacity-20 px-3 py-1.5 rounded-lg font-semibold">
+                  <p className="text-green-400 bg-green-500/20 px-3 py-1.5 rounded-lg font-semibold">
                     <FaCheckDouble className="inline" />
                   </p>
                   <p className="text-[#ababab] text-sm">
@@ -48,7 +48,7 @@ const OrderCard = ({ order }) => {
                 </>
               ) : (
                 <>
-                  <p className="text-yellow-400 bg-yellow-500 bg-opacity-20 px-3 py-1.5 rounded-lg font-semibold">
+                  <p className="text-yellow-400 bg-yellow-500/20 px-3 py-1.5 rounded-lg font-semibold">
                     <FaCircle className="inline" />
                   </p>
                   <p className="text-[#ababab] text-sm">

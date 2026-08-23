@@ -73,7 +73,7 @@ app.use("/api/report", require("./routes/generateXmlRoute"));
 app.use("/api/expenses", require("./routes/expensesRoute"));
 app.use("/api/print", require("./routes/printInvoiceRoute"));
 app.use("/api/cron", require("./routes/cronRoute"));
-
+app.use("/api/table-cart", require("./routes/tableCartRoutes"));
 
 // Global Error Handler
 app.use(globalErrorHandler);

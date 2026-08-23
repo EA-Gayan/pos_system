@@ -26,6 +26,11 @@ export const addTable = (data) => api.post("/api/table", data);
 export const deleteTable = (tableId) =>
   api.delete(`/api/table/delete/${tableId}`);
 
+// Table Cart Endpoints
+export const getTableCart = (tableId) => api.get(`/api/table-cart/${tableId}`);
+export const updateTableCart = (tableId, items) => api.post(`/api/table-cart/${tableId}`, { items });
+export const clearTableCart = (tableId) => api.delete(`/api/table-cart/${tableId}`);
+
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
 export const getOrders = () => api.get("/api/order");
