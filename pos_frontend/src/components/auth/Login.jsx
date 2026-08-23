@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../https";
 import { enqueueSnackbar } from "notistack";
 import { setUser } from "../../redux/slices/userSlice";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -34,18 +36,24 @@ const Login = () => {
     mutationFn: (reqData) => login(reqData),
     onSuccess: (res) => {
       const { data } = res;
-      const { _id, name, email, phone, role } = data.data.user;
-      dispatch(setUser({ _id, name, email, phone, role }));
+      const user = data?.data?.user || {};
+      const id = user.id || user._id;
+      const { name, email, phone, role } = user;
+      dispatch(setUser({ _id: id, name, email, phone, role }));
 
       //Set localStorage item
       localStorage.setItem("isAuthorized", "true");
-      localStorage.setItem("role", data.data.user.role);
-      localStorage.setItem("name", data.data.user.name);
+      localStorage.setItem("role", role);
+      localStorage.setItem("name", name);
 
       navigate("/");
     },
     onError: (err) => {
-      enqueueSnackbar(err.response.data.message, {
+      const errorMsg =
+        err.response?.data?.message ||
+        err.message ||
+        "Login failed. Please verify server connection.";
+      enqueueSnackbar(errorMsg, {
         variant: "error",
       });
     },
@@ -76,9 +84,9 @@ const Login = () => {
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Password
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               autoComplete="current-password"
               value={formData.password}
@@ -88,6 +96,13 @@ const Login = () => {
               className="bg-transparent flex-1 text-white focus:outline-none"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-[#ababab] hover:text-white focus:outline-none ml-2"
+            >
+              {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+            </button>
           </div>
         </div>
 

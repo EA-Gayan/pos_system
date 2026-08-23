@@ -19,26 +19,35 @@ app.get("/favicon.png", (req, res) => {
 
 app.use(bodyParser.json());
 
-const PORT = config.port;
-connectDB(); // Connect to the database
+const PORT = config.port || 8000;
+connectDB().catch((err) => {
+  console.error("Initial MongoDB connection error:", err);
+});
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173",
+  "http://127.0.0.1:5174",
+  "https://jayanthi-hotel-self.vercel.app",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
     credentials: true,
     origin: function (origin, callback) {
-      const allowedOrigins = [
-        "http://localhost:5173",
-        "https://jayanthi-hotel-self.vercel.app",
-        process.env.FRONTEND_URL,
-      ];
-
       // Allow requests with no origin (like mobile apps or Postman)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        if (process.env.NODE_ENV !== "production") {
+          return callback(null, true);
+        }
         callback(new Error("Not allowed by CORS"));
       }
     },
