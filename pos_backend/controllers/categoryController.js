@@ -3,12 +3,14 @@ const Product = require("../models/productModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
 const MealTypes = require("../enum/mealTypes");
+const connectDB = require("../config/database");
 
 /**
  * ADD CATEGORY
  */
 const addCategory = async (req, res, next) => {
   try {
+    await connectDB();
     const { categoryName, mealType } = req.body;
 
     // Validate name
