@@ -62,6 +62,16 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello from POS Server!" });
 });
 
+// Ensure DB is connected before every API request (critical for Vercel serverless)
+app.use("/api", async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Other Endpoints
 app.use("/api/user", require("./routes/userRoute"));
 app.use("/api/order", require("./routes/orderRoute"));

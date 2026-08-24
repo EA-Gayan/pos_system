@@ -3,9 +3,11 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
+const connectDB = require("../config/database");
 
 const register = async (req, res, next) => {
   try {
+    await connectDB();
     const { name, email, phone, password, role } = req.body;
 
     // Validate input
@@ -43,6 +45,7 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -101,6 +104,7 @@ const login = async (req, res, next) => {
 
 const getUserData = async (req, res, next) => {
   try {
+    await connectDB();
     const user = await User.findById(req.user.id);
     res.status(200).json({
       success: true,

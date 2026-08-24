@@ -2,9 +2,11 @@ const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const connectDB = require("../config/database");
 
 const addProduct = async (req, res, next) => {
   try {
+    await connectDB();
     const { name, sName, price, description, categoryId } = req.body;
 
     // Check if category exists
