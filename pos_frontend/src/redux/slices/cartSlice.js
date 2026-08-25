@@ -44,11 +44,33 @@ const cartSlice = createSlice({
         item.price = item.pricePerQuantity * item.quantity;
       }
     },
+    overrideItemPrice: (state, action) => {
+      // action.payload = { id, newUnitPrice }
+      // Only applies to non-combo items; only affects this order's Redux state (DB untouched)
+      const item = state.find((item) => item.id === action.payload.id);
+      if (item && !item.isCombo) {
+        const newUnitPrice = parseFloat(action.payload.newUnitPrice);
+        if (!isNaN(newUnitPrice) && newUnitPrice >= 0) {
+          item.pricePerQuantity = newUnitPrice;
+          item.price = newUnitPrice * item.quantity;
+          item.isPriceOverridden = true;
+        }
+      }
+    },
+    clearPriceOverride: (state, action) => {
+      // action.payload = id — restores the item to its original DB price
+      const item = state.find((item) => item.id === action.payload);
+      if (item && item.originalPrice !== undefined) {
+        item.pricePerQuantity = item.originalPrice;
+        item.price = item.originalPrice * item.quantity;
+        item.isPriceOverridden = false;
+      }
+    },
   },
 });
 
 export const getTotalPrice = (state) => {
   return state.cart.reduce((total, item) => total + item.price, 0);
 };
-export const { addItems, addCombo, removeItem, removeAllItems, incrementQuantity, decrementQuantity } = cartSlice.actions;
+export const { addItems, addCombo, removeItem, removeAllItems, incrementQuantity, decrementQuantity, overrideItemPrice, clearPriceOverride } = cartSlice.actions;
 export default cartSlice.reducer;
