@@ -1,10 +1,12 @@
 const Expenses = require("../models/expensesModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const connectDB = require("../config/database");
 
 // add the expense record
 const addExpenseRecord = async (req, res, next) => {
   try {
+    await connectDB();
     const { description, amount } = req.body;
 
     if (!description || typeof amount !== "number") {

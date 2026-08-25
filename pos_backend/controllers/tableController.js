@@ -1,9 +1,11 @@
 const Table = require("../models/tableModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
+const connectDB = require("../config/database");
 
 const addTable = async (req, res, next) => {
   try {
+    await connectDB();
     const { tableNo, noOfSeats } = req.body;
 
     if (!tableNo) {

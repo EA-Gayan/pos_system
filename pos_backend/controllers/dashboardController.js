@@ -4,9 +4,11 @@ const Order = require("../models/orderModel");
 const Table = require("../models/tableModel");
 const OrderTypes = require("../enum/orderTypes");
 const Expenses = require("../models/expensesModel");
+const connectDB = require("../config/database");
 
 const getItemDetails = async (req, res, next) => {
   try {
+    await connectDB();
     const categoryCount = await Category.countDocuments();
     const productCount = await Product.countDocuments();
     const tableCount = await Table.countDocuments();

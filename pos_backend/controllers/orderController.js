@@ -3,9 +3,11 @@ const OrderCounter = require("../models/orderCounterModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
 const OrderTypes = require("../enum/orderTypes");
+const connectDB = require("../config/database");
 
 const addOrder = async (req, res, next) => {
   try {
+    await connectDB();
     const body = { ...req.body };
 
     // Validate table only if provided
