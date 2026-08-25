@@ -86,7 +86,7 @@ const Bill = () => {
         totalPayable: grandTotal,
       },
       items: cartData,
-      table: customerData.table,
+      table: customerData.table?.tableId || customerData.table,
       paymentMethod: "Cash",
     };
 
@@ -125,7 +125,7 @@ const Bill = () => {
         totalPayable: grandTotal,
       },
       items: cartData,
-      table: customerData.table,
+      table: customerData.table?.tableId || customerData.table,
       paymentMethod: "Cash",
     };
 

@@ -4,13 +4,14 @@ import { removeAllItems } from "../../redux/slices/cartSlice";
 import logo from "../../assets/images/logo-modified.png";
 import { enqueueSnackbar } from "notistack";
 
-const Invoice = ({ orderInfo, setShowInvoice }) => {
+const Invoice = ({ orderInfo, setShowInvoice, onClose }) => {
   const invoiceRef = useRef(null);
   const dispatch = useDispatch();
 
   const handleInvoiceClose = () => {
     setShowInvoice(false);
     dispatch(removeAllItems());
+    if (onClose) onClose();
   };
 
   const handlePrint = async () => {

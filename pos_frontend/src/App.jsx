@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Expenses from "./pages/Expenses";
 import Home from "./pages/Home";
 import Menu from "./pages/Menu";
+import WaiterMenu from "./pages/WaiterMenu";
 import Orders from "./pages/Orders";
 import Tables from "./pages/Tables";
 import BestSelling from "./components/dashboard/BestSelling";
@@ -120,6 +121,14 @@ function Layout() {
             element={
               <ProtectedRoute>
                 <Menu />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/waiter-menu/:tableId"
+            element={
+              <ProtectedRoute>
+                <WaiterMenu />
               </ProtectedRoute>
             }
           />

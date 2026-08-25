@@ -5,11 +5,12 @@ import { GrRadialSelected } from "react-icons/gr";
 import { useDispatch,useSelector } from "react-redux";
 import { getCategories } from "../../https";
 import { addItems, addCombo } from "../../redux/slices/cartSlice";
+import { addTableCartItem, addTableCombo } from "../../redux/slices/tableCartSlice";
 import { setProductList } from "../../redux/slices/productSlice";
 import ComboModal from "./ComboModal";
 import { enqueueSnackbar } from "notistack";
 
-const MenuContainer = () => {
+const MenuContainer = ({ isWaiterMode = false }) => {
   const dispatch = useDispatch();
 
   const [selectedItem, setSelectedItem] = useState(null);
@@ -21,7 +22,11 @@ const MenuContainer = () => {
   const searchData = useSelector((state) => state?.product?.searchList);
 
   const handleCreateCombo = (comboData) => {
-    dispatch(addCombo(comboData));
+    if (isWaiterMode) {
+      dispatch(addTableCombo(comboData));
+    } else {
+      dispatch(addCombo(comboData));
+    }
   };
 
   const increment = (id) => () => {
@@ -46,7 +51,12 @@ const MenuContainer = () => {
       quantity: count,
       price: count * price,
     };
-    dispatch(addItems(newObj));
+    
+    if (isWaiterMode) {
+      dispatch(addTableCartItem(newObj));
+    } else {
+      dispatch(addItems(newObj));
+    }
 
     // Reset quantity only for this item
     setQuantities((prev) => ({ ...prev, [item._id]: 0 }));
@@ -164,13 +174,15 @@ const MenuContainer = () => {
             <h2 className="text-3xl font-bold text-white tracking-tight">
               {selectedItem?.name || "Select a Category"}
             </h2>
-            <button
-              onClick={() => setIsComboModalOpen(true)}
-              className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] hover:from-[#e0a100] hover:to-[#f6b100] text-[#1a1a1a] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-            >
-              <FaShoppingCart size={18} />
-              Create Combo
-            </button>
+            {!isWaiterMode && (
+              <button
+                onClick={() => setIsComboModalOpen(true)}
+                className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] hover:from-[#e0a100] hover:to-[#f6b100] text-[#1a1a1a] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <FaShoppingCart size={18} />
+                Create Combo
+              </button>
+            )}
           </div>
         )}
 

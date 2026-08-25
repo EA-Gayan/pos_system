@@ -16,7 +16,7 @@ const TableCard = ({ id, name, status, initials, seats }) => {
     };
 
     dispatch(updateTable({ table }));
-    navigate(`/menu`);
+    navigate(`/waiter-menu/${id}`);
   };
 
   return (
@@ -31,8 +31,10 @@ const TableCard = ({ id, name, status, initials, seats }) => {
         </h1>
         <p
           className={`${status === "Booked"
-              ? "text-green-400 bg-green-500 bg-opacity-20"
-              : "bg-yellow-500 bg-opacity-20 text-yellow-400"
+              ? "text-green-400 bg-green-500/20"
+              : status === "Draft"
+                ? "text-white bg-blue-600"
+                : "text-yellow-400 bg-yellow-500/20"
             } px-3 py-1.5 rounded-lg font-semibold text-sm`}
         >
           {status}

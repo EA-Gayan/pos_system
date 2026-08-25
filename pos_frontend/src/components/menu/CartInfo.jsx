@@ -1,15 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RiDeleteBin2Fill, RiProhibitedLine } from "react-icons/ri";
 import { FaNotesMedical } from "react-icons/fa";
 import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
+import { FiEdit2, FiCheck, FiX } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem, removeAllItems, incrementQuantity, decrementQuantity } from "../../redux/slices/cartSlice";
+import { removeItem, removeAllItems, incrementQuantity, decrementQuantity, overrideItemPrice } from "../../redux/slices/cartSlice";
 import Bill from "./Bill";
 
 const CartInfo = () => {
   const dispatch = useDispatch();
   const cartData = useSelector((state) => state.cart);
   const scrollRef = useRef();
+
+  // Price override state
+  const [editingPriceId, setEditingPriceId] = useState(null);
+  const [tempPrice, setTempPrice] = useState("");
 
   const handleRemove = (itemId) => {
     dispatch(removeItem(itemId));
@@ -25,6 +30,25 @@ const CartInfo = () => {
 
   const handleDecrement = (itemId) => {
     dispatch(decrementQuantity(itemId));
+  };
+
+  const handleStartEdit = (item) => {
+    setEditingPriceId(item.id);
+    setTempPrice(String(item.pricePerQuantity));
+  };
+
+  const handleConfirmPrice = (itemId) => {
+    const parsed = parseFloat(tempPrice);
+    if (!isNaN(parsed) && parsed >= 0) {
+      dispatch(overrideItemPrice({ id: itemId, newUnitPrice: parsed }));
+    }
+    setEditingPriceId(null);
+    setTempPrice("");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPriceId(null);
+    setTempPrice("");
   };
 
   useEffect(() => {
@@ -94,9 +118,76 @@ const CartInfo = () => {
                     </div>
                   )}
                 </div>
-                <p className="text-[#F6B100] text-md font-bold ml-4">
-                  Rs {item.price}
-                </p>
+                {/* Price display / inline edit */}
+                <div className="ml-4 flex items-center gap-1">
+                  {editingPriceId === item.id ? (
+                    // ── Inline edit mode ──────────────────────────────
+                    <div className="flex items-center gap-1">
+                      <span className="text-[#ababab] text-xs font-semibold">Rs</span>
+                      <input
+                        id={`price-input-${item.id}`}
+                        autoFocus
+                        type="number"
+                        min="0"
+                        value={tempPrice}
+                        onChange={(e) => setTempPrice(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleConfirmPrice(item.id);
+                          if (e.key === "Escape") handleCancelEdit();
+                        }}
+                        className="w-20 bg-[#2e2e2e] text-[#f5f5f5] text-sm rounded-md px-2 py-1
+                                   border border-[#f6b100] outline-none focus:ring-1 focus:ring-[#f6b100]
+                                   [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none
+                                   [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <button
+                        id={`confirm-price-${item.id}`}
+                        onClick={() => handleConfirmPrice(item.id)}
+                        title="Confirm price"
+                        className="text-green-400 hover:text-green-300 transition-all cursor-pointer"
+                      >
+                        <FiCheck size={16} />
+                      </button>
+                      <button
+                        id={`cancel-price-${item.id}`}
+                        onClick={handleCancelEdit}
+                        title="Cancel"
+                        className="text-[#ababab] hover:text-red-400 transition-all cursor-pointer"
+                      >
+                        <FiX size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    // ── Display mode ──────────────────────────────────
+                    <div className="flex items-center gap-1.5">
+                      <div className="flex flex-col items-end">
+                        <p className="text-[#F6B100] text-md font-bold leading-tight">
+                          Rs {item.price}
+                        </p>
+                        {item.isPriceOverridden && (
+                          <span
+                            className="text-[9px] font-semibold uppercase tracking-wider
+                                       text-[#f6b100] bg-[#f6b10020] border border-[#f6b10040]
+                                       px-1.5 py-0.5 rounded-full leading-tight"
+                          >
+                            custom
+                          </span>
+                        )}
+                      </div>
+                      {!item.isCombo && (
+                        <button
+                          id={`edit-price-${item.id}`}
+                          onClick={() => handleStartEdit(item)}
+                          title="Override price for this order"
+                          className="text-[#555] hover:text-[#f6b100] transition-all cursor-pointer
+                                     ml-0.5 p-1 rounded hover:bg-[#f6b10015]"
+                        >
+                          <FiEdit2 size={13} />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center justify-between mt-3">
