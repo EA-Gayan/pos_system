@@ -35,19 +35,21 @@ const BottomNav = ({ isVisible = true }) => {
           <p>Home</p>
         </button>
       )}
-      <button
-        onClick={() => {
-          navigate("/expenses");
-        }}
-        className={`flex items-center justify-center font-bold cursor-pointer ${
-          isActive("/expenses")
-            ? "text-[#f5f5f5] bg-[#343434]"
-            : "text-[#ababab]"
-        } w-[300px] rounded-[20px] hover:bg-[#2f2f2f]`}
-      >
-        <CiCircleMore className="inline mr-2" size={20} />
-        <p>Expenses</p>
-      </button>
+      {userData.role !== "Waiter" && (
+        <button
+          onClick={() => {
+            navigate("/expenses");
+          }}
+          className={`flex items-center justify-center font-bold cursor-pointer ${
+            isActive("/expenses")
+              ? "text-[#f5f5f5] bg-[#343434]"
+              : "text-[#ababab]"
+          } w-[300px] rounded-[20px] hover:bg-[#2f2f2f]`}
+        >
+          <CiCircleMore className="inline mr-2" size={20} />
+          <p>Expenses</p>
+        </button>
+      )}
       <button
         onClick={() => navigate("/tables")}
         className={`flex items-center justify-center font-bold cursor-pointer ${
@@ -57,21 +59,25 @@ const BottomNav = ({ isVisible = true }) => {
         <MdTableBar className="inline mr-2" size={20} />
         <p>Tables</p>
       </button>
-      <button
-        onClick={() => navigate("/orders")}
-        className={`flex items-center justify-center font-bold cursor-pointer ${
-          isActive("/orders") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"
-        } w-[300px] rounded-[20px] hover:bg-[#2f2f2f]`}
-      >
-        <MdOutlineReorder className="inline mr-2" size={20} />
-        <p>Orders</p>
-      </button>
-      <button
-        onClick={() => navigate("/menu")}
-        className="absolute bottom-6 bg-[#F6B100] text-[#f5f5f5] rounded-full p-4 mb-5 cursor-pointer hover:bg-[#e5a400]"
-      >
-        <BiSolidDish size={35} />
-      </button>
+      {userData.role !== "Waiter" && (
+        <button
+          onClick={() => navigate("/orders")}
+          className={`flex items-center justify-center font-bold cursor-pointer ${
+            isActive("/orders") ? "text-[#f5f5f5] bg-[#343434]" : "text-[#ababab]"
+          } w-[300px] rounded-[20px] hover:bg-[#2f2f2f]`}
+        >
+          <MdOutlineReorder className="inline mr-2" size={20} />
+          <p>Orders</p>
+        </button>
+      )}
+      {userData.role !== "Waiter" && (
+        <button
+          onClick={() => navigate("/menu")}
+          className="absolute bottom-6 bg-[#F6B100] text-[#f5f5f5] rounded-full p-4 mb-5 cursor-pointer hover:bg-[#e5a400]"
+        >
+          <BiSolidDish size={35} />
+        </button>
+      )}
     </div>
   );
 };
