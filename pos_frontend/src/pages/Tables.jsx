@@ -18,6 +18,8 @@ const Tables = () => {
       return await getTables();
     },
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
   });
 
   const currentTableData = useSelector((state) => state.table.tableData);
@@ -84,13 +86,6 @@ const Tables = () => {
           >
             Available
           </button>
-          <button
-            onClick={() => setStatus("draft")}
-            className={`text-sm font-semibold px-6 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ${status === "draft" ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] text-[#1a1a1a] shadow-lg scale-105" : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
-              }`}
-          >
-            Draft
-          </button>
         </div>
       </div>
 
@@ -103,6 +98,7 @@ const Tables = () => {
             name={table.tableNo}
             initials={table.initial}
             seats={table.noOfSeats}
+            draftTotal={table.draftTotal}
           />
         ))}
       </div>

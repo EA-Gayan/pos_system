@@ -25,6 +25,7 @@ function Layout() {
   const location = useLocation();
   const hideHeader = ["/auth"];
   const { isAuth } = useSelector((state) => state.user);
+  const userRole = localStorage.getItem("role");
   const [isBottomNavVisible, setIsBottomNavVisible] = useState(true);
   const hideTimerRef = useRef(null);
 
@@ -89,11 +90,11 @@ function Layout() {
       {!hideHeader.includes(location.pathname) && <Header />}
       <main className="flex-1 min-h-0">
         <Routes>
-          {/* Only Admin can view Home, else go to Menu */}
+          {/* Root: Admin -> Home, Waiter -> Tables, else -> Menu */}
           <Route
             path="/"
             element={
-              <ProtectedRoute adminOnly redirectTo="/menu">
+              <ProtectedRoute adminOnly redirectTo="/tables" waiterRedirectTo="/tables">
                 <Home />
               </ProtectedRoute>
             }
@@ -103,7 +104,7 @@ function Layout() {
           <Route
             path="/orders"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute waiterForbidden>
                 <Orders />
               </ProtectedRoute>
             }
@@ -119,7 +120,7 @@ function Layout() {
           <Route
             path="/menu"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute waiterForbidden>
                 <Menu />
               </ProtectedRoute>
             }
@@ -159,18 +160,18 @@ function Layout() {
           <Route
             path="/expenses"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute waiterForbidden>
                 <Expenses />
               </ProtectedRoute>
             }
           />
         </Routes>
       </main>
-      {!shouldHideBottomNav() && <BottomNav isVisible={isBottomNavVisible} />}
+      {!shouldHideBottomNav() && userRole !== "Waiter" && <BottomNav isVisible={isBottomNavVisible} />}
     </div>
   );
 }
-function ProtectedRoute({ children, adminOnly = false, redirectTo = "/auth" }) {
+function ProtectedRoute({ children, adminOnly = false, waiterForbidden = false, redirectTo = "/auth", waiterRedirectTo = "/tables" }) {
   const { isAuth, role } = useSelector((state) => state.user);
 
   // Check from Redux first, then fallback to localStorage
@@ -188,9 +189,14 @@ function ProtectedRoute({ children, adminOnly = false, redirectTo = "/auth" }) {
     return <Navigate to="/auth" replace />;
   }
 
-  // If adminOnly route and role doesn’t match, redirect
+  // If adminOnly route and role doesn't match, redirect
   if (adminOnly && userRole !== "Admin") {
-    return <Navigate to={redirectTo || "/menu"} replace />;
+    return <Navigate to={waiterRedirectTo || "/tables"} replace />;
+  }
+
+  // If route is forbidden for waiters
+  if (waiterForbidden && userRole === "Waiter") {
+    return <Navigate to="/tables" replace />;
   }
 
   return children;

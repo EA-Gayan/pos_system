@@ -32,8 +32,18 @@ const WaiterCartInfo = ({ tableId }) => {
     dispatch(removeTableCartItem(itemId));
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = async () => {
     dispatch(clearTableCartItems());
+    // Also clear the draft from the backend so it doesn't reappear
+    if (tableId) {
+      try {
+        await clearTableCart(tableId);
+        // Reset table status back to Available
+        await updateTable({ tableId, status: "Available" });
+      } catch (err) {
+        console.error("Failed to clear backend cart:", err);
+      }
+    }
   };
 
   const handleIncrement = (itemId) => {
@@ -63,10 +73,10 @@ const WaiterCartInfo = ({ tableId }) => {
     try {
       await updateTableCart(tableId, cartData);
       
-      // Change table status to indicate it has a draft
+      // Change table status to Booked (has a draft order)
       await draftTableUpdateMutation.mutateAsync({
         tableId: tableId,
-        status: "Draft",
+        status: "Booked",
       });
 
       enqueueSnackbar("Draft saved successfully!", { variant: "success" });
@@ -85,10 +95,9 @@ const WaiterCartInfo = ({ tableId }) => {
       const { data } = resData.data;
       setOrderInfo(data);
 
-      // Make table status Available again or Booked? Normally after Complete it should be Available? 
-      // Actually, if a waiter completes the order, they are done taking it. So it should probably stay Booked if they are eating, but if they paid, it's Available. Let's set it to Booked as before.
+      // After completing the order, table becomes Available again
       const tableUpdateData = {
-        status: "Booked",
+        status: "Available",
         orderId: data._id,
         tableId: data.table,
       };

@@ -1,4 +1,5 @@
 const Table = require("../models/tableModel");
+const TableCart = require("../models/tableCartModel");
 const createHttpError = require("http-errors");
 const mongoose = require("mongoose");
 const connectDB = require("../config/database");
@@ -35,10 +36,26 @@ const addTable = async (req, res, next) => {
 const getTables = async (req, res, next) => {
   try {
     const tables = await Table.find();
+
+    // Fetch all draft carts and build a map: tableId -> draftTotal
+    const carts = await TableCart.find();
+    const draftMap = {};
+    for (const cart of carts) {
+      const total = cart.items.reduce((sum, item) => sum + (item.price || 0), 0);
+      draftMap[cart.table.toString()] = total;
+    }
+
+    const tablesWithDraft = tables.map((t) => {
+      const obj = t.toObject();
+      const draftTotal = draftMap[t._id.toString()];
+      obj.draftTotal = draftTotal !== undefined ? draftTotal : null;
+      return obj;
+    });
+
     res.status(200).json({
       success: true,
       message: "Tables retrieved successfully",
-      data: tables,
+      data: tablesWithDraft,
     });
   } catch (error) {
     next(error);

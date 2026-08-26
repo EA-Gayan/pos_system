@@ -1,14 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { getBgColor, getAvatarName } from "../../utils";
+import { getAvatarName } from "../../utils";
 import { useDispatch } from "react-redux";
 import { updateTable } from "../../redux/slices/customerSlice";
 
-const TableCard = ({ id, name, status, initials, seats }) => {
+const TableCard = ({ id, name, status, initials, seats, draftTotal }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = (name) => {
-    if (status === "Booked") return;
 
     const table = {
       tableId: id,
@@ -18,6 +17,22 @@ const TableCard = ({ id, name, status, initials, seats }) => {
     dispatch(updateTable({ table }));
     navigate(`/waiter-menu/${id}`);
   };
+
+  // Determine what to show in the avatar circle
+  // If the table has a draft, show the draft total amount
+  // If there's a customer name initial, show those initials
+  // Otherwise show N/A (only for available/empty tables)
+  const avatarContent = () => {
+    if (draftTotal !== null && draftTotal !== undefined) {
+      return `Rs ${draftTotal}`;
+    }
+    if (initials) {
+      return getAvatarName(initials);
+    }
+    return "N/A";
+  };
+
+  const hasContent = draftTotal !== null && draftTotal !== undefined ? true : !!initials;
 
   return (
     <div
@@ -31,10 +46,10 @@ const TableCard = ({ id, name, status, initials, seats }) => {
         </h1>
         <p
           className={`${status === "Booked"
-              ? "text-green-400 bg-green-500/20"
-              : status === "Draft"
-                ? "text-white bg-blue-600"
-                : "text-yellow-400 bg-yellow-500/20"
+            ? "text-green-400 bg-green-500/20"
+            : status === "Available"
+              ? "text-yellow-400 bg-yellow-500/20"
+              : "text-blue-400 bg-blue-500/20"
             } px-3 py-1.5 rounded-lg font-semibold text-sm`}
         >
           {status}
@@ -42,10 +57,10 @@ const TableCard = ({ id, name, status, initials, seats }) => {
       </div>
       <div className="flex items-center justify-center mt-6 mb-8">
         <h1
-          className={`text-white rounded-full p-6 text-2xl font-bold shadow-lg`}
-          style={{ backgroundColor: initials ? getBgColor() : "#1f1f1f" }}
+          className={`text-white rounded-full p-6 text-2xl font-bold shadow-lg ${draftTotal !== null && draftTotal !== undefined ? "text-lg" : ""}`}
+          style={{ backgroundColor: hasContent ? "#e5a400" : "#2a2a2a" }}
         >
-          {getAvatarName(initials) || "N/A"}
+          {avatarContent()}
         </h1>
       </div>
       <p className="text-[#ababab] text-xs">
