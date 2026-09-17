@@ -211,7 +211,7 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
 
       {/* Scrollable Cart Items */}
       <div
-        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl ${cartData.length === 0 ? "flex items-center justify-center" : ""
+        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl touch-scrollbar ${cartData.length === 0 ? "flex items-center justify-center" : ""
           }`}
         style={{ maxHeight: "60vh" }}
         ref={scrollRef}

@@ -124,8 +124,8 @@ const MenuContainer = ({ isWaiterMode = false }) => {
   return (
     <div className="flex flex-col md:flex-row w-full h-full gap-2 sm:gap-4 p-2 sm:p-4 overflow-hidden">
       {/* Categories: Horizontal pills on mobile (< md), vertical sidebar on desktop (md+) */}
-      <div className="w-full md:w-1/4 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-2 sm:p-4 shadow-xl shrink-0">
-        <h2 className="hidden md:block text-xl font-bold text-white mb-2 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">
+      <div className="w-full md:w-72 lg:w-80 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-3 sm:p-4 shadow-xl shrink-0">
+        <h2 className="hidden md:block text-xl font-bold text-white mb-3 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">
           Categories
         </h2>
 
@@ -137,9 +137,9 @@ const MenuContainer = ({ isWaiterMode = false }) => {
               <button
                 key={category._id}
                 onClick={() => setSelectedItem(category)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer min-h-[40px] flex items-center ${
                   isSelected
-                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] shadow-md scale-102"
+                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] shadow-md font-extrabold"
                     : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333]"
                 }`}
               >
@@ -149,8 +149,8 @@ const MenuContainer = ({ isWaiterMode = false }) => {
           })}
         </div>
 
-        {/* Desktop vertical sidebar */}
-        <div className="hidden md:flex flex-col gap-3 overflow-y-auto pr-1 pb-20 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
+        {/* Desktop vertical sidebar with touch-friendly scrollbar & larger touch targets */}
+        <div className="hidden md:flex flex-col gap-2.5 sm:gap-3 overflow-y-auto pr-2.5 pb-20 touch-scrollbar">
           {filteredCategories.map((category) => {
             const isSelected = selectedItem?._id === category._id;
             return (
@@ -158,20 +158,20 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                 key={category._id}
                 onClick={() => setSelectedItem(category)}
                 className={`
-                  relative overflow-hidden group cursor-pointer p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-95
+                  relative overflow-hidden group cursor-pointer p-3.5 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-200 transform hover:scale-[1.01] active:scale-95 min-h-[60px] flex flex-col justify-center
                   ${isSelected
-                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] shadow-lg shadow-[#f6b100]/20"
-                    : "bg-[#2a2a2a] hover:bg-[#333]"
+                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] shadow-lg shadow-[#f6b100]/25 border border-yellow-300/30"
+                    : "bg-[#272727] hover:bg-[#303030] border border-[#333]"
                   }
                 `}
               >
                 <div className="flex items-center justify-between relative z-10">
-                  <h3 className={`font-bold text-sm ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
+                  <h3 className={`font-bold text-sm sm:text-base leading-tight ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
                     {category.name}
                   </h3>
-                  {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-xl" />}
+                  {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-xl shrink-0 ml-2" />}
                 </div>
-                <p className={`text-xs mt-1 font-medium ${isSelected ? "text-[#1a1a1a]/70" : "text-gray-500"}`}>
+                <p className={`text-xs mt-1 font-semibold ${isSelected ? "text-[#1a1a1a]/80" : "text-gray-400"}`}>
                   {category?.products?.length || 0} Items
                 </p>
 
@@ -184,7 +184,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
       </div>
 
       {/* Main Content - Products */}
-      <div className="w-full md:w-3/4 flex-1 md:h-full bg-[#1f1f1f] rounded-2xl p-3 sm:p-6 shadow-xl overflow-hidden flex flex-col min-h-0">
+      <div className="w-full flex-1 md:h-full bg-[#1f1f1f] rounded-2xl p-3 sm:p-6 shadow-xl overflow-hidden flex flex-col min-h-0 min-w-0">
         {/* Header Area */}
         {searchData?.length > 0 ? (
           <h2 className="text-lg sm:text-2xl font-bold text-white mb-3 sm:mb-6 flex items-center gap-3">
@@ -210,8 +210,8 @@ const MenuContainer = ({ isWaiterMode = false }) => {
           </div>
         )}
 
-        {/* Product Grid */}
-        <div className="flex-1 overflow-y-auto pr-1 sm:pr-2 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
+        {/* Product Grid with touch-friendly scrollbar */}
+        <div className="flex-1 overflow-y-auto pr-2 sm:pr-3 touch-scrollbar">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 pb-24 md:pb-12">
             {(searchData?.length > 0 ? searchData : selectedItem?.products || []).map((item) => {
               const qty = quantities[item._id] || 0;
