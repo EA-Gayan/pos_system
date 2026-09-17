@@ -2,8 +2,8 @@ import React from "react";
 
 const Table = ({ headers, data, renderRow }) => {
   return (
-    <div className="overflow-x-auto rounded-lg shadow-lg">
-      <table className="w-full text-left text-[#f5f5f5]">
+    <div className="overflow-x-auto rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-[#3a3a3a]">
+      <table className="w-full min-w-[500px] text-left text-[#f5f5f5]">
         <thead className="bg-gradient-to-r from-[#333] to-[#3a3a3a] text-[#f6b100] sticky top-0 shadow-md">
           <tr>
             {headers.map((header, idx) => (

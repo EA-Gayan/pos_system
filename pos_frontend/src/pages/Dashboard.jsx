@@ -26,32 +26,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#1f1f1f] min-h-screen flex flex-col">
-      <div className="container mx-auto flex items-center justify-between py-14 px-6 md:px-4">
-        <div className="flex items-center gap-3">
+    <div className="bg-[#1f1f1f] min-h-screen flex flex-col pb-20 md:pb-0">
+      <div className="container mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between py-4 sm:py-8 px-3 sm:px-6 gap-3 sm:gap-4">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
           {buttons.map(({ label, icon, action, id }) => {
             return (
               <button
                 id={id}
                 key={action}
                 onClick={() => handleOpenModal(action)}
-                className="bg-[#1a1a1a] hover:bg-[#262626] px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2 cursor-pointer"
+                className="bg-[#1a1a1a] hover:bg-[#262626] px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-[#f5f5f5] font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 shrink-0 cursor-pointer transition-colors shadow"
               >
-                {label} {icon}
+                <span>{label}</span>
+                <span className="text-base">{icon}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Tab Buttons */}
+        <div className="flex items-center gap-2 bg-[#1a1a1a] p-1 rounded-xl w-full md:w-auto">
           {tabs.map((tab, id) => {
             return (
               <button
                 key={id}
-                className={`px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-md flex items-center gap-2 cursor-pointer ${
+                className={`flex-1 md:flex-none justify-center px-4 sm:px-8 py-2 sm:py-2.5 rounded-lg text-[#f5f5f5] font-semibold text-xs sm:text-sm flex items-center gap-2 cursor-pointer transition-all ${
                   activeTab === tab
-                    ? "bg-[#262626]"
-                    : "bg-[#1a1a1a] hover:bg-[#262626]"
+                    ? "bg-[#262626] text-[#f6b100] shadow"
+                    : "hover:bg-[#262626] text-gray-400"
                 }`}
                 onClick={() => setActiveTab(tab)}
               >

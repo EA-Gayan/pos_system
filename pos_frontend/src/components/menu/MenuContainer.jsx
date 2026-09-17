@@ -122,11 +122,35 @@ const MenuContainer = ({ isWaiterMode = false }) => {
   }, [categories, selectedItem, isError, selectedStatus]);
 
   return (
-    <div className="flex flex-col md:flex-row w-full h-full gap-4 p-4 overflow-hidden">
-      {/* Sidebar - Categories */}
-      <div className="w-full md:w-1/4 h-[35%] md:h-full flex flex-col gap-4 bg-[#1f1f1f] rounded-2xl p-4 shadow-xl overflow-y-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent flex-shrink-0">
-        <h2 className="text-xl font-bold text-white mb-2 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">Categories</h2>
-        <div className="flex flex-col gap-3 pb-20">
+    <div className="flex flex-col md:flex-row w-full h-full gap-2 sm:gap-4 p-2 sm:p-4 overflow-hidden">
+      {/* Categories: Horizontal pills on mobile (< md), vertical sidebar on desktop (md+) */}
+      <div className="w-full md:w-1/4 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-2 sm:p-4 shadow-xl shrink-0">
+        <h2 className="hidden md:block text-xl font-bold text-white mb-2 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">
+          Categories
+        </h2>
+
+        {/* Mobile horizontal pill scroll */}
+        <div className="flex md:hidden overflow-x-auto gap-2 py-1 scrollbar-none">
+          {filteredCategories.map((category) => {
+            const isSelected = selectedItem?._id === category._id;
+            return (
+              <button
+                key={category._id}
+                onClick={() => setSelectedItem(category)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] shadow-md scale-102"
+                    : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333]"
+                }`}
+              >
+                {category.name} ({category?.products?.length || 0})
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Desktop vertical sidebar */}
+        <div className="hidden md:flex flex-col gap-3 overflow-y-auto pr-1 pb-20 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
           {filteredCategories.map((category) => {
             const isSelected = selectedItem?._id === category._id;
             return (
@@ -160,50 +184,50 @@ const MenuContainer = ({ isWaiterMode = false }) => {
       </div>
 
       {/* Main Content - Products */}
-      <div className="w-full md:w-3/4 h-[65%] md:h-full bg-[#1f1f1f] rounded-2xl p-6 shadow-xl overflow-hidden flex flex-col min-h-0">
+      <div className="w-full md:w-3/4 flex-1 md:h-full bg-[#1f1f1f] rounded-2xl p-3 sm:p-6 shadow-xl overflow-hidden flex flex-col min-h-0">
         {/* Header Area */}
         {searchData?.length > 0 ? (
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+          <h2 className="text-lg sm:text-2xl font-bold text-white mb-3 sm:mb-6 flex items-center gap-3">
             <span className="text-[#f6b100]">Search Results</span>
-            <span className="text-sm font-normal text-gray-500 bg-[#2a2a2a] px-3 py-1 rounded-full">
+            <span className="text-xs sm:text-sm font-normal text-gray-500 bg-[#2a2a2a] px-3 py-1 rounded-full">
               Found {searchData.length} items
             </span>
           </h2>
         ) : (
-          <div className="mb-6 pb-4 border-b border-[#333] flex items-center justify-between">
-            <h2 className="text-3xl font-bold text-white tracking-tight">
+          <div className="mb-3 sm:mb-6 pb-2 sm:pb-4 border-b border-[#333] flex items-center justify-between gap-2">
+            <h2 className="text-lg sm:text-3xl font-bold text-white tracking-tight truncate">
               {selectedItem?.name || "Select a Category"}
             </h2>
             {!isWaiterMode && (
               <button
                 onClick={() => setIsComboModalOpen(true)}
-                className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] hover:from-[#e0a100] hover:to-[#f6b100] text-[#1a1a1a] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+                className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] hover:from-[#e0a100] hover:to-[#f6b100] text-[#1a1a1a] font-bold px-3 sm:px-6 py-1.5 sm:py-3 text-xs sm:text-sm rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center gap-1.5 sm:gap-2 shrink-0 cursor-pointer"
               >
-                <FaShoppingCart size={18} />
-                Create Combo
+                <FaShoppingCart size={15} />
+                <span>Create Combo</span>
               </button>
             )}
           </div>
         )}
 
         {/* Product Grid */}
-        <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-20">
+        <div className="flex-1 overflow-y-auto pr-1 sm:pr-2 scrollbar-thin scrollbar-thumb-[#3a3a3a] scrollbar-track-transparent">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 pb-24 md:pb-12">
             {(searchData?.length > 0 ? searchData : selectedItem?.products || []).map((item) => {
               const qty = quantities[item._id] || 0;
               return (
                 <div
                   key={item._id}
                   onClick={() => handleAddToCart(item)}
-                  className="group relative bg-[#2a2a2a] rounded-2xl p-4 cursor-pointer transition-all duration-300 hover:bg-[#333] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-[#f6b100]/30 overflow-hidden"
+                  className="group relative bg-[#2a2a2a] rounded-2xl p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:bg-[#333] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-[#f6b100]/30 overflow-hidden"
                 >
-                  <div className="flex flex-col h-full justify-between gap-4 relative z-10">
+                  <div className="flex flex-col h-full justify-between gap-3 sm:gap-4 relative z-10">
                     <div>
-                      <h3 className="text-white text-lg font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
+                      <h3 className="text-white text-base sm:text-lg font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
                         {item.name}
                       </h3>
-                      <p className="text-[#f6b100] font-bold text-l">
-                        <span className="text-gray-500">Rs. </span>
+                      <p className="text-[#f6b100] font-bold text-base sm:text-lg">
+                        <span className="text-gray-500 text-xs sm:text-sm font-normal">Rs. </span>
                         {item.price}
                       </p>
                     </div>
@@ -222,7 +246,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                       <input
                         type="number"
                         min="0"
-                        className="w-10 bg-transparent text-center text-white font-bold outline-none no-spinner"
+                        className="w-10 bg-transparent text-center text-white font-bold outline-none no-spinner text-sm sm:text-base"
                         value={qty}
                         onChange={(e) => {
                           e.stopPropagation();
@@ -242,15 +266,6 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                         &#43;
                       </button>
                     </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(item);
-                      }}
-                      className="absolute top-0 right-0 p-2 text-[#02ca3a] opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0"
-                    >
-                    </button>
                   </div>
                 </div>
               );

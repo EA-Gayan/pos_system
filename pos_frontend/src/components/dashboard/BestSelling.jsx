@@ -59,12 +59,12 @@ const BestSelling = ({ products }) => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#262626]">
-      <div className="flex-none px-4 sm:px-10 py-4 flex items-center justify-between">
+    <div className="flex flex-col h-full bg-[#262626] overflow-hidden min-h-0">
+      <div className="flex-none px-3 sm:px-10 py-3 sm:py-4 flex items-center justify-between">
         <BackButton />
       </div>
 
-      <div className="flex-1 px-4 sm:px-10 pb-4 overflow-y-hidden">
+      <div className="flex-1 px-2 sm:px-10 pb-20 md:pb-4 overflow-y-auto min-h-0">
         <Table headers={columns} data={rows} renderRow={renderRow} />
       </div>
     </div>

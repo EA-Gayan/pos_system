@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
 
 const Greetings = () => {
   const [dateTime, setDateTime] = useState(new Date());
@@ -16,23 +16,11 @@ const Greetings = () => {
 
   const formatDate = (date) => {
     const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ];
-    return `${months[date.getMonth()]} ${String(date.getDate()).padStart(
-      2,
-      "0"
-    )}, ${date.getFullYear()}`;
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
   };
 
   const formatTime = (date) =>
@@ -41,20 +29,40 @@ const Greetings = () => {
     ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
   return (
-    <div className="flex justify-between items-center bg-gradient-to-r from-[#1a1a1a] to-[#262626] p-6 rounded-xl shadow-lg mb-2">
-      <div>
-        <h1 className="text-[#f5f5f5] text-3xl font-bold tracking-wide ml-3">
-          Hi, {userData.name || "Test User"} 👋
-        </h1>
-        <p className="text-[#ababab] text-sm ml-3 mt-1">
-          Give your best services for customers
+    <div className="relative overflow-hidden bg-gradient-to-r from-[#1f1f1f] via-[#242424] to-[#1a1a1a] p-4 sm:p-6 rounded-2xl shadow-xl border border-[#2c2c2c] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      {/* Subtle decorative glow */}
+      <div className="absolute -top-10 -right-10 w-36 h-36 bg-[#f6b100]/10 rounded-full blur-2xl pointer-events-none" />
+
+      {/* Left Greeting & Status */}
+      <div className="relative z-10">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <h1 className="text-[#f5f5f5] text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            Hi, {userData.name || "Janith"}
+          </h1>
+          <span className="text-xl sm:text-2xl animate-bounce">👋</span>
+          <span className="text-[11px] font-semibold bg-[#f6b100]/15 text-[#f6b100] px-2.5 py-0.5 rounded-full border border-[#f6b100]/30 tracking-wide">
+            {userData.role || "Admin"}
+          </span>
+        </div>
+        <p className="text-[#a0a0a0] text-xs sm:text-sm mt-1 flex items-center gap-2">
+          <span>Welcome back! Here is today's restaurant activity</span>
         </p>
       </div>
-      <div className="text-right">
-        <h1 className="text-[#f6b100] text-3xl font-bold tracking-wide w-[130px]">
-          {formatTime(dateTime)}
-        </h1>
-        <p className="text-[#ababab] text-sm mt-1">{formatDate(dateTime)}</p>
+
+      {/* Right Realtime Clock Card */}
+      <div className="relative z-10 flex items-center gap-3 bg-[#161616]/90 border border-[#2e2e2e] py-2 px-4 rounded-xl shadow-inner w-full sm:w-auto justify-between sm:justify-start">
+        <div className="w-10 h-10 rounded-lg bg-[#f6b100]/10 border border-[#f6b100]/25 flex items-center justify-center text-[#f6b100] shrink-0">
+          <FaRegClock className="text-lg" />
+        </div>
+        <div className="text-right sm:text-left">
+          <div className="text-lg sm:text-xl font-bold font-mono text-[#f6b100] tracking-wider leading-none">
+            {formatTime(dateTime)}
+          </div>
+          <div className="text-[11px] text-[#888] font-medium mt-0.5 flex items-center justify-end sm:justify-start gap-1">
+            <FaRegCalendarAlt className="text-[9px] text-[#666]" />
+            <span>{formatDate(dateTime)}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -55,9 +55,9 @@ const Invoice = ({ orderInfo, setShowInvoice, onClose }) => {
   });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-4 rounded-lg shadow-lg w-[400px]">
-        <div ref={invoiceRef} className="p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex justify-center items-center z-50 p-3">
+      <div className="bg-white p-3 sm:p-4 rounded-xl shadow-2xl w-full max-w-sm sm:max-w-md max-h-[92vh] overflow-y-auto">
+        <div ref={invoiceRef} className="p-2 sm:p-4">
           <div className="logo-container flex justify-center mb-4">
             <img src={logo} alt="Logo" className="w-16" />
           </div>
