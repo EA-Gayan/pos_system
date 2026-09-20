@@ -38,11 +38,11 @@ const TableCard = ({ id, name, status, initials, seats, draftTotal }) => {
     <div
       onClick={() => handleClick(name)}
       key={id}
-      className="hover:bg-[#2c2c2c] bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-5 rounded-xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-[#333]"
+      className="hover:bg-[#2c2c2c] bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-3 sm:p-5 rounded-xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-98 transition-all duration-300 border border-[#333] flex flex-col justify-between"
     >
-      <div className="flex items-center justify-between px-1">
-        <h1 className="text-[#f5f5f5] text-xl font-bold">
-          <p className="text-[#ababab] ml-2 inline" /> Table {name}
+      <div className="flex items-center justify-between gap-1 px-0.5">
+        <h1 className="text-[#f5f5f5] text-sm sm:text-xl font-bold truncate">
+          Table {name}
         </h1>
         <p
           className={`${status === "Booked"
@@ -50,21 +50,23 @@ const TableCard = ({ id, name, status, initials, seats, draftTotal }) => {
             : status === "Available"
               ? "text-yellow-400 bg-yellow-500/20"
               : "text-blue-400 bg-blue-500/20"
-            } px-3 py-1.5 rounded-lg font-semibold text-sm`}
+            } px-2 sm:px-3 py-0.5 sm:py-1.5 rounded-lg font-semibold text-[10px] sm:text-sm shrink-0`}
         >
           {status}
         </p>
       </div>
-      <div className="flex items-center justify-center mt-6 mb-8">
-        <h1
-          className={`text-white rounded-full p-6 text-2xl font-bold shadow-lg ${draftTotal !== null && draftTotal !== undefined ? "text-lg" : ""}`}
+      <div className="flex items-center justify-center my-4 sm:my-7">
+        <div
+          className={`text-white rounded-full h-16 w-16 sm:h-20 sm:w-20 flex items-center justify-center text-center font-bold shadow-lg text-xs sm:text-lg px-1 ${
+            draftTotal !== null && draftTotal !== undefined ? "text-[11px] sm:text-base leading-tight" : ""
+          }`}
           style={{ backgroundColor: hasContent ? "#e5a400" : "#2a2a2a" }}
         >
-          {avatarContent()}
-        </h1>
+          <span className="truncate">{avatarContent()}</span>
+        </div>
       </div>
-      <p className="text-[#ababab] text-xs">
-        Seats: <span className="text-[#f5f5f5]">{seats}</span>
+      <p className="text-[#ababab] text-[11px] sm:text-xs">
+        Seats: <span className="text-[#f5f5f5] font-semibold">{seats}</span>
       </p>
     </div>
   );

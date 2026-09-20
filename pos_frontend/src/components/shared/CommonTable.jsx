@@ -2,8 +2,8 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 const CommonTable = ({ data, columns, onEdit, onDelete }) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-[#f5f5f5] table-fixed">
+    <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] rounded-lg">
+      <table className="w-full min-w-[500px] text-[#f5f5f5] table-fixed">
         <colgroup>
           {columns.map((col) => (
             <col key={`col-${col.key}`} />
@@ -25,7 +25,7 @@ const CommonTable = ({ data, columns, onEdit, onDelete }) => {
         className="overflow-y-auto"
         style={{ maxHeight: "calc(100vh - 150px)" }}
       >
-        <table className="w-full text-[#f5f5f5] table-fixed">
+        <table className="w-full min-w-[500px] text-[#f5f5f5] table-fixed">
           <colgroup>
             {columns.map((col) => (
               <col key={`col-data-${col.key}`} />

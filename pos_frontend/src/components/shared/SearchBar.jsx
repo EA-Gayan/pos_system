@@ -41,19 +41,19 @@ const SearchBar = ({ onSearchChange }) => {
   };
 
   return (
-    <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-5 py-2 w-[500px] border-2 border-transparent focus-within:border-[#f6b100] focus-within:shadow-lg transition-all duration-300">
-      <FaSearch className="text-[#f5f5f5] transition-colors duration-200" />
+    <div className="flex items-center gap-2 sm:gap-4 bg-[#1f1f1f] rounded-[15px] px-3 sm:px-5 py-1.5 sm:py-2 w-full max-w-[500px] border-2 border-transparent focus-within:border-[#f6b100] focus-within:shadow-lg transition-all duration-300">
+      <FaSearch className="text-[#f5f5f5] text-sm sm:text-base shrink-0 transition-colors duration-200" />
       <input
         type="text"
         value={searchValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        placeholder="Search"
-        className="bg-[#1f1f1f] outline-none text-[#f5f5f5] flex-1 placeholder:text-gray-500"
+        placeholder="Search..."
+        className="bg-[#1f1f1f] outline-none text-[#f5f5f5] text-sm sm:text-base min-w-0 flex-1 placeholder:text-gray-500"
       />
       {searchValue && (
         <IoMdClose
-          className="text-[#f5f5f5] cursor-pointer hover:text-[#f6b100] transition-colors duration-200 hover:scale-110"
+          className="text-[#f5f5f5] cursor-pointer hover:text-[#f6b100] transition-colors duration-200 hover:scale-110 shrink-0 text-base sm:text-lg"
           onClick={handleClear}
         />
       )}

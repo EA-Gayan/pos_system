@@ -289,31 +289,29 @@ const DashBoardTable = () => {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
   return (
-    <div className="bg-[#262626] p-6 w-full h-full overflow-hidden">
+    <div className="bg-[#262626] p-3 sm:p-6 w-full h-full overflow-hidden flex flex-col pb-20 md:pb-6 min-h-0">
       {queryLoading ? (
         <div className="flex justify-center items-center h-32">
           <FullScreenLoader />
         </div>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-5 gap-3 bg-[#1f1f1f] rounded-lg shadow-md mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 sm:px-6 py-3 sm:py-5 gap-2 sm:gap-3 bg-[#1f1f1f] rounded-lg shadow-md mb-3 sm:mb-4 shrink-0">
             {/* Left: Back + Title */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <BackButton />
-              <h2 className="text-xl sm:text-2xl text-white font-bold tracking-wide">{readableTitle}</h2>
+              <h2 className="text-lg sm:text-2xl text-white font-bold tracking-wide">{readableTitle}</h2>
             </div>
-
-            {/* Center: Filter Buttons */}
 
             {/* Right: Result Count */}
             {section === "total-items" && (
-              <span className="text-sm text-gray-400 mt-2 sm:mt-0 bg-[#2a2a2a] px-4 py-2 rounded-full">
+              <span className="text-xs sm:text-sm text-gray-400 self-start sm:self-auto bg-[#2a2a2a] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
                 Showing <span className="text-[#f6b100] font-semibold">{tableData.length}</span> result(s)
               </span>
             )}
           </div>
 
-          <div className="overflow-x-auto h-[calc(100%-80px)]">
+          <div className="flex-1 overflow-x-auto overflow-y-auto min-h-0 rounded-lg">
             <Table headers={headers} data={tableData} renderRow={renderRow} />
           </div>
           {isTableModalOpen && selectedRow && (

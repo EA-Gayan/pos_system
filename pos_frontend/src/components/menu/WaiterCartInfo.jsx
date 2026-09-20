@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { RiDeleteBin2Fill, RiProhibitedLine } from "react-icons/ri";
 import { HiMinusCircle, HiPlusCircle } from "react-icons/hi";
+import { FiX } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeTableCartItem,
@@ -16,7 +17,7 @@ import { OrderTypes } from "../../enum/orderTypes";
 import Invoice from "../invoice/invoice";
 import { useNavigate } from "react-router-dom";
 
-const WaiterCartInfo = ({ tableId }) => {
+const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartData = useSelector((state) => state.tableCart.items);
@@ -166,26 +167,51 @@ const WaiterCartInfo = ({ tableId }) => {
   };
 
   return (
-    <div className="flex-1 bg-[#1a1a1a] mt-4 mr-3 rounded-2xl shadow-lg pt-4 mb-[5rem] flex flex-col px-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl text-[#F6B100] font-semibold tracking-wide">
-          Table {customerData?.table?.tableNo} Order
-        </h1>
-        {cartData.length > 0 && (
-          <RiDeleteBin2Fill
-            onClick={handleClearCart}
-            className="text-[#ac1b1b] cursor-pointer hover:text-red-500 transition-all"
-            size={22}
-            title="Clear Cart"
-          />
-        )}
-      </div>
-      <hr className="border-[#b4b4b4] border-t mt-3 mb-3" />
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden"
+        />
+      )}
+
+      <div
+        className={`
+          fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-[#1a1a1a] shadow-2xl flex flex-col px-4 pt-4
+          transition-transform duration-300 ease-in-out
+          md:relative md:inset-auto md:z-auto md:flex-1 md:mt-4 md:mr-3 md:rounded-2xl md:shadow-lg md:mb-[5rem]
+          ${isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onClose}
+              className="md:hidden text-gray-400 hover:text-white p-1 rounded-lg hover:bg-[#2a2a2a] cursor-pointer"
+              title="Close Cart"
+            >
+              <FiX size={22} />
+            </button>
+            <h1 className="text-lg sm:text-xl text-[#F6B100] font-semibold tracking-wide">
+              Table {customerData?.table?.tableNo} Order
+            </h1>
+          </div>
+          {cartData.length > 0 && (
+            <RiDeleteBin2Fill
+              onClick={handleClearCart}
+              className="text-[#ac1b1b] cursor-pointer hover:text-red-500 transition-all"
+              size={22}
+              title="Clear Cart"
+            />
+          )}
+        </div>
+        <hr className="border-[#333] border-t mt-3 mb-3" />
 
       {/* Scrollable Cart Items */}
       <div
-        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl ${cartData.length === 0 ? "flex items-center justify-center" : ""
+        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl touch-scrollbar ${cartData.length === 0 ? "flex items-center justify-center" : ""
           }`}
         style={{ maxHeight: "60vh" }}
         ref={scrollRef}
@@ -259,7 +285,7 @@ const WaiterCartInfo = ({ tableId }) => {
       </div>
 
       {/* Action Buttons Section */}
-      <div className="px-5 py-3 border-t border-[#3a3a3a] bg-[#1a1a1a] mb-15">
+      <div className="px-3 sm:px-5 py-3 border-t border-[#3a3a3a] bg-[#1a1a1a] mb-0 md:mb-15 pb-8 md:pb-3 shrink-0">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-xs text-[#ababab] font-medium">Items({cartData.length})</p>
@@ -273,7 +299,7 @@ const WaiterCartInfo = ({ tableId }) => {
 
         <div className="flex gap-2 mt-4">
           <button
-            className="flex-1 bg-gray-600 hover:bg-gray-500 py-3 rounded-lg text-white font-semibold transition-all"
+            className="flex-1 bg-gray-600 hover:bg-gray-500 py-3 rounded-lg text-white font-semibold transition-all cursor-pointer"
             onClick={handleSaveDraft}
             disabled={isSaving}
           >
@@ -281,7 +307,7 @@ const WaiterCartInfo = ({ tableId }) => {
           </button>
           
           <button
-            className="flex-1 bg-[#f6b100] hover:bg-[#e5a400] py-3 rounded-lg text-[#1f1f1f] font-semibold transition-all"
+            className="flex-1 bg-[#f6b100] hover:bg-[#e5a400] py-3 rounded-lg text-[#1f1f1f] font-semibold transition-all cursor-pointer"
             onClick={handleCompleteOrder}
             disabled={orderMutation.isLoading}
           >
@@ -298,6 +324,7 @@ const WaiterCartInfo = ({ tableId }) => {
         />
       )}
     </div>
+  </>
   );
 };
 

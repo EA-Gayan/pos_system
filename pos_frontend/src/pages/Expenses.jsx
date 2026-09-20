@@ -115,44 +115,47 @@ const Expenses = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-[#262626] via-[#1f1f1f] to-[#1a1a1a]">
-      <div className="flex-none px-4 sm:px-10 py-6 flex items-center justify-between bg-[#1a1a1a] shadow-lg">
-        <BackButton />
+    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-[#262626] via-[#1f1f1f] to-[#1a1a1a] min-h-0">
+      <div className="flex-none px-3 sm:px-10 py-3.5 sm:py-6 flex flex-col sm:flex-row sm:items-center justify-between bg-[#1a1a1a] shadow-lg gap-3">
+        <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3">
+          <BackButton />
+          <h1 className="sm:hidden text-lg font-bold text-white">Expenses</h1>
+        </div>
 
         {/* Right-side Buttons */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
           {/* Add Expense Button */}
           <button
             onClick={() => {
               setModalOpen(true);
               setRowData(null);
             }}
-            className="bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
+            className="flex-1 sm:flex-none bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold text-xs sm:text-sm px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-200 cursor-pointer"
           >
             Add Expense
           </button>
 
           {/* Export Dropdown */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <button
               onClick={() => setExportOpen((prev) => !prev)}
-              className="bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold px-6 py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-200 cursor-pointer"
+              className="w-full bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold text-xs sm:text-sm px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-200 cursor-pointer"
             >
               Export Expense
             </button>
 
             {/* Dropdown Menu */}
             {exportOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
                 <button
                   onClick={() => handleExport("today")}
-                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000] cursor-pointer"
+                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                 >
                   Today
                 </button>
                 <button
                   onClick={() => handleExport("week")}
-                  className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000] cursor-pointer"
+                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                 >
                   This Week
                 </button>
@@ -162,7 +165,7 @@ const Expenses = () => {
         </div>
       </div>
 
-      <div className="flex-1 px-4 sm:px-10 pb-4 overflow-y-hidden">
+      <div className="flex-1 px-2 sm:px-10 pb-20 md:pb-4 overflow-y-auto min-h-0">
         <CommonTable
           data={displayRecords}
           columns={columns}

@@ -24,7 +24,6 @@ import BestSelling from "./components/dashboard/BestSelling";
 function Layout() {
   const location = useLocation();
   const hideHeader = ["/auth"];
-  const { isAuth } = useSelector((state) => state.user);
   const userRole = localStorage.getItem("role");
   const [isBottomNavVisible, setIsBottomNavVisible] = useState(true);
   const hideTimerRef = useRef(null);
@@ -41,9 +40,10 @@ function Layout() {
   };
 
   useEffect(() => {
-    // If device doesn't support hover (touch), keep nav visible.
-    const noHover = window.matchMedia?.("(hover: none)")?.matches;
-    if (noHover) {
+    // If mobile or touch device, keep nav visible.
+    const isMobile =
+      window.innerWidth < 768 || window.matchMedia?.("(hover: none)")?.matches;
+    if (isMobile) {
       setIsBottomNavVisible(true);
       return;
     }
@@ -75,7 +75,7 @@ function Layout() {
       }
     };
 
-    // Start hidden until user approaches the bottom.
+    // Start hidden on desktop until user approaches the bottom.
     setIsBottomNavVisible(false);
     window.addEventListener("mousemove", onMouseMove, { passive: true });
 
@@ -86,15 +86,19 @@ function Layout() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-[100dvh] w-full overflow-hidden">
       {!hideHeader.includes(location.pathname) && <Header />}
-      <main className="flex-1 min-h-0">
+      <main className="flex-1 min-h-0 overflow-hidden relative">
         <Routes>
           {/* Root: Admin -> Home, Waiter -> Tables, else -> Menu */}
           <Route
             path="/"
             element={
-              <ProtectedRoute adminOnly redirectTo="/tables" waiterRedirectTo="/tables">
+              <ProtectedRoute
+                adminOnly
+                redirectTo="/tables"
+                waiterRedirectTo="/tables"
+              >
                 <Home />
               </ProtectedRoute>
             }
@@ -167,11 +171,18 @@ function Layout() {
           />
         </Routes>
       </main>
-      {!shouldHideBottomNav() && userRole !== "Waiter" && <BottomNav isVisible={isBottomNavVisible} />}
+      {!shouldHideBottomNav() && userRole !== "Waiter" && (
+        <BottomNav isVisible={isBottomNavVisible} />
+      )}
     </div>
   );
 }
-function ProtectedRoute({ children, adminOnly = false, waiterForbidden = false, redirectTo = "/auth", waiterRedirectTo = "/tables" }) {
+function ProtectedRoute({
+  children,
+  adminOnly = false,
+  waiterForbidden = false,
+  waiterRedirectTo = "/tables",
+}) {
   const { isAuth, role } = useSelector((state) => state.user);
 
   // Check from Redux first, then fallback to localStorage

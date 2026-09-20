@@ -29,34 +29,36 @@ const WeeklyFinanceChart = () => {
   const data = resData?.data?.data || [];
 
   return (
-    <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
+    <div className="container mx-auto bg-[#262626] p-2 sm:p-4 rounded-lg mb-20 md:mb-0">
       {isLoading ? (
-        <div className="flex justify-center items-center h-32 mt-30">
+        <div className="flex justify-center items-center h-32 mt-20 sm:mt-30">
           <FullScreenLoader />
         </div>
       ) : (
         <>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" /> {/* match backend */}
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="income"
-                stroke="#4CAF50"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="expenses"
-                stroke="#F44336"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="w-full h-[280px] sm:h-[380px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="income"
+                  stroke="#4CAF50"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke="#F44336"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </>
       )}
     </div>

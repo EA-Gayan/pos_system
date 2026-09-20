@@ -4,6 +4,77 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+/* Attractive Sleek & Light Capsule Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f6b100;
+  box-shadow: 0 0 8px rgba(246, 177, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #e5a400;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+/* Touch Screen Friendly Larger Scrollbar for POS Lists */
+.touch-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.touch-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  margin: 4px 0;
+}
+
+.touch-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  border: 2px solid #1f1f1f;
+  transition: all 0.2s ease-in-out;
+}
+
+.touch-scrollbar::-webkit-scrollbar-thumb:hover,
+.touch-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #f6b100;
+  box-shadow: 0 0 10px rgba(246, 177, 0, 0.6);
+}
+
+.touch-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.05);
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
 /* FullScreenLoader.css */
 
 .fullscreen-loader {
@@ -37,5 +108,18 @@ body {
 
   .no-spinner {
     -moz-appearance: textfield;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem);
   }
 }

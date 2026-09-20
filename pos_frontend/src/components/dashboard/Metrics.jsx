@@ -223,14 +223,14 @@ useEffect(() => {
                   })}
               </div>
             </div>
-            <div className="flex justify-between items-center mt-12">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-8 sm:mt-12 gap-3">
               <div>
-                <h2 className="font-semibold text-[#f5f5f5] text-xl ">
+                <h2 className="font-semibold text-[#f5f5f5] text-lg sm:text-xl">
                   Overall Performance
                 </h2>
               </div>
               {/* Export Dropdown */}
-              <div className="flex items-center space-x-4 relative">
+              <div className="flex items-center gap-2 sm:gap-4 relative flex-wrap">
                 {/* Export Income Button */}
                 <div className="relative">
                   <button
@@ -238,21 +238,21 @@ useEffect(() => {
                       setExportOpen((prev) => !prev);
                       setExpenseExport(false);
                     }}
-                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
                   >
                     Export Income
                   </button>
                   {exportOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
                       <button
                         onClick={() => handleExport("today")}
-                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                       >
                         Today
                       </button>
                       <button
                         onClick={() => handleExport("week")}
-                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                       >
                         This Week
                       </button>
@@ -267,21 +267,21 @@ useEffect(() => {
                       setExpenseExport((prev) => !prev);
                       setExportOpen(false);
                     }}
-                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold px-4 py-2 rounded-lg hover:bg-yellow-400"
+                    className="bg-[#f6B100] text-[#1a1a1a] font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 rounded-lg hover:bg-yellow-400 cursor-pointer"
                   >
                     Export Expense
                   </button>
                   {expenseExport && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-10">
+                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
                       <button
                         onClick={() => handleExpenseExport("today")}
-                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                       >
                         Today
                       </button>
                       <button
                         onClick={() => handleExpenseExport("week")}
-                        className="block w-full px-4 py-2 text-left text-sm text-white hover:bg-gray-600 bg-[#000]"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
                       >
                         This Week
                       </button>
@@ -291,7 +291,7 @@ useEffect(() => {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 pb-20">
               <div
                 className="shadow-sm rounded-lg p-4"
                 style={{ backgroundColor: "#025cca" }}

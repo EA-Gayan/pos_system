@@ -100,21 +100,21 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1a1a1a] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[80vh] overflow-hidden border border-[#333]">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-[#1a1a1a] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden border border-[#333] flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] p-3 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[#1a1a1a]">Create Combo Package</h2>
+        <div className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] p-3 flex items-center justify-between shrink-0">
+          <h2 className="text-base sm:text-lg font-bold text-[#1a1a1a]">Create Combo Package</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#1a1a1a]/20 hover:bg-[#1a1a1a]/30 flex items-center justify-center transition-all"
+            className="w-8 h-8 rounded-full bg-[#1a1a1a]/20 hover:bg-[#1a1a1a]/30 flex items-center justify-center transition-all cursor-pointer"
           >
             <FaTimes className="text-[#1a1a1a]" size={16} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-3 overflow-y-auto max-h-[calc(80vh-240px)]">
+        <div className="p-2.5 sm:p-4 overflow-y-auto flex-1 min-h-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Available Products */}
             <div>
