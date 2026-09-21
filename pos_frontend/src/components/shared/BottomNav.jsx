@@ -24,39 +24,42 @@ const BottomNav = ({ isVisible = true }) => {
       ].join(" ")}
       style={{ pointerEvents: isVisible ? "auto" : "none" }}
     >
-      <div className="flex items-center justify-between w-full max-w-6xl xl:max-w-7xl mx-auto relative gap-1 xs:gap-2 sm:gap-6 md:gap-10 lg:gap-14">
-        {userData.role === "Admin" && (
+      <div className="relative w-full max-w-6xl xl:max-w-7xl mx-auto h-full flex items-center">
+        {/* Left Side Navigation Items */}
+        <div className="w-1/2 flex items-center justify-center gap-1 xs:gap-2 sm:gap-4 md:gap-6 pr-8 sm:pr-12 md:pr-14 h-full">
+          {userData.role === "Admin" && (
+            <button
+              onClick={() => navigate("/")}
+              className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
+                isActive("/")
+                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+              }`}
+            >
+              <FaHome className="shrink-0 text-base sm:text-xl" />
+              <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Home</span>
+            </button>
+          )}
+
           <button
-            onClick={() => navigate("/")}
-            className={`flex-1 sm:max-w-[220px] md:max-w-[260px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 py-1.5 sm:py-2.5 px-2 sm:px-5 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
-              isActive("/")
+            onClick={() => navigate("/tables")}
+            className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
+              isActive("/tables")
                 ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
                 : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
             }`}
           >
-            <FaHome className="shrink-0 text-base sm:text-xl" />
-            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Home</span>
+            <MdTableBar className="shrink-0 text-base sm:text-xl" />
+            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Tables</span>
           </button>
-        )}
+        </div>
 
-        <button
-          onClick={() => navigate("/tables")}
-          className={`flex-1 sm:max-w-[220px] md:max-w-[260px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 py-1.5 sm:py-2.5 px-2 sm:px-5 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
-            isActive("/tables")
-              ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-              : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
-          }`}
-        >
-          <MdTableBar className="shrink-0 text-base sm:text-xl" />
-          <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Tables</span>
-        </button>
-
-        {/* Center Floating Dish / Menu Button */}
+        {/* Center Floating Dish / Menu Button - Always in Dead Center */}
         {userData.role !== "Waiter" && (
-          <div className="flex items-center justify-center px-1 sm:px-3 shrink-0">
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 -mt-7 sm:-mt-8 z-20 flex items-center justify-center pointer-events-auto">
             <button
               onClick={() => navigate("/menu")}
-              className={`-mt-7 sm:-mt-8 bg-gradient-to-tr from-[#e5a400] to-[#f6b100] text-[#1a1a1a] rounded-full p-3.5 sm:p-4 shadow-2xl border-4 border-[#262626] cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ${
+              className={`bg-gradient-to-tr from-[#e5a400] to-[#f6b100] text-[#1a1a1a] rounded-full p-3.5 sm:p-4 shadow-2xl border-4 border-[#262626] cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ${
                 isActive("/menu") ? "ring-4 ring-[#f6b100]/40 shadow-[#f6b100]/40" : ""
               }`}
               title="Menu"
@@ -66,33 +69,36 @@ const BottomNav = ({ isVisible = true }) => {
           </div>
         )}
 
-        {userData.role !== "Waiter" && (
-          <button
-            onClick={() => navigate("/orders")}
-            className={`flex-1 sm:max-w-[220px] md:max-w-[260px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 py-1.5 sm:py-2.5 px-2 sm:px-5 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
-              isActive("/orders")
-                ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
-            }`}
-          >
-            <MdOutlineReorder className="shrink-0 text-base sm:text-xl" />
-            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Orders</span>
-          </button>
-        )}
+        {/* Right Side Navigation Items */}
+        <div className="w-1/2 flex items-center justify-center gap-1 xs:gap-2 sm:gap-4 md:gap-6 pl-8 sm:pl-12 md:pl-14 h-full">
+          {userData.role !== "Waiter" && (
+            <button
+              onClick={() => navigate("/orders")}
+              className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
+                isActive("/orders")
+                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+              }`}
+            >
+              <MdOutlineReorder className="shrink-0 text-base sm:text-xl" />
+              <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Orders</span>
+            </button>
+          )}
 
-        {userData.role !== "Waiter" && (
-          <button
-            onClick={() => navigate("/expenses")}
-            className={`flex-1 sm:max-w-[220px] md:max-w-[260px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 py-1.5 sm:py-2.5 px-2 sm:px-5 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
-              isActive("/expenses")
-                ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
-            }`}
-          >
-            <CiCircleMore className="shrink-0 text-base sm:text-xl" />
-            <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Expenses</span>
-          </button>
-        )}
+          {userData.role !== "Waiter" && (
+            <button
+              onClick={() => navigate("/expenses")}
+              className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
+                isActive("/expenses")
+                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+              }`}
+            >
+              <CiCircleMore className="shrink-0 text-base sm:text-xl" />
+              <span className="text-[10px] sm:text-xs md:text-sm tracking-wide">Expenses</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

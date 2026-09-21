@@ -124,8 +124,8 @@ const MenuContainer = ({ isWaiterMode = false }) => {
   return (
     <div className="flex flex-col md:flex-row w-full h-full gap-2 sm:gap-4 p-2 sm:p-4 overflow-hidden">
       {/* Categories: Horizontal pills on mobile (< md), vertical sidebar on desktop (md+) */}
-      <div className="w-full md:w-72 lg:w-80 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-3 sm:p-4 shadow-xl shrink-0">
-        <h2 className="hidden md:block text-xl font-bold text-white mb-3 px-2 border-l-4 border-[#f6b100] pl-3 sticky top-0 bg-[#1f1f1f] z-20 py-1">
+      <div className="w-full md:w-44 lg:w-48 xl:w-52 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-2.5 sm:p-3 shadow-xl shrink-0">
+        <h2 className="hidden md:block text-base lg:text-lg font-bold text-white mb-2.5 px-1 border-l-4 border-[#f6b100] pl-2.5 sticky top-0 bg-[#1f1f1f] z-20 py-0.5">
           Categories
         </h2>
 
@@ -150,7 +150,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
         </div>
 
         {/* Desktop vertical sidebar with touch-friendly scrollbar & larger touch targets */}
-        <div className="hidden md:flex flex-col gap-2.5 sm:gap-3 overflow-y-auto pr-2.5 pb-20 touch-scrollbar">
+        <div className="hidden md:flex flex-col gap-2 sm:gap-2.5 overflow-y-auto pr-1.5 pb-20 touch-scrollbar">
           {filteredCategories.map((category) => {
             const isSelected = selectedItem?._id === category._id;
             return (
@@ -158,25 +158,28 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                 key={category._id}
                 onClick={() => setSelectedItem(category)}
                 className={`
-                  relative overflow-hidden group cursor-pointer p-3.5 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-200 transform hover:scale-[1.01] active:scale-95 min-h-[60px] flex flex-col justify-center
+                  relative overflow-hidden group cursor-pointer px-3 py-2.5 sm:px-3.5 sm:py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.01] active:scale-95 min-h-[52px] flex flex-col justify-center
                   ${isSelected
                     ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] shadow-lg shadow-[#f6b100]/25 border border-yellow-300/30"
                     : "bg-[#272727] hover:bg-[#303030] border border-[#333]"
                   }
                 `}
               >
-                <div className="flex items-center justify-between relative z-10">
-                  <h3 className={`font-bold text-sm sm:text-base leading-tight ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}>
+                <div className="flex items-center justify-between relative z-10 gap-1.5">
+                  <h3
+                    className={`font-bold text-xs sm:text-sm leading-snug line-clamp-2 break-words ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}
+                    title={category.name}
+                  >
                     {category.name}
                   </h3>
-                  {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-xl shrink-0 ml-2" />}
+                  {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-lg shrink-0 ml-1" />}
                 </div>
-                <p className={`text-xs mt-1 font-semibold ${isSelected ? "text-[#1a1a1a]/80" : "text-gray-400"}`}>
+                <p className={`text-[11px] sm:text-xs mt-0.5 font-semibold ${isSelected ? "text-[#1a1a1a]/80" : "text-gray-400"}`}>
                   {category?.products?.length || 0} Items
                 </p>
 
                 {/* Decorative background element */}
-                <div className={`absolute -right-4 -bottom-4 w-20 h-20 rounded-full opacity-10 ${isSelected ? "bg-white" : "bg-white/5"}`} />
+                <div className={`absolute -right-4 -bottom-4 w-16 h-16 rounded-full opacity-10 ${isSelected ? "bg-white" : "bg-white/5"}`} />
               </div>
             );
           })}
