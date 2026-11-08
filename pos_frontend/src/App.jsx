@@ -149,7 +149,7 @@ function Layout() {
             path="/dashboard/best-selling"
             element={
               <ProtectedRoute>
-                <BestSelling />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
@@ -157,7 +157,7 @@ function Layout() {
             path="/dashboard/:section"
             element={
               <ProtectedRoute>
-                <DashBoardTable />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
