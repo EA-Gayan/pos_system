@@ -172,8 +172,8 @@ const Header = () => {
     } else {
       setIsShowMenuTypeIcon(false);
     }
-    // Hide search only on root path ("/")
-    if (path === "/dashboard" || path === "/") {
+    // Hide search on dashboard paths or root path ("/")
+    if (path.startsWith("/dashboard") || path === "/") {
       setIsShowSearch(false);
     } else {
       setIsShowSearch(true);
@@ -237,7 +237,7 @@ const Header = () => {
         </div>
       )}
 
-      {pageName === "dashboard" && (
+      {location.pathname.startsWith("/dashboard") && (
         <div className="flex items-center text-[#f5f5f5] font-semibold text-sm sm:text-md gap-2 shrink-0">
           <h2>Admin Dashboard</h2>
         </div>

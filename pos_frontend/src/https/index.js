@@ -71,6 +71,8 @@ export const getDashboardItemsData = () =>
 export const getWeeklyData = () => api.get("/api/dashboard/getWeeklyData");
 export const getBestSellingProducts = (period) =>
   api.get(`/api/dashboard/best-selling`, { params: { period } });
+export const getTodaySessionSales = () =>
+  api.get("/api/dashboard/session-sales");
 
 // Expenses Record Endpoints
 export const getExpenseRecords = () => api.get("/api/expenses");
