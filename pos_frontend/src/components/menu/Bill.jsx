@@ -62,18 +62,9 @@ const Bill = () => {
     },
   });
 
-  const handlePlaceOrder = async () => {
-    if (!cartData.length) {
-      enqueueSnackbar(
-        "Cart is empty. Please add items before placing an order.",
-        {
-          variant: "warning",
-        }
-      );
-      return;
-    }
-
-    const orderData = {
+  const buildOrderPayload = () => {
+    const selectedSession = parseInt(localStorage.getItem("selectedStatus"), 10);
+    return {
       customerDetails: {
         name: customerData.customerName,
         phone: customerData.customerPhone,
@@ -88,7 +79,22 @@ const Bill = () => {
       items: cartData,
       table: customerData.table?.tableId || customerData.table,
       paymentMethod: "Cash",
+      ...([1, 2, 3].includes(selectedSession) ? { mealSession: selectedSession } : {}),
     };
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!cartData.length) {
+      enqueueSnackbar(
+        "Cart is empty. Please add items before placing an order.",
+        {
+          variant: "warning",
+        }
+      );
+      return;
+    }
+
+    const orderData = buildOrderPayload();
 
     try {
       // Wait for the order mutation to complete
@@ -112,22 +118,7 @@ const Bill = () => {
       return;
     }
 
-    const orderData = {
-      customerDetails: {
-        name: customerData.customerName,
-        phone: customerData.customerPhone,
-        guests: customerData.guests,
-      },
-      orderStatus: OrderTypes.COMPLETE,
-      bills: {
-        total: total,
-        tax: tax,
-        totalPayable: grandTotal,
-      },
-      items: cartData,
-      table: customerData.table?.tableId || customerData.table,
-      paymentMethod: "Cash",
-    };
+    const orderData = buildOrderPayload();
 
     try {
       // Wait for the order mutation to complete

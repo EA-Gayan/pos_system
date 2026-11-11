@@ -254,6 +254,35 @@ const getBestSellingProducts = async (req, res, next) => {
   }
 };
 
+const parseValidMealTypes = (category) => {
+  let raw = [];
+  if (Array.isArray(category?.mealType)) {
+    raw = category.mealType.map(Number);
+  } else if (category?.mealType !== undefined && category?.mealType !== null) {
+    raw = [Number(category.mealType)];
+  }
+  return raw.filter((t) => [1, 2, 3].includes(t));
+};
+
+const getOrderSLHour = (order) => {
+  // Prefer createdAt since legacy orders may have frozen orderDate defaults
+  const dt = new Date(order.createdAt || order.orderDate);
+  const utc = dt.getTime() + dt.getTimezoneOffset() * 60000;
+  const slDate = new Date(utc + 3600000 * 5.5);
+  return slDate.getHours() + slDate.getMinutes() / 60;
+};
+
+const pickCandidateByHour = (candidates, hour) => {
+  if (candidates.length === 1) return candidates[0];
+  if (candidates.includes(1) && hour < 10.5) return 1;
+  if (candidates.includes(2) && hour >= 10.5 && hour < 16.0) return 2;
+  if (candidates.includes(3) && hour >= 16.0) return 3;
+  if (candidates.includes(2) && hour < 16.0) return 2;
+  if (candidates.includes(1) && hour < 12.0) return 1;
+  if (candidates.includes(3) && hour >= 12.0) return 3;
+  return candidates[0] || 1;
+};
+
 const getTodaySessionSales = async (req, res, next) => {
   try {
     await connectDB();
@@ -263,10 +292,7 @@ const getTodaySessionSales = async (req, res, next) => {
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
     const orders = await Order.find({
-      $or: [
-        { orderDate: { $gte: startDate, $lte: endDate } },
-        { createdAt: { $gte: startDate, $lte: endDate } },
-      ],
+      createdAt: { $gte: startDate, $lte: endDate },
     });
 
     if (orders.length === 0) {
@@ -291,7 +317,7 @@ const getTodaySessionSales = async (req, res, next) => {
       });
     }
 
-    // Collect all product names and product IDs
+    // Collect all product names and product IDs referenced by today's orders
     const productNames = new Set();
     const productIds = new Set();
     orders.forEach((order) => {
@@ -301,19 +327,61 @@ const getTodaySessionSales = async (req, res, next) => {
       });
     });
 
-    // Fetch products with populated category
+    // Build regexes matching trimmed names in case DB product names carry trailing whitespace
+    const escapedNameRegexes = Array.from(productNames).map(
+      (n) => new RegExp(`^\\s*${n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "i")
+    );
+
     const products = await Product.find({
       $or: [
         { _id: { $in: Array.from(productIds) } },
-        { name: { $in: Array.from(productNames) } },
+        { name: { $in: escapedNameRegexes } },
       ],
     }).populate("category", "name mealType");
 
-    const productMap = {};
+    // Index products by ID, (name + price), and name list to distinguish duplicate names across sessions
+    const productById = {};
+    const productsByNamePrice = {};
+    const productsByName = {};
+
     products.forEach((p) => {
-      productMap[p._id.toString()] = p;
-      productMap[p.name.toLowerCase().trim()] = p;
+      productById[p._id.toString()] = p;
+      const norm = p.name.toLowerCase().trim();
+      const priceKey = `${norm}::${Number(p.price)}`;
+
+      if (!productsByNamePrice[priceKey]) productsByNamePrice[priceKey] = [];
+      productsByNamePrice[priceKey].push(p);
+
+      if (!productsByName[norm]) productsByName[norm] = [];
+      productsByName[norm].push(p);
     });
+
+    const pickBySession = (list, preferredSession) => {
+      if (!list || list.length === 0) return null;
+      if (list.length === 1 || !preferredSession) return list[0];
+      return (
+        list.find((p) => parseValidMealTypes(p.category).includes(preferredSession)) ||
+        list[0]
+      );
+    };
+
+    const resolveProduct = (item, preferredSession = null) => {
+      if (item.product && productById[item.product.toString()]) {
+        return productById[item.product.toString()];
+      }
+      const norm = (item.name || "").toLowerCase().trim();
+      const qty = Number(item.quantity) || 0;
+      const unitPrice =
+        Number(item.pricePerQuantity) || (qty ? Number(item.price) / qty : 0);
+
+      if (unitPrice > 0) {
+        const priceMatches = productsByNamePrice[`${norm}::${unitPrice}`];
+        const matched = pickBySession(priceMatches, preferredSession);
+        if (matched) return matched;
+      }
+
+      return pickBySession(productsByName[norm], preferredSession);
+    };
 
     // 3 Sessions only: Breakfast (1), Lunch (2), Dinner (3)
     const sessions = {
@@ -325,59 +393,55 @@ const getTodaySessionSales = async (req, res, next) => {
     const allItemsMap = {};
 
     orders.forEach((order) => {
-      // Calculate order's placement time in Sri Lanka (UTC+5:30)
-      const orderDate = new Date(order.orderDate || order.createdAt);
-      const utc = orderDate.getTime() + orderDate.getTimezoneOffset() * 60000;
-      const slDate = new Date(utc + 3600000 * 5.5);
-      const hour = slDate.getHours() + slDate.getMinutes() / 60;
+      const explicitMealSession = [1, 2, 3].includes(Number(order.mealSession))
+        ? Number(order.mealSession)
+        : null;
 
-      // Time-based session
-      let timeSession = 1; // Breakfast (before 11:30 AM)
-      if (hour >= 11.5 && hour < 16.5) {
-        timeSession = 2; // Lunch (11:30 AM to 4:30 PM)
-      } else if (hour >= 16.5) {
-        timeSession = 3; // Dinner (after 4:30 PM)
+      // For orders without explicit mealSession, infer via category intersection before falling back to order time
+      let fallbackSession = explicitMealSession;
+      if (!fallbackSession) {
+        let candidates = [1, 2, 3];
+        (order.items || []).forEach((item) => {
+          const p = resolveProduct(item);
+          const valid = parseValidMealTypes(p?.category);
+          if (valid.length > 0) {
+            const intersection = candidates.filter((c) => valid.includes(c));
+            if (intersection.length > 0) candidates = intersection;
+          }
+        });
+        fallbackSession =
+          candidates.length === 1
+            ? candidates[0]
+            : pickCandidateByHour(candidates, getOrderSLHour(order));
       }
 
       (order.items || []).forEach((item) => {
         const trimmedName = (item.name || "").trim();
         if (!trimmedName) return;
 
-        const matchedProduct =
-          (item.product && productMap[item.product.toString()]) ||
-          productMap[trimmedName.toLowerCase()] ||
-          null;
-
+        const targetSessionHint = explicitMealSession || fallbackSession;
+        const matchedProduct = resolveProduct(item, targetSessionHint);
         const category = matchedProduct?.category || null;
-        const categoryName = category?.name || "Uncategorized";
+        const categoryName =
+          category?.name || (item.isCombo ? "Combo Package" : "Uncategorized");
+        const validMealTypes = parseValidMealTypes(category);
 
-        // Parse category mealType
-        let mealTypes = [];
-        if (Array.isArray(category?.mealType)) {
-          mealTypes = category.mealType.map(Number);
-        } else if (category?.mealType !== undefined && category?.mealType !== null) {
-          mealTypes = [Number(category.mealType)];
-        }
-
-        // Only consider valid sessions: 1 (Breakfast), 2 (Lunch), 3 (Dinner)
-        const validMealTypes = mealTypes.filter((t) => [1, 2, 3].includes(t));
-
-        let assignedSession = 1;
-
-        if (validMealTypes.length === 1) {
-          // Category belongs strictly to 1 session
-          assignedSession = validMealTypes[0];
-        } else if (validMealTypes.length > 1) {
-          // Category is connected to multiple sessions (e.g. all 3: [1, 2, 3])
-          // Attribute this specific order to the session it was placed in!
-          if (validMealTypes.includes(timeSession)) {
-            assignedSession = timeSession;
-          } else {
+        // Priority: 1. Cashier's POS Meal Session -> 2. Strict Category Session -> 3. Order Intersection/Fallback
+        let assignedSession = targetSessionHint;
+        if (explicitMealSession) {
+          if (validMealTypes.length === 1 && validMealTypes[0] !== explicitMealSession) {
             assignedSession = validMealTypes[0];
+          } else {
+            assignedSession = explicitMealSession;
           }
         } else {
-          // Category has no 1/2/3 tag: attribute by order placement time!
-          assignedSession = timeSession;
+          if (validMealTypes.length === 1) {
+            assignedSession = validMealTypes[0];
+          } else if (validMealTypes.length > 1) {
+            assignedSession = validMealTypes.includes(fallbackSession)
+              ? fallbackSession
+              : validMealTypes[0];
+          }
         }
 
         const sessionKey =
@@ -391,13 +455,15 @@ const getTodaySessionSales = async (req, res, next) => {
           0;
         const lineTotal = Number(item.price) || unitPrice * qty || 0;
 
+        const itemKey = `${trimmedName}::${categoryName}`;
+
         // Add to the specific session
         const sessionObj = sessions[sessionKey];
         sessionObj.totalSoldQty += qty;
         sessionObj.totalRevenue += lineTotal;
 
-        if (!sessionObj.itemsMap[trimmedName]) {
-          sessionObj.itemsMap[trimmedName] = {
+        if (!sessionObj.itemsMap[itemKey]) {
+          sessionObj.itemsMap[itemKey] = {
             productName: trimmedName,
             categoryName,
             price: unitPrice,
@@ -406,12 +472,12 @@ const getTodaySessionSales = async (req, res, next) => {
             sessionName: sessionObj.sessionName,
           };
         }
-        sessionObj.itemsMap[trimmedName].soldQty += qty;
-        sessionObj.itemsMap[trimmedName].income += lineTotal;
+        sessionObj.itemsMap[itemKey].soldQty += qty;
+        sessionObj.itemsMap[itemKey].income += lineTotal;
 
         // Add to consolidated all items map
-        if (!allItemsMap[trimmedName]) {
-          allItemsMap[trimmedName] = {
+        if (!allItemsMap[itemKey]) {
+          allItemsMap[itemKey] = {
             productName: trimmedName,
             categoryName,
             price: unitPrice,
@@ -422,11 +488,11 @@ const getTodaySessionSales = async (req, res, next) => {
             income: 0,
           };
         }
-        allItemsMap[trimmedName].totalSoldQty += qty;
-        allItemsMap[trimmedName].income += lineTotal;
-        if (assignedSession === 1) allItemsMap[trimmedName].breakfastQty += qty;
-        if (assignedSession === 2) allItemsMap[trimmedName].lunchQty += qty;
-        if (assignedSession === 3) allItemsMap[trimmedName].dinnerQty += qty;
+        allItemsMap[itemKey].totalSoldQty += qty;
+        allItemsMap[itemKey].income += lineTotal;
+        if (assignedSession === 1) allItemsMap[itemKey].breakfastQty += qty;
+        if (assignedSession === 2) allItemsMap[itemKey].lunchQty += qty;
+        if (assignedSession === 3) allItemsMap[itemKey].dinnerQty += qty;
       });
     });
 

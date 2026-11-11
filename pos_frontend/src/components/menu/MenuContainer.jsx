@@ -43,9 +43,10 @@ const MenuContainer = ({ isWaiterMode = false }) => {
     const count = quantities[item._id] || 0;
     if (count === 0) return;
 
-    const { name, price } = item;
+    const { _id, name, price } = item;
     const newObj = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      product: _id,
       name,
       pricePerQuantity: price,
       quantity: count,

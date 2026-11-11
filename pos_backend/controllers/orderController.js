@@ -19,6 +19,31 @@ const addOrder = async (req, res, next) => {
       delete body.table;
     }
 
+    // Sanitize mealSession (1: Breakfast, 2: Lunch, 3: Dinner)
+    if ([1, 2, 3].includes(Number(body.mealSession))) {
+      body.mealSession = Number(body.mealSession);
+    } else {
+      delete body.mealSession;
+    }
+
+    if (!body.orderDate) {
+      body.orderDate = new Date();
+    }
+
+    // Safely normalize item.product references (handles populated draft objects cleanly)
+    if (Array.isArray(body.items)) {
+      body.items = body.items.map((item) => {
+        const cleanItem = { ...item };
+        const rawProd = cleanItem.product?._id || cleanItem.product;
+        if (rawProd && mongoose.Types.ObjectId.isValid(rawProd)) {
+          cleanItem.product = rawProd;
+        } else {
+          delete cleanItem.product;
+        }
+        return cleanItem;
+      });
+    }
+
     const order = new Order(body);
 
     const today = new Date();

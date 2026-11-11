@@ -17,7 +17,11 @@ const orderSchema = new mongoose.Schema(
     },
     orderDate: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
+    },
+    mealSession: {
+      type: Number,
+      enum: [1, 2, 3], // 1: Breakfast, 2: Lunch, 3: Dinner
     },
     bills: {
       total: { type: Number, required: true },
