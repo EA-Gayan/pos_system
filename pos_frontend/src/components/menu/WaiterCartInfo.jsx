@@ -141,6 +141,8 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
       return;
     }
 
+    const selectedSession = parseInt(localStorage.getItem("selectedStatus"), 10);
+
     const orderData = {
       customerDetails: {
         name: customerData.customerName,
@@ -156,6 +158,7 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
       items: cartData,
       table: tableId,
       paymentMethod: "Cash",
+      ...([1, 2, 3].includes(selectedSession) ? { mealSession: selectedSession } : {}),
     };
 
     try {
