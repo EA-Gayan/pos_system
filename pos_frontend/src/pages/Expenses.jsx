@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import BackButton from "../components/shared/BackButton";
 import CommonTable from "../components/shared/CommonTable";
@@ -10,11 +10,14 @@ import {
 import { useState } from "react";
 import Modal from "../components/shared/Modal";
 import { useSelector } from "react-redux";
+import ConfirmationPopup from "../components/shared/ConfirmationPopup";
 
 const Expenses = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [rowData, setRowData] = useState(null);
   const [exportOpen, setExportOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const queryClient = useQueryClient();
 
   const {
     data: recordsData,
@@ -28,11 +31,19 @@ const Expenses = () => {
     },
   });
 
+  // Employee advances change salary balances shown in the admin panel
+  const refreshAll = () => {
+    refetch();
+    queryClient.invalidateQueries({ queryKey: ["employees"] });
+    queryClient.invalidateQueries({ queryKey: ["employee"] });
+  };
+
   const deleteRecordMutation = useMutation({
     mutationFn: (recordId) => deleteExpenseRecord(recordId),
     onSuccess: () => {
       enqueueSnackbar("Record deleted successfully!", { variant: "success" });
-      refetch();
+      setDeleteTarget(null);
+      refreshAll();
     },
     onError: () => {
       enqueueSnackbar("Failed to delete record!", { variant: "error" });
@@ -86,7 +97,20 @@ const Expenses = () => {
     },
     {
       key: "description",
-      label: "Description",
+      label: "Category",
+      render: (val, row) => (
+        <div className="flex flex-col min-w-0">
+          <span className="truncate font-medium">{row.descriptionSi || val}</span>
+          {row.descriptionSi && (
+            <span className="truncate text-xs text-[#ababab]">{val}</span>
+          )}
+          {row.employee && (
+            <span className="mt-1 self-start text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+              Salary deducted
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: "amount",
@@ -105,9 +129,7 @@ const Expenses = () => {
     setRowData(row);
   };
 
-  const handleDelete = (row) => {
-    deleteRecordMutation.mutate(row._id);
-  };
+  const handleDelete = (row) => setDeleteTarget(row);
 
   const handleExport = (type) => {
     setExportOpen(false);
@@ -178,10 +200,22 @@ const Expenses = () => {
         <Modal
           currentData={rowData}
           onRecordAdded={() => {
-            refetch();
+            refreshAll();
             handleCloseModal();
           }}
           onClose={handleCloseModal}
+        />
+      )}
+      {deleteTarget && (
+        <ConfirmationPopup
+          title="Delete expense"
+          message={
+            deleteTarget.employee
+              ? `Delete "${deleteTarget.description}"? It will also be removed from the employee's salary deductions.`
+              : `Delete "${deleteTarget.descriptionSi || deleteTarget.description}"?`
+          }
+          onConfirm={() => deleteRecordMutation.mutate(deleteTarget._id)}
+          onCancel={() => setDeleteTarget(null)}
         />
       )}
     </div>

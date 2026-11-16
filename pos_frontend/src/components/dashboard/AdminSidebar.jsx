@@ -12,6 +12,7 @@ import {
   MdChevronRight,
   MdClose,
   MdDashboard,
+  MdOutlineCategory,
   MdOutlineFoodBank,
   MdOutlineReorder,
   MdTableBar,
@@ -108,6 +109,18 @@ const AdminSidebar = ({
           shortLabel: "Employees",
           icon: <FaUsers className="text-lg" />,
           path: "/dashboard/employees",
+        },
+      ],
+    },
+    {
+      group: "FINANCE",
+      items: [
+        {
+          id: "expense-categories",
+          label: "Expense Categories",
+          shortLabel: "Expense Types",
+          icon: <MdOutlineCategory className="text-xl" />,
+          path: "/dashboard/expense-categories",
         },
       ],
     },

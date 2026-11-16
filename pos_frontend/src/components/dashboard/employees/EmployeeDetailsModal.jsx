@@ -295,6 +295,14 @@ const WithdrawalList = ({ withdrawals, onDelete, deletingId }) => {
               >
                 {w.type === "salary" ? "Salary" : "Advance"}
               </span>
+              {w.expense && (
+                <span
+                  className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border bg-[#f6b100]/10 text-[#f6b100] border-[#f6b100]/30"
+                  title="Recorded from the Expenses screen — deleting it also removes that expense"
+                >
+                  Expense
+                </span>
+              )}
             </div>
             <p className="text-[11px] text-gray-500 truncate">
               {prettyDate(w.date)}
@@ -308,7 +316,7 @@ const WithdrawalList = ({ withdrawals, onDelete, deletingId }) => {
                 disabled={deletingId === w._id}
                 className="text-[11px] font-semibold text-white bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded-lg cursor-pointer"
               >
-                Delete
+                {w.expense ? "Delete + expense" : "Delete"}
               </button>
               <button
                 onClick={() => setConfirmId(null)}
@@ -376,6 +384,8 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
     onSuccess: () => {
       enqueueSnackbar("Withdrawal deleted!", { variant: "success" });
       refresh();
+      // A linked expense may have been removed too
+      queryClient.invalidateQueries({ queryKey: ["records"] });
     },
     onError: (err) =>
       enqueueSnackbar(apiError(err, "Failed to delete withdrawal!"), { variant: "error" }),

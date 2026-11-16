@@ -95,6 +95,17 @@ export const exportExpenseRecord = async (type) => {
 
 export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
+// Active employee names for the "Employee Advance" expense
+export const getExpenseEmployees = () => api.get("/api/expenses/employees");
+
+// Expense Category Endpoints (list: any user, manage: admin)
+export const getExpenseCategories = () => api.get("/api/expense-category");
+export const addExpenseCategory = (data) =>
+  api.post("/api/expense-category", data);
+export const updateExpenseCategory = ({ categoryId, ...data }) =>
+  api.put(`/api/expense-category/${categoryId}`, data);
+export const deleteExpenseCategory = (categoryId) =>
+  api.delete(`/api/expense-category/${categoryId}`);
 
 // Employee Management Endpoints (admin only)
 // month = "YYYY-MM", asOf = local today "YYYY-MM-DD"

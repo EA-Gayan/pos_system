@@ -13,6 +13,7 @@ import AdminTablesView from "../components/dashboard/AdminTablesView";
 import AdminReportsView from "../components/dashboard/AdminReportsView";
 import AdminSessionSalesView from "../components/dashboard/AdminSessionSalesView";
 import AdminEmployeesView from "../components/dashboard/AdminEmployeesView";
+import AdminExpenseCategoriesView from "../components/dashboard/AdminExpenseCategoriesView";
 import BestSelling from "../components/dashboard/BestSelling";
 import Modal from "../components/dashboard/Modal";
 import EditModal from "../components/dashboard/EditModal";
@@ -76,6 +77,8 @@ const Dashboard = () => {
   const activeSection = useMemo(() => {
     const pathname = location.pathname.toLowerCase();
 
+    // Checked first: "expense-categories" must not fall into "categories"
+    if (pathname.includes("expense-categories")) return "expense-categories";
     if (pathname.includes("best-selling")) return "best-selling";
     if (pathname.includes("session-sales")) return "session-sales";
     if (
@@ -125,6 +128,8 @@ const Dashboard = () => {
       navigate("/dashboard/best-selling");
     } else if (sectionId === "employees") {
       navigate("/dashboard/employees");
+    } else if (sectionId === "expense-categories") {
+      navigate("/dashboard/expense-categories");
     } else if (sectionId === "orders") {
       navigate("/orders");
     } else if (sectionId === "expenses") {
@@ -481,6 +486,8 @@ const Dashboard = () => {
               )}
 
               {activeSection === "employees" && <AdminEmployeesView />}
+
+              {activeSection === "expense-categories" && <AdminExpenseCategoriesView />}
 
               {activeSection === "best-selling" && (
                 <div className="flex flex-col space-y-4">

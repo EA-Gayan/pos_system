@@ -3,6 +3,7 @@ const createHttpError = require("http-errors");
 const Employee = require("../models/employeeModel");
 const EmployeeAttendance = require("../models/employeeAttendanceModel");
 const EmployeeWithdrawal = require("../models/employeeWithdrawalModel");
+const Expenses = require("../models/expensesModel");
 const EmployeePositions = require("../enum/employeePositions");
 const generatePayslip = require("../services/payslipService");
 
@@ -446,7 +447,8 @@ const updateEmployee = async (req, res, next) => {
   }
 };
 
-// DELETE /api/employee/:id — also removes the employee's attendance and withdrawals
+// DELETE /api/employee/:id — also removes the employee's attendance and withdrawals.
+// Expenses paid to them stay (the cash did leave the till) but are unlinked.
 const deleteEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -458,6 +460,7 @@ const deleteEmployee = async (req, res, next) => {
     await Promise.all([
       EmployeeAttendance.deleteMany({ employee: id }),
       EmployeeWithdrawal.deleteMany({ employee: id }),
+      Expenses.updateMany({ employee: id }, { employee: null, withdrawal: null }),
     ]);
 
     res.status(200).json({
@@ -602,6 +605,9 @@ const deleteWithdrawal = async (req, res, next) => {
       employee: id,
     });
     if (!record) throw createHttpError(404, "Withdrawal record not found!");
+
+    // An advance paid from the Expenses screen goes with its expense record
+    if (record.expense) await Expenses.deleteOne({ _id: record.expense });
 
     res.status(200).json({
       success: true,

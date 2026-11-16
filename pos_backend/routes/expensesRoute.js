@@ -2,6 +2,7 @@ const express = require("express");
 const {
   addExpenseRecord,
   getExpenseRecords,
+  getExpenseEmployees,
   updateExpenseRecord,
   deleteExpenseRecord,
   searchByExpensesRecord,
@@ -12,6 +13,7 @@ const { isVerifiedUser } = require("../middleware/tokenVerification");
 
 router.route("/").post(isVerifiedUser, addExpenseRecord);
 router.route("/").get(isVerifiedUser, getExpenseRecords);
+router.route("/employees").get(isVerifiedUser, getExpenseEmployees);
 router.route("/:id").put(isVerifiedUser, updateExpenseRecord);
 router.route("/delete/:id").delete(isVerifiedUser, deleteExpenseRecord);
 router.route("/search").get(isVerifiedUser, searchByExpensesRecord);

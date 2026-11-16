@@ -21,6 +21,12 @@ const employeeWithdrawalSchema = new mongoose.Schema(
       default: "advance",
     },
     note: { type: String, trim: true, default: "" },
+    // Set when recorded from the Expenses screen; the two records stay in sync
+    expense: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Expenses",
+      default: null,
+    },
   },
   { timestamps: true }
 );
