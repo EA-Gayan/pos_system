@@ -107,7 +107,12 @@ export const updateEmployee = ({ employeeId, ...data }) =>
   api.put(`/api/employee/${employeeId}`, data);
 export const deleteEmployee = (employeeId) =>
   api.delete(`/api/employee/${employeeId}`);
-export const deleteEmployeeSalaryEntry = ({ employeeId, entryId }) =>
+export const downloadEmployeePayslip = ({ employeeId, month, asOf }) =>
+  api.get(`/api/employee/${employeeId}/payslip`, {
+    params: { month, asOf },
+    responseType: "blob",
+  });
+export const deleteEmployeeSalaryEntry =({ employeeId, entryId }) =>
   api.delete(`/api/employee/${employeeId}/salary-history/${entryId}`);
 export const markEmployeeAttendance =({ employeeId, date, status }) =>
   api.put(`/api/employee/${employeeId}/attendance`, { date, status });

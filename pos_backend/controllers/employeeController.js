@@ -4,6 +4,7 @@ const Employee = require("../models/employeeModel");
 const EmployeeAttendance = require("../models/employeeAttendanceModel");
 const EmployeeWithdrawal = require("../models/employeeWithdrawalModel");
 const EmployeePositions = require("../enum/employeePositions");
+const generatePayslip = require("../services/payslipService");
 
 const POSITION_VALUES = Object.values(EmployeePositions);
 
@@ -294,37 +295,63 @@ const getEmployees = async (req, res, next) => {
   }
 };
 
+// One employee's profile, month + overall summaries and the month's records.
+// Shared by the details endpoint and the payslip so both always agree.
+const loadEmployeeDetails = async (id, period) => {
+  ensureObjectId(id);
+
+  const employee = await Employee.findById(id).lean();
+  if (!employee) throw createHttpError(404, "Employee not found!");
+
+  const [attendance, withdrawals] = await Promise.all([
+    EmployeeAttendance.find({ employee: id }).sort({ date: 1 }).lean(),
+    EmployeeWithdrawal.find({ employee: id }).sort({ date: -1, createdAt: -1 }).lean(),
+  ]);
+
+  const summary = buildEmployeeSummary(employee, attendance, withdrawals, period);
+
+  return {
+    ...summary,
+    month: period.month,
+    asOf: period.asOf,
+    // Balance left over from all months before this one
+    previousSummary: summarize(
+      employee, attendance, withdrawals,
+      employee.joinDate, addDays(period.start, -1), period.asOf
+    ),
+    attendance: attendance.filter(
+      (a) => a.date >= period.start && a.date <= period.end
+    ),
+    withdrawals: withdrawals.filter(
+      (w) => w.date >= period.start && w.date <= period.end
+    ),
+  };
+};
+
 // GET /api/employee/:id?month=YYYY-MM&asOf=YYYY-MM-DD
 const getEmployeeDetails = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    ensureObjectId(id);
+    const data = await loadEmployeeDetails(req.params.id, readPeriod(req.query));
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/employee/:id/payslip?month=YYYY-MM&asOf=YYYY-MM-DD — A5 PDF salary slip
+const downloadPayslip = async (req, res, next) => {
+  try {
     const period = readPeriod(req.query);
+    const details = await loadEmployeeDetails(req.params.id, period);
+    const pdf = await generatePayslip(details, period);
 
-    const employee = await Employee.findById(id).lean();
-    if (!employee) throw createHttpError(404, "Employee not found!");
-
-    const [attendance, withdrawals] = await Promise.all([
-      EmployeeAttendance.find({ employee: id }).sort({ date: 1 }).lean(),
-      EmployeeWithdrawal.find({ employee: id }).sort({ date: -1, createdAt: -1 }).lean(),
-    ]);
-
-    const summary = buildEmployeeSummary(employee, attendance, withdrawals, period);
-
-    res.status(200).json({
-      success: true,
-      data: {
-        ...summary,
-        month: period.month,
-        asOf: period.asOf,
-        attendance: attendance.filter(
-          (a) => a.date >= period.start && a.date <= period.end
-        ),
-        withdrawals: withdrawals.filter(
-          (w) => w.date >= period.start && w.date <= period.end
-        ),
-      },
-    });
+    const safeName = details.name.replace(/[^a-z0-9]+/gi, "_").replace(/^_|_$/g, "");
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=payslip_${safeName || "employee"}_${period.month}.pdf`
+    );
+    res.send(pdf);
   } catch (error) {
     next(error);
   }
@@ -589,6 +616,7 @@ const deleteWithdrawal = async (req, res, next) => {
 module.exports = {
   getEmployees,
   getEmployeeDetails,
+  downloadPayslip,
   addEmployee,
   updateEmployee,
   deleteEmployee,

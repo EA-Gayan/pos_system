@@ -2,10 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { IoMdClose } from "react-icons/io";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { FaEdit, FaTrash, FaPlus, FaFilePdf } from "react-icons/fa";
 import {
   addEmployeeWithdrawal,
   deleteEmployeeSalaryEntry,
+  downloadEmployeePayslip,
   deleteEmployeeWithdrawal,
   getEmployeeDetails,
   markEmployeeAttendance,
@@ -380,6 +381,35 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
       enqueueSnackbar(apiError(err, "Failed to delete withdrawal!"), { variant: "error" }),
   });
 
+  const payslipMutation = useMutation({
+    mutationFn: downloadEmployeePayslip,
+    onSuccess: (response, { month: slipMonth }) => {
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      const safeName = (details?.name || "employee").replace(/[^a-z0-9]+/gi, "_");
+      link.download = `payslip_${safeName}_${slipMonth}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      enqueueSnackbar("Payslip downloaded!", { variant: "success" });
+    },
+    onError: async (err) => {
+      // Blob responses hide the JSON error message — read it back out
+      let message = "Failed to download payslip!";
+      try {
+        const text = await err?.response?.data?.text?.();
+        message = JSON.parse(text).message || message;
+      } catch {
+        // keep the generic message
+      }
+      enqueueSnackbar(message, { variant: "error" });
+    },
+  });
+
   const deleteSalaryMutation = useMutation({
     mutationFn: deleteEmployeeSalaryEntry,
     onSuccess: () => {
@@ -426,6 +456,19 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
               className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-blue-300 bg-blue-500/10 hover:bg-blue-500/25 px-3 py-2 rounded-xl cursor-pointer"
             >
               <FaEdit /> Edit Profile
+            </button>
+          )}
+          {details && (
+            <button
+              onClick={() => payslipMutation.mutate({ employeeId, month, asOf })}
+              disabled={payslipMutation.isPending}
+              className="flex items-center gap-1.5 text-xs font-semibold text-black bg-[#f6b100] hover:bg-yellow-400 px-3 py-2 rounded-xl cursor-pointer disabled:opacity-60"
+              title={`Download salary slip for the selected month (PDF)`}
+            >
+              <FaFilePdf />
+              <span className="hidden sm:inline">
+                {payslipMutation.isPending ? "Preparing..." : "Download Payslip"}
+              </span>
             </button>
           )}
           <button
