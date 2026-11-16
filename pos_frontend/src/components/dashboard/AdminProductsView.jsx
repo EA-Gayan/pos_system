@@ -61,19 +61,19 @@ const AdminProductsView = ({
     return (
       <tr
         key={row._id || index}
-        className="border-b border-[#333] hover:bg-[#252525] transition-colors duration-150"
+        className="border-b border-line-strong hover:bg-elevated transition-colors duration-150"
       >
-        <td className="p-4 font-semibold text-white">
+        <td className="p-4 font-semibold text-fg">
           <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-lg bg-[#2a2a2a] text-[#f6b100]">
+            <span className="p-2 rounded-lg bg-muted text-accent">
               <BiSolidDish className="text-base" />
             </span>
             <div>
-              <div className="font-semibold text-sm sm:text-base text-white">
+              <div className="font-semibold text-sm sm:text-base text-fg">
                 {row.name}
               </div>
               {row.sName && (
-                <span className="text-[11px] text-gray-400 bg-[#333] px-1.5 py-0.2 rounded font-mono">
+                <span className="text-[11px] text-fg-dim bg-strong px-1.5 py-0.2 rounded font-mono">
                   Code: {row.sName}
                 </span>
               )}
@@ -81,14 +81,14 @@ const AdminProductsView = ({
           </div>
         </td>
         <td className="p-4">
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#2a2a2a] text-amber-300 border border-amber-500/20">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-muted text-amber-300 border border-amber-500/20">
             {row.categoryName || "Unassigned"}
           </span>
         </td>
-        <td className="p-4 font-bold text-[#f6b100] text-sm sm:text-base">
+        <td className="p-4 font-bold text-accent text-sm sm:text-base">
           Rs. {Number(row.price || 0).toLocaleString()}
         </td>
-        <td className="p-4 text-gray-400 text-sm max-w-xs truncate">
+        <td className="p-4 text-fg-dim text-sm max-w-xs truncate">
           {row.description || <span className="text-gray-600 italic">No description</span>}
         </td>
         <td className="p-4">
@@ -116,17 +116,17 @@ const AdminProductsView = ({
   return (
     <div className="flex flex-col h-full space-y-4">
       {/* Top Banner & Actions */}
-      <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+            <h2 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
               Products & Menu Items
             </h2>
-            <span className="bg-[#f6b100]/20 text-[#f6b100] border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
+            <span className="bg-[#f6b100]/20 text-accent border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
               {allProducts.length} Total Items
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-fg-dim mt-0.5">
             Manage food & drink prices, descriptions, and assign items to categories.
           </p>
         </div>
@@ -143,18 +143,18 @@ const AdminProductsView = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Category Selector Dropdown (Crucial for scaling to many categories!) */}
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          <div className="flex items-center gap-1.5 bg-[#242424] px-3 py-2 rounded-xl border border-[#383838] text-xs text-gray-300 w-full sm:w-auto">
-            <FaFilter className="text-gray-400 text-xs shrink-0" />
-            <span className="text-gray-400 font-medium shrink-0">Category:</span>
+          <div className="flex items-center gap-1.5 bg-elevated px-3 py-2 rounded-xl border border-line-strong text-xs text-fg-soft w-full sm:w-auto">
+            <FaFilter className="text-fg-dim text-xs shrink-0" />
+            <span className="text-fg-dim font-medium shrink-0">Category:</span>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-transparent text-white font-semibold text-xs focus:outline-none cursor-pointer w-full"
+              className="bg-transparent text-fg font-semibold text-xs focus:outline-none cursor-pointer w-full"
             >
-              <option value="all" className="bg-[#242424] text-white">
+              <option value="all" className="bg-elevated text-fg">
                 All Categories ({allProducts.length})
               </option>
               {categories.map((cat) => {
@@ -163,7 +163,7 @@ const AdminProductsView = ({
                   <option
                     key={cat._id}
                     value={cat._id}
-                    className="bg-[#242424] text-white"
+                    className="bg-elevated text-fg"
                   >
                     {cat.name} ({count})
                   </option>
@@ -176,7 +176,7 @@ const AdminProductsView = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-[#242424] text-gray-300 border border-[#383838] text-xs rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
+            className="bg-elevated text-fg-soft border border-line-strong text-xs rounded-xl px-3 py-2 focus:outline-none cursor-pointer"
           >
             <option value="default">Sort by: Default</option>
             <option value="name-asc">Sort by: Name (A-Z)</option>
@@ -193,12 +193,12 @@ const AdminProductsView = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search products, codes..."
-            className="w-full bg-[#242424] text-white text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none transition"
+            className="w-full bg-elevated text-fg text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none transition"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-white cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-fg-dim hover:text-fg cursor-pointer"
             >
               ✕
             </button>
@@ -207,7 +207,7 @@ const AdminProductsView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {filteredProducts.length > 0 ? (
             <Table
@@ -218,7 +218,7 @@ const AdminProductsView = ({
           ) : (
             <div className="flex flex-col items-center justify-center p-12 text-center h-full">
               <BiSolidDish className="text-4xl text-gray-600 mb-3" />
-              <h3 className="text-base font-semibold text-gray-300">
+              <h3 className="text-base font-semibold text-fg-soft">
                 {searchTerm || selectedCategory !== "all"
                   ? "No matching products found"
                   : "No products added yet"}
@@ -234,7 +234,7 @@ const AdminProductsView = ({
                     setSearchTerm("");
                     setSelectedCategory("all");
                   }}
-                  className="mt-3 text-xs text-[#f6b100] hover:underline cursor-pointer"
+                  className="mt-3 text-xs text-accent hover:underline cursor-pointer"
                 >
                   Reset filters
                 </button>

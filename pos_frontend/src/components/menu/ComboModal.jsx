@@ -101,13 +101,13 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-[#1a1a1a] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden border border-[#333] flex flex-col">
+      <div className="bg-base rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden border border-line-strong flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] p-3 flex items-center justify-between shrink-0">
           <h2 className="text-base sm:text-lg font-bold text-[#1a1a1a]">Create Combo Package</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#1a1a1a]/20 hover:bg-[#1a1a1a]/30 flex items-center justify-center transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-base/20 hover:bg-base/30 flex items-center justify-center transition-all cursor-pointer"
           >
             <FaTimes className="text-[#1a1a1a]" size={16} />
           </button>
@@ -118,9 +118,9 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Available Products */}
             <div>
-              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span className="text-[#f6b100]">Available Products</span>
-                <span className="text-xs bg-[#2a2a2a] px-2 py-1 rounded-full text-gray-400">
+              <h3 className="text-lg font-bold text-fg mb-4 flex items-center gap-2">
+                <span className="text-accent">Available Products</span>
+                <span className="text-xs bg-muted px-2 py-1 rounded-full text-fg-dim">
                   {allProducts.length} items
                 </span>
               </h3>
@@ -134,20 +134,20 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                       className={`p-3 rounded-lg cursor-pointer transition-all border ${
                         isSelected 
                           ? "bg-[#f6b100]/10 border-[#f6b100] opacity-50 cursor-not-allowed" 
-                          : "bg-[#2a2a2a] hover:bg-[#333] border-transparent hover:border-[#f6b100]/30"
+                          : "bg-muted hover:bg-strong border-transparent hover:border-[#f6b100]/30"
                       } group`}
                     >
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className={`font-semibold transition-colors ${
-                            isSelected ? "text-gray-500" : "text-white group-hover:text-[#f6b100]"
+                            isSelected ? "text-gray-500" : "text-fg group-hover:text-accent"
                           }`}>
                             {product.name}
                           </h4>
                           <p className="text-gray-500 text-sm">Rs. {product.price}</p>
                         </div>
                         {!isSelected && (
-                          <FaPlus className="text-[#f6b100] opacity-50 group-hover:opacity-100 transition-opacity" />
+                          <FaPlus className="text-accent opacity-50 group-hover:opacity-100 transition-opacity" />
                         )}
                       </div>
                     </div>
@@ -158,8 +158,8 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
 
             {/* Selected Products for Combo */}
             <div>
-              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <span className="text-[#f6b100]">Selected Products</span>
+              <h3 className="text-lg font-bold text-fg mb-4 flex items-center gap-2">
+                <span className="text-accent">Selected Products</span>
                 <span className="text-xs bg-[#f6b100] px-2 py-1 rounded-full text-[#1a1a1a] font-bold">
                   {selectedProducts.length}
                 </span>
@@ -173,11 +173,11 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                   selectedProducts.map(product => (
                     <div
                       key={product._id}
-                      className="bg-[#2a2a2a] p-3 rounded-xl border border-[#333] hover:border-[#f6b100]/30 transition-all"
+                      className="bg-muted p-3 rounded-xl border border-line-strong hover:border-[#f6b100]/30 transition-all"
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex-1">
-                          <h4 className="text-white font-semibold">{product.name}</h4>
+                          <h4 className="text-fg font-semibold">{product.name}</h4>
                           <p className="text-gray-500 text-sm">Rs. {product.price}</p>
                         </div>
                         <button
@@ -189,15 +189,15 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                       </div>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-2 bg-[#1a1a1a] rounded-lg p-1.5">
+                      <div className="flex items-center gap-2 bg-base rounded-lg p-1.5">
                         <button
                           onClick={() => decrementProductQuantity(product._id)}
-                          className="w-7 h-7 flex items-center justify-center rounded-md bg-[#2a2a2a] hover:bg-[#333] text-gray-400 hover:text-white transition-colors text-lg font-bold"
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-muted hover:bg-strong text-fg-dim hover:text-fg transition-colors text-lg font-bold"
                         >
                           −
                         </button>
                         <div className="flex-1 text-center">
-                          <span className="text-white font-bold text-sm">{product.quantity || 1}</span>
+                          <span className="text-fg font-bold text-sm">{product.quantity || 1}</span>
                         </div>
                         <button
                           onClick={() => incrementProductQuantity(product._id)}
@@ -215,9 +215,9 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
         </div>
 
         {/* Footer with Multiplier */}
-        <div className="bg-[#2a2a2a] p-3 border-t border-[#333]">
+        <div className="bg-muted p-3 border-t border-line-strong">
           {/* Multiplier Input */}
-          <div className="mb-2 bg-[#1a1a1a] p-2 rounded-lg border border-[#f6b100]/30">
+          <div className="mb-2 bg-base p-2 rounded-lg border border-[#f6b100]/30">
             <input
               type="number"
               min="0"
@@ -227,22 +227,22 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                 setMultiplier(val === "" ? "" : Math.max(0, parseInt(val) || 0));
               }}
               onFocus={(e) => e.target.select()}
-              className="w-full bg-[#2a2a2a] text-white text-center text-lg font-bold px-2 py-1.5 rounded-lg border border-[#333] focus:border-[#f6b100] outline-none transition-all"
+              className="w-full bg-muted text-fg text-center text-lg font-bold px-2 py-1.5 rounded-lg border border-line-strong focus:border-[#f6b100] outline-none transition-all"
               placeholder="0"
             />
           </div>
 
 
           {/* Calculation Display */}
-          <div className="bg-[#1a1a1a] p-2 rounded-lg mb-2">
+          <div className="bg-base p-2 rounded-lg mb-2">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-400 text-xs">Items</p>
-                <p className="text-white font-bold text-base">{calculateTotalItems()}</p>
+                <p className="text-fg-dim text-xs">Items</p>
+                <p className="text-fg font-bold text-base">{calculateTotalItems()}</p>
               </div>
               <div className="text-right">
-                <p className="text-gray-400 text-xs">Price</p>
-                <p className="text-[#f6b100] font-bold text-lg">Rs. {calculateTotalPrice()}</p>
+                <p className="text-fg-dim text-xs">Price</p>
+                <p className="text-accent font-bold text-lg">Rs. {calculateTotalPrice()}</p>
               </div>
             </div>
           </div>
@@ -251,7 +251,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="flex-1 bg-[#1a1a1a] hover:bg-[#333] text-white font-semibold py-2 rounded-lg transition-all text-sm"
+              className="flex-1 bg-base hover:bg-strong text-fg font-semibold py-2 rounded-lg transition-all text-sm"
             >
               Cancel
             </button>

@@ -181,7 +181,7 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
 
       <div
         className={`
-          fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-[#1a1a1a] shadow-2xl flex flex-col px-4 pt-4
+          fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-base shadow-2xl flex flex-col px-4 pt-4
           transition-transform duration-300 ease-in-out
           md:relative md:inset-auto md:z-auto md:flex-1 md:mt-4 md:mr-3 md:rounded-2xl md:shadow-lg md:mb-[5rem]
           ${isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
@@ -192,12 +192,12 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="md:hidden text-gray-400 hover:text-white p-1 rounded-lg hover:bg-[#2a2a2a] cursor-pointer"
+              className="md:hidden text-fg-dim hover:text-fg p-1 rounded-lg hover:bg-muted cursor-pointer"
               title="Close Cart"
             >
               <FiX size={22} />
             </button>
-            <h1 className="text-lg sm:text-xl text-[#F6B100] font-semibold tracking-wide">
+            <h1 className="text-lg sm:text-xl text-accent font-semibold tracking-wide">
               Table {customerData?.table?.tableNo} Order
             </h1>
           </div>
@@ -210,19 +210,19 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
             />
           )}
         </div>
-        <hr className="border-[#333] border-t mt-3 mb-3" />
+        <hr className="border-line-strong border-t mt-3 mb-3" />
 
       {/* Scrollable Cart Items */}
       <div
-        className={`flex-1 overflow-y-auto px-5 py-3 bg-[#262626] rounded-t-xl touch-scrollbar ${cartData.length === 0 ? "flex items-center justify-center" : ""
+        className={`flex-1 overflow-y-auto px-5 py-3 bg-elevated rounded-t-xl touch-scrollbar ${cartData.length === 0 ? "flex items-center justify-center" : ""
           }`}
         style={{ maxHeight: "60vh" }}
         ref={scrollRef}
       >
         {cartData.length === 0 ? (
           <div className="flex flex-col items-center py-10">
-            <RiProhibitedLine className="text-[#ababab] mb-3" size={45} />
-            <p className="text-[#ababab] text-sm font-medium">
+            <RiProhibitedLine className="text-fg-muted mb-3" size={45} />
+            <p className="text-fg-muted text-sm font-medium">
               Your cart is empty
             </p>
           </div>
@@ -230,48 +230,48 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
           cartData.map((item) => (
             <div
               key={item.id}
-              className={`bg-[#1f1f1f] rounded-xl px-4 py-4 mb-3 shadow-sm border ${item.isCombo
-                ? "border-[#f6b100]/30 bg-gradient-to-br from-[#1f1f1f] to-[#2a2a2a]"
-                : "border-[#2c2c2c] hover:border-[#3a3a3a]"
+              className={`bg-surface rounded-xl px-4 py-4 mb-3 shadow-sm border ${item.isCombo
+                ? "border-[#f6b100]/30 bg-gradient-to-br from-surface to-muted"
+                : "border-line hover:border-line-strong"
                 } transition-all`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h1 className="text-[#f5f5f5] font-semibold tracking-wide text-md">
+                  <h1 className="text-fg font-semibold tracking-wide text-md">
                     {item.name}
                   </h1>
                   {item.isCombo && item.comboProducts && (
                     <div className="mt-2 pl-2 border-l-2 border-[#f6b100]/30">
-                      <p className="text-[#f6b100] text-xs font-semibold mb-1">Includes:</p>
+                      <p className="text-accent text-xs font-semibold mb-1">Includes:</p>
                       {item.comboProducts.map((product, index) => (
-                        <p key={index} className="text-[#9a9a9a] text-xs">
+                        <p key={index} className="text-fg-muted text-xs">
                           • {product.quantity}x {product.name}
                         </p>
                       ))}
                     </div>
                   )}
                 </div>
-                <p className="text-[#F6B100] text-md font-bold ml-4">
+                <p className="text-accent text-md font-bold ml-4">
                   Rs {item.price}
                 </p>
               </div>
 
               <div className="flex items-center justify-between mt-3">
-                <div className="flex items-center gap-4 bg-[#262626] rounded-lg px-4 py-2.5">
+                <div className="flex items-center gap-4 bg-elevated rounded-lg px-4 py-2.5">
                   <HiMinusCircle
                     onClick={() => handleDecrement(item.id)}
                     className={`cursor-pointer transition-all ${item.quantity <= 1
-                      ? "text-[#4a4a4a] cursor-not-allowed"
-                      : "text-[#F6B100] hover:text-[#ffcc33]"
+                      ? "text-fg-faint cursor-not-allowed"
+                      : "text-accent hover:text-accent-soft"
                       }`}
                     size={32}
                   />
-                  <span className="text-[#f5f5f5] font-semibold text-base min-w-[40px] text-center">
+                  <span className="text-fg font-semibold text-base min-w-[40px] text-center">
                     x{item.quantity}
                   </span>
                   <HiPlusCircle
                     onClick={() => handleIncrement(item.id)}
-                    className="text-[#F6B100] cursor-pointer hover:text-[#ffcc33] transition-all"
+                    className="text-accent cursor-pointer hover:text-accent-soft transition-all"
                     size={32}
                   />
                 </div>
@@ -288,15 +288,15 @@ const WaiterCartInfo = ({ tableId, isOpen = true, onClose = () => {} }) => {
       </div>
 
       {/* Action Buttons Section */}
-      <div className="px-3 sm:px-5 py-3 border-t border-[#3a3a3a] bg-[#1a1a1a] mb-0 md:mb-15 pb-8 md:pb-3 shrink-0">
+      <div className="px-3 sm:px-5 py-3 border-t border-line-strong bg-base mb-0 md:mb-15 pb-8 md:pb-3 shrink-0">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-[#ababab] font-medium">Items({cartData.length})</p>
-            <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
+            <p className="text-xs text-fg-muted font-medium">Items({cartData.length})</p>
+            <h1 className="text-fg text-md font-bold">Rs {total}</h1>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-xs text-[#ababab] font-medium">Total</p>
-            <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
+            <p className="text-xs text-fg-muted font-medium">Total</p>
+            <h1 className="text-fg text-md font-bold">Rs {total}</h1>
           </div>
         </div>
 

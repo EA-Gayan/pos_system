@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <ThemeProvider>
     <Provider store={store}>
       <SnackbarProvider autoHideDuration={3000}>
         <QueryClientProvider client={queryClient}>
@@ -25,5 +27,6 @@ createRoot(document.getElementById("root")).render(
         </QueryClientProvider>
       </SnackbarProvider>
     </Provider>
+    </ThemeProvider>
   </StrictMode>
 );

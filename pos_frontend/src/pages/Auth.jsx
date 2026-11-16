@@ -3,13 +3,17 @@ import logo from "../assets/images/logo-modified.png";
 import restaurant from "../assets/images/restaurant-img.jpg";
 import Register from "../components/auth/Register";
 import Login from "../components/auth/Login";
+import ThemeToggle from "../components/shared/ThemeToggle";
 const Auth = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   return (
-    <div className="flex min-h-screen w-full bg-[#1a1a1a]">
+    <div className="relative flex min-h-screen w-full bg-base">
+      {/* Theme toggle (the main header is hidden on this page) */}
+      <ThemeToggle className="absolute top-4 right-4 z-30" />
+
       {/* Left Section - Hidden on mobile, visible on desktop */}
-      <div className="hidden md:flex md:w-1/2 relative items-center justify-center bg-cover overflow-hidden">
+      <div className="theme-dark hidden md:flex md:w-1/2 relative items-center justify-center bg-cover overflow-hidden">
         {/* BG Image */}
         <img
           className="w-full h-full object-cover opacity-35 z-10"
@@ -18,10 +22,10 @@ const Auth = () => {
         />
 
         {/* Black Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-80"></div>
+        <div className="absolute inset-0 bg-black/80"></div>
 
         {/* Quote at bottom */}
-        <blockquote className="absolute bottom-10 px-8 mb-10 text-xl lg:text-2xl italic text-white z-20">
+        <blockquote className="absolute bottom-10 px-8 mb-10 text-xl lg:text-2xl italic text-fg z-20">
           "Serve customers the best food with prompt and friendly service in a
           welcoming atmosphere, and they’ll keep coming back."
           <br />
@@ -30,7 +34,7 @@ const Auth = () => {
       </div>
 
       {/* Right Section - Full width on mobile */}
-      <div className="w-full md:w-1/2 min-h-screen overflow-y-auto bg-[#1a1a1a] p-6 sm:p-10 flex flex-col justify-center">
+      <div className="w-full md:w-1/2 min-h-screen overflow-y-auto bg-base p-6 sm:p-10 flex flex-col justify-center">
         <div className="max-w-md w-full mx-auto my-auto">
           <div className="flex flex-col items-center gap-2">
             <img
@@ -38,12 +42,12 @@ const Auth = () => {
               alt="Restro Logo"
               className="h-12 w-12 sm:h-14 sm:w-14 border-2 rounded-full p-1"
             />
-            <h1 className="text-base sm:text-lg font-semibold text-[#f5f5f5] tracking-wide">
+            <h1 className="text-base sm:text-lg font-semibold text-fg tracking-wide">
               Jayanthi Hotel
             </h1>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl text-center mt-6 sm:mt-10 font-semibold text-yellow-400 mb-6 sm:mb-10">
+          <h2 className="text-2xl sm:text-4xl text-center mt-6 sm:mt-10 font-semibold text-accent mb-6 sm:mb-10">
             {isRegister ? "Employee Registration" : "Employee Login"}
           </h2>
 
@@ -51,14 +55,14 @@ const Auth = () => {
           {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
 
           <div className="flex justify-center mt-6">
-            <p className="text-sm text-[#ababab]">
+            <p className="text-sm text-fg-muted">
               {isRegister ? "Already have an account?" : "Don't have an account?"}
               <a
                 onClick={(e) => {
                   e.preventDefault();
                   setIsRegister(!isRegister);
                 }}
-                className="text-yellow-400 font-semibold hover:underline cursor-pointer ml-1"
+                className="text-accent font-semibold hover:underline cursor-pointer ml-1"
                 href="#"
               >
                 {isRegister ? "Sign in" : "Sign up"}

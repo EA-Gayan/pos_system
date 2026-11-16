@@ -33,12 +33,12 @@ const Orders = () => {
       : resData?.data?.data || [];
 
   return (
-    <section className="bg-gradient-to-br from-[#1f1f1f] via-[#1a1a1a] to-[#262626] h-full flex flex-col overflow-hidden min-h-0">
+    <section className="bg-gradient-to-br from-surface via-base to-elevated h-full flex flex-col overflow-hidden min-h-0">
       {/* Header with filter buttons */}
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-10 py-4 sm:py-6 bg-[#1a1a1a] shadow-lg gap-3">
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-10 py-4 sm:py-6 bg-bar shadow-lg border-b border-bar-line gap-3">
         <div className="flex items-center gap-3 sm:gap-4">
           <BackButton />
-          <h1 className="text-[#f5f5f5] text-xl sm:text-3xl font-bold tracking-wider">
+          <h1 className="text-fg text-xl sm:text-3xl font-bold tracking-wider">
             Orders
           </h1>
         </div>
@@ -48,7 +48,7 @@ const Orders = () => {
             className={`flex-1 sm:flex-none text-xs sm:text-sm rounded-lg px-3.5 sm:px-6 py-2 sm:py-2.5 font-semibold cursor-pointer transition-all duration-200 ${
               status === OrderTypes.ALL
                 ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] text-[#1a1a1a] shadow-lg font-bold"
-                : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+                : "bg-muted text-fg hover:bg-strong"
             }`}
           >
             All
@@ -58,7 +58,7 @@ const Orders = () => {
             className={`flex-1 sm:flex-none text-xs sm:text-sm rounded-lg px-3.5 sm:px-6 py-2 sm:py-2.5 font-semibold cursor-pointer transition-all duration-200 ${
               status === OrderTypes.INPROGRESS
                 ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] text-[#1a1a1a] shadow-lg font-bold"
-                : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+                : "bg-muted text-fg hover:bg-strong"
             }`}
           >
             In Progress
@@ -68,7 +68,7 @@ const Orders = () => {
             className={`flex-1 sm:flex-none text-xs sm:text-sm rounded-lg px-3.5 sm:px-6 py-2 sm:py-2.5 font-semibold cursor-pointer transition-all duration-200 ${
               status === OrderTypes.COMPLETE
                 ? "bg-gradient-to-r from-[#f6b100] to-[#e5a400] text-[#1a1a1a] shadow-lg font-bold"
-                : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+                : "bg-muted text-fg hover:bg-strong"
             }`}
           >
             Completed
@@ -92,19 +92,19 @@ const Orders = () => {
       </div>
       {/* Pagination Controls */}
       {resData?.data?.pagination && (
-        <div className="pt-3 pb-20 sm:pb-6 px-4 bg-[#1a1a1a] border-t border-[#333] flex items-center justify-center gap-3 shrink-0">
+        <div className="pt-3 pb-20 sm:pb-6 px-4 bg-base border-t border-line-strong flex items-center justify-center gap-3 shrink-0">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
               currentPage === 1
-                ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"
-                : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+                ? "bg-muted text-gray-500 cursor-not-allowed"
+                : "bg-muted text-fg hover:bg-strong"
             }`}
           >
             Previous
           </button>
-          <span className="text-[#f5f5f5] text-xs sm:text-sm font-medium">
+          <span className="text-fg text-xs sm:text-sm font-medium">
             Page {currentPage} of {resData.data.pagination.totalPages || 1}
           </span>
           <button
@@ -120,8 +120,8 @@ const Orders = () => {
             className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
               !resData.data.pagination.totalPages ||
               currentPage === resData.data.pagination.totalPages
-                ? "bg-[#2a2a2a] text-gray-500 cursor-not-allowed"
-                : "bg-[#2a2a2a] text-[#f5f5f5] hover:bg-[#333]"
+                ? "bg-muted text-gray-500 cursor-not-allowed"
+                : "bg-muted text-fg hover:bg-strong"
             }`}
           >
             Next

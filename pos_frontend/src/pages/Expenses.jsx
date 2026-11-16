@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import BackButton from "../components/shared/BackButton";
 import CommonTable from "../components/shared/CommonTable";
@@ -10,11 +10,14 @@ import {
 import { useState } from "react";
 import Modal from "../components/shared/Modal";
 import { useSelector } from "react-redux";
+import ConfirmationPopup from "../components/shared/ConfirmationPopup";
 
 const Expenses = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [rowData, setRowData] = useState(null);
   const [exportOpen, setExportOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const queryClient = useQueryClient();
 
   const {
     data: recordsData,
@@ -28,11 +31,19 @@ const Expenses = () => {
     },
   });
 
+  // Employee advances change salary balances shown in the admin panel
+  const refreshAll = () => {
+    refetch();
+    queryClient.invalidateQueries({ queryKey: ["employees"] });
+    queryClient.invalidateQueries({ queryKey: ["employee"] });
+  };
+
   const deleteRecordMutation = useMutation({
     mutationFn: (recordId) => deleteExpenseRecord(recordId),
     onSuccess: () => {
       enqueueSnackbar("Record deleted successfully!", { variant: "success" });
-      refetch();
+      setDeleteTarget(null);
+      refreshAll();
     },
     onError: () => {
       enqueueSnackbar("Failed to delete record!", { variant: "error" });
@@ -86,7 +97,20 @@ const Expenses = () => {
     },
     {
       key: "description",
-      label: "Description",
+      label: "Category",
+      render: (val, row) => (
+        <div className="flex flex-col min-w-0">
+          <span className="truncate font-medium">{row.descriptionSi || val}</span>
+          {row.descriptionSi && (
+            <span className="truncate text-xs text-fg-muted">{val}</span>
+          )}
+          {row.employee && (
+            <span className="mt-1 self-start text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-300 border border-purple-500/30">
+              Salary deducted
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: "amount",
@@ -105,9 +129,7 @@ const Expenses = () => {
     setRowData(row);
   };
 
-  const handleDelete = (row) => {
-    deleteRecordMutation.mutate(row._id);
-  };
+  const handleDelete = (row) => setDeleteTarget(row);
 
   const handleExport = (type) => {
     setExportOpen(false);
@@ -115,11 +137,11 @@ const Expenses = () => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-[#262626] via-[#1f1f1f] to-[#1a1a1a] min-h-0">
-      <div className="flex-none px-3 sm:px-10 py-3.5 sm:py-6 flex flex-col sm:flex-row sm:items-center justify-between bg-[#1a1a1a] shadow-lg gap-3">
+    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-elevated via-surface to-base min-h-0">
+      <div className="flex-none px-3 sm:px-10 py-3.5 sm:py-6 flex flex-col sm:flex-row sm:items-center justify-between bg-bar shadow-lg border-b border-bar-line gap-3">
         <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3">
           <BackButton />
-          <h1 className="sm:hidden text-lg font-bold text-white">Expenses</h1>
+          <h1 className="sm:hidden text-lg font-bold text-fg">Expenses</h1>
         </div>
 
         {/* Right-side Buttons */}
@@ -146,16 +168,16 @@ const Expenses = () => {
 
             {/* Dropdown Menu */}
             {exportOpen && (
-              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
+              <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-surface border border-line-strong rounded-md shadow-2xl z-20">
                 <button
                   onClick={() => handleExport("today")}
-                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                 >
                   Today
                 </button>
                 <button
                   onClick={() => handleExport("week")}
-                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                 >
                   This Week
                 </button>
@@ -178,10 +200,22 @@ const Expenses = () => {
         <Modal
           currentData={rowData}
           onRecordAdded={() => {
-            refetch();
+            refreshAll();
             handleCloseModal();
           }}
           onClose={handleCloseModal}
+        />
+      )}
+      {deleteTarget && (
+        <ConfirmationPopup
+          title="Delete expense"
+          message={
+            deleteTarget.employee
+              ? `Delete "${deleteTarget.description}"? It will also be removed from the employee's salary deductions.`
+              : `Delete "${deleteTarget.descriptionSi || deleteTarget.description}"?`
+          }
+          onConfirm={() => deleteRecordMutation.mutate(deleteTarget._id)}
+          onCancel={() => setDeleteTarget(null)}
         />
       )}
     </div>

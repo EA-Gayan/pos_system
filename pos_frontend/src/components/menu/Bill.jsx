@@ -166,17 +166,17 @@ const Bill = () => {
   return (
     <>
       {/* Bill Section (Sticky at Bottom) */}
-      <div className="py-3 bg-[#1a1a1a] relative">
+      <div className="py-3 bg-base relative">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-[#ababab] font-medium">
+            <p className="text-xs text-fg-muted font-medium">
               Items({cartData.length})
             </p>
-            <h1 className="text-[#f5f5f5] text-md font-bold">Rs {total}</h1>
+            <h1 className="text-fg text-md font-bold">Rs {total}</h1>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-xs text-[#ababab] font-medium">Total</p>
-            <h1 className="text-[#f5f5f5] text-md font-bold">
+            <p className="text-xs text-fg-muted font-medium">Total</p>
+            <h1 className="text-fg text-md font-bold">
               Rs {grandTotal}
             </h1>
           </div>

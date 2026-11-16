@@ -13,10 +13,15 @@ import {
 } from "recharts";
 import { getWeeklyData } from "../../https";
 import FullScreenLoader from "../shared/FullScreenLoader";
+import { useTheme } from "../../context/ThemeContext";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { FaArrowTrendUp } from "react-icons/fa6";
 
 const WeeklyFinanceChart = () => {
+  const { isDark } = useTheme();
+  const chartColors = isDark
+    ? { grid: "#2c2c2c", axis: "#3d3d3d", tick: "#9ca3af", dotRing: "#ffffff" }
+    : { grid: "#e5e7eb", axis: "#d1d5db", tick: "#6b7280", dotRing: "#ffffff" };
   const {
     data: resData,
     isLoading,
@@ -91,11 +96,11 @@ const WeeklyFinanceChart = () => {
     const net = inc - exp;
 
     return (
-      <div className="bg-[#1f1f1f] border border-[#383838] p-3 rounded-xl shadow-2xl text-xs min-w-[190px]">
-        <div className="border-b border-[#2d2d2d] pb-2 mb-2">
-          <p className="font-bold text-white text-sm">{label}</p>
+      <div className="bg-surface border border-line-strong p-3 rounded-xl shadow-2xl text-xs min-w-[190px]">
+        <div className="border-b border-line pb-2 mb-2">
+          <p className="font-bold text-fg text-sm">{label}</p>
           {dataItem.date && (
-            <p className="text-[11px] text-gray-400">{dataItem.date}</p>
+            <p className="text-[11px] text-fg-dim">{dataItem.date}</p>
           )}
         </div>
         <div className="space-y-1.5">
@@ -117,11 +122,11 @@ const WeeklyFinanceChart = () => {
               Rs. {exp.toLocaleString()}
             </span>
           </div>
-          <div className="border-t border-[#2d2d2d] pt-1.5 mt-1.5 flex items-center justify-between gap-4">
-            <span className="text-gray-400 font-medium">Net Profit:</span>
+          <div className="border-t border-line pt-1.5 mt-1.5 flex items-center justify-between gap-4">
+            <span className="text-fg-dim font-medium">Net Profit:</span>
             <span
               className={`font-bold ${
-                net >= 0 ? "text-[#f6b100]" : "text-red-400"
+                net >= 0 ? "text-accent" : "text-red-400"
               }`}
             >
               Rs. {net.toLocaleString()}
@@ -133,12 +138,12 @@ const WeeklyFinanceChart = () => {
   };
 
   return (
-    <div className="w-full bg-[#1b1b1b] border border-[#2a2a2a] rounded-2xl p-4 sm:p-5 shadow-sm">
+    <div className="w-full bg-base border border-line rounded-2xl p-4 sm:p-5 shadow-sm">
       {/* Quick Trend Badges */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-        <div className="bg-[#242424] border border-[#333] rounded-xl p-3 flex items-center justify-between">
+        <div className="bg-elevated border border-line-strong rounded-xl p-3 flex items-center justify-between">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-medium">
+            <p className="text-[11px] uppercase tracking-wider text-fg-dim font-medium">
               7-Day Total Revenue
             </p>
             <p className="text-base sm:text-lg font-bold text-emerald-400 mt-0.5">
@@ -150,9 +155,9 @@ const WeeklyFinanceChart = () => {
           </span>
         </div>
 
-        <div className="bg-[#242424] border border-[#333] rounded-xl p-3 flex items-center justify-between">
+        <div className="bg-elevated border border-line-strong rounded-xl p-3 flex items-center justify-between">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-medium">
+            <p className="text-[11px] uppercase tracking-wider text-fg-dim font-medium">
               7-Day Total Expenses
             </p>
             <p className="text-base sm:text-lg font-bold text-red-400 mt-0.5">
@@ -164,20 +169,20 @@ const WeeklyFinanceChart = () => {
           </span>
         </div>
 
-        <div className="bg-[#242424] border border-[#333] rounded-xl p-3 flex items-center justify-between">
+        <div className="bg-elevated border border-line-strong rounded-xl p-3 flex items-center justify-between">
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-medium">
+            <p className="text-[11px] uppercase tracking-wider text-fg-dim font-medium">
               7-Day Net Profit
             </p>
             <p
               className={`text-base sm:text-lg font-bold mt-0.5 ${
-                weekSummary.netBalance >= 0 ? "text-[#f6b100]" : "text-red-400"
+                weekSummary.netBalance >= 0 ? "text-accent" : "text-red-400"
               }`}
             >
               Rs. {weekSummary.netBalance.toLocaleString()}
             </p>
           </div>
-          <span className="text-[11px] font-semibold text-gray-400 bg-[#1c1c1c] px-2 py-1 rounded-md border border-[#303030]">
+          <span className="text-[11px] font-semibold text-fg-dim bg-base px-2 py-1 rounded-md border border-line">
             Mon - Sun
           </span>
         </div>
@@ -188,7 +193,7 @@ const WeeklyFinanceChart = () => {
           <FullScreenLoader />
         </div>
       ) : chartData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-400 text-sm">
+        <div className="flex flex-col items-center justify-center h-64 text-fg-dim text-sm">
           <p>No financial data recorded for this week.</p>
         </div>
       ) : (
@@ -198,17 +203,17 @@ const WeeklyFinanceChart = () => {
               data={chartData}
               margin={{ top: 10, right: 15, left: 10, bottom: 5 }}
             >
-              <CartesianGrid stroke="#2c2c2c" strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid stroke={chartColors.grid} strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="displayLabel"
-                tick={{ fill: "#9ca3af", fontSize: 11 }}
-                axisLine={{ stroke: "#3d3d3d" }}
-                tickLine={{ stroke: "#3d3d3d" }}
+                tick={{ fill: chartColors.tick, fontSize: 11 }}
+                axisLine={{ stroke: chartColors.axis }}
+                tickLine={{ stroke: chartColors.axis }}
               />
               <YAxis
-                tick={{ fill: "#9ca3af", fontSize: 11 }}
-                axisLine={{ stroke: "#3d3d3d" }}
-                tickLine={{ stroke: "#3d3d3d" }}
+                tick={{ fill: chartColors.tick, fontSize: 11 }}
+                axisLine={{ stroke: chartColors.axis }}
+                tickLine={{ stroke: chartColors.axis }}
                 tickFormatter={(val) =>
                   val >= 1000
                     ? `Rs. ${(val / 1000).toFixed(val % 1000 === 0 ? 0 : 1)}k`
@@ -231,7 +236,7 @@ const WeeklyFinanceChart = () => {
                 activeDot={{
                   r: 7,
                   fill: "#10b981",
-                  stroke: "#ffffff",
+                  stroke: chartColors.dotRing,
                   strokeWidth: 2,
                 }}
               />
@@ -245,7 +250,7 @@ const WeeklyFinanceChart = () => {
                 activeDot={{
                   r: 7,
                   fill: "#ef4444",
-                  stroke: "#ffffff",
+                  stroke: chartColors.dotRing,
                   strokeWidth: 2,
                 }}
               />

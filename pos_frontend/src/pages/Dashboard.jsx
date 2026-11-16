@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { MdMenu } from "react-icons/md";
@@ -16,7 +12,8 @@ import AdminProductsView from "../components/dashboard/AdminProductsView";
 import AdminTablesView from "../components/dashboard/AdminTablesView";
 import AdminReportsView from "../components/dashboard/AdminReportsView";
 import AdminSessionSalesView from "../components/dashboard/AdminSessionSalesView";
-import WeeklyFinanceChart from "../components/dashboard/WeeklyFinanceChart";
+import AdminEmployeesView from "../components/dashboard/AdminEmployeesView";
+import AdminExpenseCategoriesView from "../components/dashboard/AdminExpenseCategoriesView";
 import BestSelling from "../components/dashboard/BestSelling";
 import Modal from "../components/dashboard/Modal";
 import EditModal from "../components/dashboard/EditModal";
@@ -70,16 +67,24 @@ const Dashboard = () => {
 
   // Persist sidebar collapsed state
   useEffect(() => {
-    localStorage.setItem("admin_sidebar_collapsed", isCollapsed ? "true" : "false");
+    localStorage.setItem(
+      "admin_sidebar_collapsed",
+      isCollapsed ? "true" : "false",
+    );
   }, [isCollapsed]);
 
   // Determine active section from URL
   const activeSection = useMemo(() => {
     const pathname = location.pathname.toLowerCase();
 
+    // Checked first: "expense-categories" must not fall into "categories"
+    if (pathname.includes("expense-categories")) return "expense-categories";
     if (pathname.includes("best-selling")) return "best-selling";
     if (pathname.includes("session-sales")) return "session-sales";
-    if (pathname.includes("total-categories") || pathname.includes("/categories"))
+    if (
+      pathname.includes("total-categories") ||
+      pathname.includes("/categories")
+    )
       return "categories";
     if (
       pathname.includes("total-items") ||
@@ -91,12 +96,12 @@ const Dashboard = () => {
       return "tables";
     if (pathname.includes("reports") || pathname.includes("view-report"))
       return "reports";
+    if (pathname.includes("/employees")) return "employees";
 
     if (urlSection === "session-sales") return "session-sales";
     if (urlSection === "total-categories" || urlSection === "categories")
       return "categories";
-    if (urlSection === "total-items" || urlSection === "items")
-      return "items";
+    if (urlSection === "total-items" || urlSection === "items") return "items";
     if (urlSection === "total-tables" || urlSection === "tables")
       return "tables";
     if (urlSection === "best-selling") return "best-selling";
@@ -121,6 +126,10 @@ const Dashboard = () => {
       navigate("/dashboard/reports");
     } else if (sectionId === "best-selling") {
       navigate("/dashboard/best-selling");
+    } else if (sectionId === "employees") {
+      navigate("/dashboard/employees");
+    } else if (sectionId === "expense-categories") {
+      navigate("/dashboard/expense-categories");
     } else if (sectionId === "orders") {
       navigate("/orders");
     } else if (sectionId === "expenses") {
@@ -184,20 +193,20 @@ const Dashboard = () => {
   // Extracted Data
   const categories = useMemo(
     () => categoriesRes?.data?.data || [],
-    [categoriesRes]
+    [categoriesRes],
   );
   const tables = useMemo(() => tablesRes?.data?.data || [], [tablesRes]);
   const dashboardItemDetails = useMemo(
     () => dashboardItemsRes?.data?.data || dashboardItemsRes?.data || [],
-    [dashboardItemsRes]
+    [dashboardItemsRes],
   );
   const bestSellingList = useMemo(
     () => bestSellingRes?.data?.data || [],
-    [bestSellingRes]
+    [bestSellingRes],
   );
   const sessionSalesData = useMemo(
     () => sessionSalesRes?.data?.data || null,
-    [sessionSalesRes]
+    [sessionSalesRes],
   );
 
   // Counts for sidebar badges
@@ -214,8 +223,7 @@ const Dashboard = () => {
     const rawActiveOrders =
       dashboardItemDetails.find((d) => d.key === "inProgressOrders")?.count ??
       0;
-    const rawSessionSold =
-      sessionSalesData?.summary?.totalItemsSold ?? 0;
+    const rawSessionSold = sessionSalesData?.summary?.totalItemsSold ?? 0;
 
     return {
       categories: rawCategoriesCount,
@@ -265,7 +273,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete category!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -281,7 +289,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete product!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -297,7 +305,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete table!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -340,7 +348,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to export income record",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -369,7 +377,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to export expense record",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -378,7 +386,7 @@ const Dashboard = () => {
     isCategoriesLoading || isTablesLoading || isItemsLoading;
 
   return (
-    <div className="flex h-full w-full bg-[#121212] overflow-hidden">
+    <div className="flex h-full w-full bg-base overflow-hidden">
       {/* Left Navigation Sidebar */}
       <AdminSidebar
         activeSection={activeSection}
@@ -391,17 +399,17 @@ const Dashboard = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#121212]">
+      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-base">
         {/* Mobile Header Bar */}
-        <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#181818] border-b border-[#2d2d2d] shrink-0">
+        <div className="md:hidden flex items-center justify-between px-4 py-3 bg-bar border-b border-bar-line shrink-0">
           <button
             onClick={() => setIsMobileOpen(true)}
-            className="flex items-center gap-2 text-gray-300 hover:text-white p-1 rounded-lg bg-[#242424] px-2.5 py-1.5 cursor-pointer"
+            className="flex items-center gap-2 text-fg-soft hover:text-fg p-1 rounded-lg bg-elevated px-2.5 py-1.5 cursor-pointer"
           >
-            <MdMenu className="text-lg text-[#f6b100]" />
+            <MdMenu className="text-lg text-accent" />
             <span className="text-xs font-semibold">Admin Nav</span>
           </button>
-          <span className="text-xs font-bold text-[#f6b100] uppercase tracking-wider">
+          <span className="text-xs font-bold text-accent uppercase tracking-wider">
             {activeSection.replace("-", " ")}
           </span>
         </div>
@@ -477,13 +485,17 @@ const Dashboard = () => {
                 />
               )}
 
+              {activeSection === "employees" && <AdminEmployeesView />}
+
+              {activeSection === "expense-categories" && <AdminExpenseCategoriesView />}
+
               {activeSection === "best-selling" && (
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 shadow-sm">
-                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                  <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <h2 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
                       Best Selling Products
                     </h2>
-                    <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+                    <p className="text-xs sm:text-sm text-fg-dim mt-0.5">
                       Top performing items ranked by sales volume and income.
                     </p>
                   </div>

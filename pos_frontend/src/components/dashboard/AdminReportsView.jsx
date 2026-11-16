@@ -24,23 +24,23 @@ const AdminReportsView = ({
   return (
     <div className="flex flex-col space-y-6">
       {/* Top Banner */}
-      <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-surface border border-line rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-xl bg-[#2a2a2a] text-[#f6b100]">
+            <span className="p-2 rounded-xl bg-muted text-accent">
               <HiOutlineDocumentReport className="text-xl" />
             </span>
-            <h1 className="text-lg sm:text-2xl font-bold text-white tracking-wide">
+            <h1 className="text-lg sm:text-2xl font-bold text-fg tracking-wide">
               Reports & Downloads
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-fg-dim mt-1">
             Download financial records in Excel (.xlsx) format and review weekly performance metrics.
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#262626] text-gray-300 border border-[#383838]">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-elevated text-fg-soft border border-line-strong">
             <span className="w-2 h-2 rounded-full bg-emerald-400" />
             Excel Export Ready
           </span>
@@ -49,24 +49,24 @@ const AdminReportsView = ({
 
       {/* Financial Summary Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-4">
-          <p className="text-xs text-gray-400 font-medium">Today's Gross Sales</p>
+        <div className="bg-base border border-line rounded-2xl p-4">
+          <p className="text-xs text-fg-dim font-medium">Today's Gross Sales</p>
           <p className="text-2xl font-bold text-[#025cca] mt-1">
             Rs. {Number(earnings || 0).toLocaleString()}
           </p>
           <p className="text-[11px] text-gray-500 mt-1">From {ordersCount} processed orders</p>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-4">
-          <p className="text-xs text-gray-400 font-medium">Today's Recorded Expenses</p>
+        <div className="bg-base border border-line rounded-2xl p-4">
+          <p className="text-xs text-fg-dim font-medium">Today's Recorded Expenses</p>
           <p className="text-2xl font-bold text-[#02ca3a] mt-1">
             Rs. {Number(expenses || 0).toLocaleString()}
           </p>
           <p className="text-[11px] text-gray-500 mt-1">Operational & purchase costs</p>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-4">
-          <p className="text-xs text-gray-400 font-medium">Today's Net Balance</p>
+        <div className="bg-base border border-line rounded-2xl p-4">
+          <p className="text-xs text-fg-dim font-medium">Today's Net Balance</p>
           <p
             className={`text-2xl font-bold mt-1 ${
               netProfit >= 0 ? "text-emerald-400" : "text-red-400"
@@ -77,22 +77,22 @@ const AdminReportsView = ({
           <p className="text-[11px] text-gray-500 mt-1">Gross sales minus expenses</p>
         </div>
 
-        <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-4">
-          <p className="text-xs text-gray-400 font-medium">Completed Orders</p>
-          <p className="text-2xl font-bold text-[#f6b100] mt-1">{ordersCount}</p>
+        <div className="bg-base border border-line rounded-2xl p-4">
+          <p className="text-xs text-fg-dim font-medium">Completed Orders</p>
+          <p className="text-2xl font-bold text-accent mt-1">{ordersCount}</p>
           <p className="text-[11px] text-gray-500 mt-1">Total orders billed today</p>
         </div>
       </div>
 
       {/* Export & Download Cards Grid */}
       <div>
-        <h2 className="font-bold text-white text-base sm:text-lg tracking-wide mb-3">
+        <h2 className="font-bold text-fg text-base sm:text-lg tracking-wide mb-3">
           Download Reports
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Income Records Export Card */}
-          <div className="bg-[#1a1a1a] border border-[#2d2d2d] hover:border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
+          <div className="bg-base border border-line hover:border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ const AdminReportsView = ({
                     <FaFileExcel className="text-2xl" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-base sm:text-lg">
+                    <h3 className="font-bold text-fg text-base sm:text-lg">
                       Income / Sales Report
                     </h3>
                     <span className="text-[11px] text-emerald-400 font-medium">
@@ -110,12 +110,12 @@ const AdminReportsView = ({
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mt-2 mb-6">
+              <p className="text-xs sm:text-sm text-fg-dim leading-relaxed mt-2 mb-6">
                 Export complete order records including receipt numbers, order types, customer details, payment breakdowns, and gross revenues.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-[#2a2a2a]">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
               <button
                 disabled={isExportingIncome}
                 onClick={() => onExportIncome("today")}
@@ -132,12 +132,12 @@ const AdminReportsView = ({
               <button
                 disabled={isExportingIncome}
                 onClick={() => onExportIncome("week")}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#262626] hover:bg-[#333] hover:text-[#f6b100] text-gray-200 border border-[#383838] font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-2 bg-elevated hover:bg-strong hover:text-accent text-fg border border-line-strong font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
               >
                 {isExportingIncome ? (
                   <FaSpinner className="animate-spin text-sm" />
                 ) : (
-                  <FaCalendarWeek className="text-sm text-[#f6b100]" />
+                  <FaCalendarWeek className="text-sm text-accent" />
                 )}
                 <span>Download This Week's</span>
               </button>
@@ -145,7 +145,7 @@ const AdminReportsView = ({
           </div>
 
           {/* Expense Records Export Card */}
-          <div className="bg-[#1a1a1a] border border-[#2d2d2d] hover:border-amber-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
+          <div className="bg-base border border-line hover:border-amber-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -153,7 +153,7 @@ const AdminReportsView = ({
                     <FaFileExcel className="text-2xl" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-white text-base sm:text-lg">
+                    <h3 className="font-bold text-fg text-base sm:text-lg">
                       Expense Records Report
                     </h3>
                     <span className="text-[11px] text-amber-400 font-medium">
@@ -163,12 +163,12 @@ const AdminReportsView = ({
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed mt-2 mb-6">
+              <p className="text-xs sm:text-sm text-fg-dim leading-relaxed mt-2 mb-6">
                 Export operational restaurant expenditures, inventory purchases, billings, notes, and categorized daily expense entries.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-[#2a2a2a]">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
               <button
                 disabled={isExportingExpense}
                 onClick={() => onExportExpense("today")}
@@ -185,12 +185,12 @@ const AdminReportsView = ({
               <button
                 disabled={isExportingExpense}
                 onClick={() => onExportExpense("week")}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#262626] hover:bg-[#333] hover:text-[#f6b100] text-gray-200 border border-[#383838] font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-2 bg-elevated hover:bg-strong hover:text-accent text-fg border border-line-strong font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
               >
                 {isExportingExpense ? (
                   <FaSpinner className="animate-spin text-sm" />
                 ) : (
-                  <FaCalendarWeek className="text-sm text-[#f6b100]" />
+                  <FaCalendarWeek className="text-sm text-accent" />
                 )}
                 <span>Download This Week's</span>
               </button>
@@ -200,12 +200,12 @@ const AdminReportsView = ({
       </div>
 
       {/* Weekly Visual Trends Chart */}
-      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-base border border-line rounded-2xl p-4 sm:p-6 shadow-sm">
         <div className="mb-4">
-          <h2 className="font-bold text-white text-base sm:text-lg tracking-wide">
+          <h2 className="font-bold text-fg text-base sm:text-lg tracking-wide">
             Weekly Financial Trend Analysis
           </h2>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className="text-xs text-fg-dim mt-0.5">
             Graphical comparison of daily revenue (green) vs. expenses (red) for the current week.
           </p>
         </div>

@@ -74,20 +74,20 @@ const AdminSessionSalesView = ({
       return (
         <tr
           key={`${row.productName}-${index}`}
-          className="border-b border-[#333] hover:bg-[#252525] transition-colors duration-150"
+          className="border-b border-line-strong hover:bg-elevated transition-colors duration-150"
         >
-          <td className="p-4 font-semibold text-white">
+          <td className="p-4 font-semibold text-fg">
             <div className="flex items-center gap-2.5">
-              <span className="p-2 rounded-lg bg-[#2a2a2a] text-[#f6b100]">
+              <span className="p-2 rounded-lg bg-muted text-accent">
                 <BiSolidDish className="text-base" />
               </span>
-              <span className="font-semibold text-sm sm:text-base text-white">
+              <span className="font-semibold text-sm sm:text-base text-fg">
                 {row.productName}
               </span>
             </div>
           </td>
-          <td className="p-4 text-gray-300 text-sm">
-            <span className="bg-[#242424] px-2.5 py-1 rounded-full text-xs font-medium border border-[#383838]">
+          <td className="p-4 text-fg-soft text-sm">
+            <span className="bg-elevated px-2.5 py-1 rounded-full text-xs font-medium border border-line-strong">
               {row.categoryName}
             </span>
           </td>
@@ -119,12 +119,12 @@ const AdminSessionSalesView = ({
             )}
           </td>
           <td className="p-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold bg-[#f6b100]/15 text-[#f6b100] border border-[#f6b100]/30">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs sm:text-sm font-extrabold bg-[#f6b100]/15 text-accent border border-[#f6b100]/30">
               <span>{row.totalSoldQty}</span>
               <span className="text-[10px] font-normal text-amber-200">sold</span>
             </span>
           </td>
-          <td className="p-4 font-bold text-[#f6b100] text-sm sm:text-base">
+          <td className="p-4 font-bold text-accent text-sm sm:text-base">
             Rs. {Number(row.income || 0).toLocaleString()}
           </td>
         </tr>
@@ -135,24 +135,24 @@ const AdminSessionSalesView = ({
     return (
       <tr
         key={`${row.productName}-${index}`}
-        className="border-b border-[#333] hover:bg-[#252525] transition-colors duration-150"
+        className="border-b border-line-strong hover:bg-elevated transition-colors duration-150"
       >
-        <td className="p-4 font-semibold text-white">
+        <td className="p-4 font-semibold text-fg">
           <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-lg bg-[#2a2a2a] text-[#f6b100]">
+            <span className="p-2 rounded-lg bg-muted text-accent">
               <BiSolidDish className="text-base" />
             </span>
-            <span className="font-semibold text-sm sm:text-base text-white">
+            <span className="font-semibold text-sm sm:text-base text-fg">
               {row.productName}
             </span>
           </div>
         </td>
-        <td className="p-4 text-gray-300 text-sm">
-          <span className="bg-[#242424] px-2.5 py-1 rounded-full text-xs font-medium border border-[#383838]">
+        <td className="p-4 text-fg-soft text-sm">
+          <span className="bg-elevated px-2.5 py-1 rounded-full text-xs font-medium border border-line-strong">
             {row.categoryName}
           </span>
         </td>
-        <td className="p-4 text-gray-300 text-sm font-medium">
+        <td className="p-4 text-fg-soft text-sm font-medium">
           Rs. {Number(row.price || 0).toLocaleString()}
         </td>
         <td className="p-4">
@@ -161,7 +161,7 @@ const AdminSessionSalesView = ({
             <span className="text-[10px] font-normal text-emerald-300">sold</span>
           </span>
         </td>
-        <td className="p-4 font-bold text-[#f6b100] text-sm sm:text-base">
+        <td className="p-4 font-bold text-accent text-sm sm:text-base">
           Rs. {Number(row.income || 0).toLocaleString()}
         </td>
       </tr>
@@ -178,30 +178,30 @@ const AdminSessionSalesView = ({
   return (
     <div className="flex flex-col h-full space-y-4">
       {/* Top Banner */}
-      <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="p-2 rounded-xl bg-[#2a2a2a] text-[#f6b100]">
+            <span className="p-2 rounded-xl bg-muted text-accent">
               <MdOutlineFoodBank className="text-xl" />
             </span>
-            <h1 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+            <h1 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
               Today's Sold Items by Session
             </h1>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 mt-1">
+          <p className="text-xs sm:text-sm text-fg-dim mt-1">
             Real-time count of items sold today categorized by meal sessions (Breakfast, Lunch, Dinner).
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#262626] text-gray-300 border border-[#383838] flex items-center gap-1.5">
-            <FaCalendarDay className="text-[#f6b100] text-xs" />
+          <span className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-elevated text-fg-soft border border-line-strong flex items-center gap-1.5">
+            <FaCalendarDay className="text-accent text-xs" />
             <span>{todayFormatted}</span>
           </span>
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 rounded-xl bg-[#262626] text-gray-300 hover:text-white hover:bg-[#333] transition cursor-pointer"
+              className="p-2 rounded-xl bg-elevated text-fg-soft hover:text-fg hover:bg-strong transition cursor-pointer"
               title="Refresh Data"
             >
               <FaRedo className="text-xs" />
@@ -217,23 +217,23 @@ const AdminSessionSalesView = ({
           onClick={() => setActiveSession("breakfast")}
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "breakfast"
-              ? "bg-[#252525] border-amber-400 ring-2 ring-amber-400/30"
-              : "bg-[#1a1a1a] border-[#2d2d2d] hover:border-[#444]"
+              ? "bg-elevated border-amber-400 ring-2 ring-amber-400/30"
+              : "bg-base border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
               <span>🍳</span> Breakfast
             </span>
-            <span className="text-[11px] text-gray-400 font-medium">Morning</span>
+            <span className="text-[11px] text-fg-dim font-medium">Morning</span>
           </div>
-          <p className="text-3xl font-extrabold text-white mt-2">
+          <p className="text-3xl font-extrabold text-fg mt-2">
             {summary.breakfastCount}{" "}
-            <span className="text-xs font-normal text-gray-400">units</span>
+            <span className="text-xs font-normal text-fg-dim">units</span>
           </p>
-          <div className="mt-3 pt-2.5 border-t border-[#2a2a2a] flex items-center justify-between text-xs text-gray-400">
+          <div className="mt-3 pt-2.5 border-t border-line flex items-center justify-between text-xs text-fg-dim">
             <span>Session Revenue:</span>
-            <span className="text-[#f6b100] font-semibold">
+            <span className="text-accent font-semibold">
               Rs. {Number(bySession.breakfast?.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
@@ -244,23 +244,23 @@ const AdminSessionSalesView = ({
           onClick={() => setActiveSession("lunch")}
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "lunch"
-              ? "bg-[#252525] border-emerald-400 ring-2 ring-emerald-400/30"
-              : "bg-[#1a1a1a] border-[#2d2d2d] hover:border-[#444]"
+              ? "bg-elevated border-emerald-400 ring-2 ring-emerald-400/30"
+              : "bg-base border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
               <span>🍛</span> Lunch
             </span>
-            <span className="text-[11px] text-gray-400 font-medium">Afternoon</span>
+            <span className="text-[11px] text-fg-dim font-medium">Afternoon</span>
           </div>
-          <p className="text-3xl font-extrabold text-white mt-2">
+          <p className="text-3xl font-extrabold text-fg mt-2">
             {summary.lunchCount}{" "}
-            <span className="text-xs font-normal text-gray-400">units</span>
+            <span className="text-xs font-normal text-fg-dim">units</span>
           </p>
-          <div className="mt-3 pt-2.5 border-t border-[#2a2a2a] flex items-center justify-between text-xs text-gray-400">
+          <div className="mt-3 pt-2.5 border-t border-line flex items-center justify-between text-xs text-fg-dim">
             <span>Session Revenue:</span>
-            <span className="text-[#f6b100] font-semibold">
+            <span className="text-accent font-semibold">
               Rs. {Number(bySession.lunch?.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
@@ -271,23 +271,23 @@ const AdminSessionSalesView = ({
           onClick={() => setActiveSession("dinner")}
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "dinner"
-              ? "bg-[#252525] border-purple-400 ring-2 ring-purple-400/30"
-              : "bg-[#1a1a1a] border-[#2d2d2d] hover:border-[#444]"
+              ? "bg-elevated border-purple-400 ring-2 ring-purple-400/30"
+              : "bg-base border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-purple-400 uppercase tracking-wider flex items-center gap-1.5">
               <span>🍲</span> Dinner
             </span>
-            <span className="text-[11px] text-gray-400 font-medium">Evening & Night</span>
+            <span className="text-[11px] text-fg-dim font-medium">Evening & Night</span>
           </div>
-          <p className="text-3xl font-extrabold text-white mt-2">
+          <p className="text-3xl font-extrabold text-fg mt-2">
             {summary.dinnerCount}{" "}
-            <span className="text-xs font-normal text-gray-400">units</span>
+            <span className="text-xs font-normal text-fg-dim">units</span>
           </p>
-          <div className="mt-3 pt-2.5 border-t border-[#2a2a2a] flex items-center justify-between text-xs text-gray-400">
+          <div className="mt-3 pt-2.5 border-t border-line flex items-center justify-between text-xs text-fg-dim">
             <span>Session Revenue:</span>
-            <span className="text-[#f6b100] font-semibold">
+            <span className="text-accent font-semibold">
               Rs. {Number(bySession.dinner?.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
@@ -295,7 +295,7 @@ const AdminSessionSalesView = ({
       </div>
 
       {/* Filter Tabs and Search Bar (Only All, Breakfast, Lunch, Dinner - No Common) */}
-      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Session Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -303,7 +303,7 @@ const AdminSessionSalesView = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
               activeSession === "all"
                 ? "bg-[#f6b100] text-black shadow-sm"
-                : "bg-[#252525] text-gray-400 hover:text-white hover:bg-[#2f2f2f]"
+                : "bg-elevated text-fg-dim hover:text-fg hover:bg-muted"
             }`}
           >
             All Sessions ({summary.totalItemsSold})
@@ -313,7 +313,7 @@ const AdminSessionSalesView = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
               activeSession === "breakfast"
                 ? "bg-amber-400 text-black shadow-sm"
-                : "bg-[#252525] text-gray-400 hover:text-white hover:bg-[#2f2f2f]"
+                : "bg-elevated text-fg-dim hover:text-fg hover:bg-muted"
             }`}
           >
             Breakfast ({summary.breakfastCount})
@@ -323,7 +323,7 @@ const AdminSessionSalesView = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
               activeSession === "lunch"
                 ? "bg-emerald-400 text-black shadow-sm"
-                : "bg-[#252525] text-gray-400 hover:text-white hover:bg-[#2f2f2f]"
+                : "bg-elevated text-fg-dim hover:text-fg hover:bg-muted"
             }`}
           >
             Lunch ({summary.lunchCount})
@@ -333,7 +333,7 @@ const AdminSessionSalesView = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer whitespace-nowrap ${
               activeSession === "dinner"
                 ? "bg-purple-400 text-white shadow-sm"
-                : "bg-[#252525] text-gray-400 hover:text-white hover:bg-[#2f2f2f]"
+                : "bg-elevated text-fg-dim hover:text-fg hover:bg-muted"
             }`}
           >
             Dinner ({summary.dinnerCount})
@@ -348,12 +348,12 @@ const AdminSessionSalesView = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search sold items or categories..."
-            className="w-full bg-[#242424] text-white text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none transition"
+            className="w-full bg-elevated text-fg text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none transition"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-white cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-fg-dim hover:text-fg cursor-pointer"
             >
               ✕
             </button>
@@ -362,7 +362,7 @@ const AdminSessionSalesView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center h-48">
@@ -377,7 +377,7 @@ const AdminSessionSalesView = ({
           ) : (
             <div className="flex flex-col items-center justify-center p-12 text-center h-full">
               <FaUtensils className="text-4xl text-gray-600 mb-3" />
-              <h3 className="text-base font-semibold text-gray-300">
+              <h3 className="text-base font-semibold text-fg-soft">
                 {searchTerm
                   ? "No items match your search"
                   : `No items sold for ${activeSession} today`}
@@ -390,7 +390,7 @@ const AdminSessionSalesView = ({
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="mt-3 text-xs text-[#f6b100] hover:underline cursor-pointer"
+                  className="mt-3 text-xs text-accent hover:underline cursor-pointer"
                 >
                   Clear search
                 </button>

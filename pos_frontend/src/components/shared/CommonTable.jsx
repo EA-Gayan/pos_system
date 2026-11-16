@@ -3,14 +3,14 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 const CommonTable = ({ data, columns, onEdit, onDelete }) => {
   return (
     <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-[#3a3a3a] rounded-lg">
-      <table className="w-full min-w-[500px] text-[#f5f5f5] table-fixed">
+      <table className="w-full min-w-[500px] text-fg table-fixed">
         <colgroup>
           {columns.map((col) => (
             <col key={`col-${col.key}`} />
           ))}
           <col key="col-action" />
         </colgroup>
-        <thead className="bg-[#333] text-[#ababab] sticky top-0">
+        <thead className="bg-strong text-fg-muted sticky top-0">
           <tr>
             {columns.map((col) => (
               <th key={`th-${col.key}`} className="p-3 text-left align-top">
@@ -25,7 +25,7 @@ const CommonTable = ({ data, columns, onEdit, onDelete }) => {
         className="overflow-y-auto"
         style={{ maxHeight: "calc(100vh - 150px)" }}
       >
-        <table className="w-full min-w-[500px] text-[#f5f5f5] table-fixed">
+        <table className="w-full min-w-[500px] text-fg table-fixed">
           <colgroup>
             {columns.map((col) => (
               <col key={`col-data-${col.key}`} />
@@ -37,14 +37,14 @@ const CommonTable = ({ data, columns, onEdit, onDelete }) => {
               <tr>
                 <td
                   colSpan={columns.length + 1}
-                  className="p-3 text-center text-[#ababab]"
+                  className="p-3 text-center text-fg-muted"
                 >
                   No data available.
                 </td>
               </tr>
             ) : (
               data.map((item, index) => (
-                <tr key={item.id || index} className="border-b border-[#444]">
+                <tr key={item.id || index} className="border-b border-line-stronger">
                   {columns.map((col) => (
                     <td
                       key={`td-${col.key}-${index}`}

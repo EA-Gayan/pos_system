@@ -14,22 +14,22 @@ const RecentOrders = ({ orders = [] }) => {
   });
 
   return (
-    <div className="bg-[#1f1f1f] rounded-2xl border border-[#2c2c2c] p-4 sm:p-5 shadow-xl flex-1 flex flex-col min-h-0">
+    <div className="bg-surface rounded-2xl border border-line p-4 sm:p-5 shadow-xl flex-1 flex flex-col min-h-0">
       {/* Panel Header */}
-      <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#2a2a2a]">
+      <div className="flex items-center justify-between gap-2 pb-3 border-b border-line">
         <div className="flex items-center gap-2.5">
           <div className="w-1.5 h-6 bg-[#f6b100] rounded-full" />
-          <h2 className="text-[#f5f5f5] text-base sm:text-lg font-bold tracking-wide">
+          <h2 className="text-fg text-base sm:text-lg font-bold tracking-wide">
             Recent Orders
           </h2>
-          <span className="bg-[#2a2a2a] text-[#f6b100] text-xs font-bold px-2 py-0.5 rounded-full border border-[#f6b100]/20">
+          <span className="bg-muted text-accent text-xs font-bold px-2 py-0.5 rounded-full border border-[#f6b100]/20">
             {orders.length}
           </span>
         </div>
 
         <Link
           to="/orders"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#f6b100] hover:text-[#ffd24d] bg-[#f6b100]/10 hover:bg-[#f6b100]/20 border border-[#f6b100]/30 px-3 py-1.5 rounded-xl transition-all"
+          className="inline-flex items-center gap-1 text-xs font-bold text-accent hover:text-accent-soft bg-[#f6b100]/10 hover:bg-[#f6b100]/20 border border-[#f6b100]/30 px-3 py-1.5 rounded-xl transition-all"
         >
           <span>View all</span>
           <FaChevronRight className="text-[10px]" />
@@ -43,7 +43,7 @@ const RecentOrders = ({ orders = [] }) => {
           className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
             filter === "all"
               ? "bg-[#f6b100] text-[#1a1a1a] shadow-sm font-bold"
-              : "bg-[#262626] text-[#a0a0a0] hover:text-white"
+              : "bg-elevated text-fg-muted hover:text-fg"
           }`}
         >
           All ({orders.length})
@@ -53,7 +53,7 @@ const RecentOrders = ({ orders = [] }) => {
           className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
             filter === "inprogress"
               ? "bg-[#f6b100] text-[#1a1a1a] shadow-sm font-bold"
-              : "bg-[#262626] text-[#a0a0a0] hover:text-white"
+              : "bg-elevated text-fg-muted hover:text-fg"
           }`}
         >
           In Progress ({orders.filter((o) => o.orderStatus === OrderTypes.INPROGRESS).length})
@@ -63,7 +63,7 @@ const RecentOrders = ({ orders = [] }) => {
           className={`px-3 py-1 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
             filter === "completed"
               ? "bg-[#f6b100] text-[#1a1a1a] shadow-sm font-bold"
-              : "bg-[#262626] text-[#a0a0a0] hover:text-white"
+              : "bg-elevated text-fg-muted hover:text-fg"
           }`}
         >
           Completed ({orders.filter((o) => o.orderStatus === OrderTypes.COMPLETE).length})
@@ -78,11 +78,11 @@ const RecentOrders = ({ orders = [] }) => {
           ))
         ) : (
           <div className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-2xl bg-[#262626] border border-[#333] flex items-center justify-center text-[#666] mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-elevated border border-line-strong flex items-center justify-center text-fg-faint mb-3">
               <FaReceipt className="text-xl" />
             </div>
-            <p className="text-white text-sm font-semibold">No orders found</p>
-            <p className="text-[#777] text-xs mt-1">
+            <p className="text-fg text-sm font-semibold">No orders found</p>
+            <p className="text-fg-subtle text-xs mt-1">
               {filter !== "all"
                 ? `No orders matching "${filter}" status`
                 : "Recent orders will show up here as customers order"}

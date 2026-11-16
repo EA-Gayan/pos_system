@@ -2,6 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { MdDashboard } from "react-icons/md";
+import { THEME_STORAGE_KEY } from "../../context/ThemeContext";
+import ThemeToggle from "./ThemeToggle";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -52,7 +54,10 @@ const Header = () => {
     },
     onSettled: () => {
       dispatch(removeUser());
+      // Keep the user's theme choice across logins
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
       localStorage.clear();
+      if (savedTheme) localStorage.setItem(THEME_STORAGE_KEY, savedTheme);
       navigate("/auth");
     },
   });
@@ -219,7 +224,7 @@ const Header = () => {
   }, [location.pathname]);
 
   return (
-    <header className="flex justify-between items-center py-2.5 sm:py-4 px-3 sm:px-8 bg-[#1a1a1a] sticky top-0 z-40 gap-2 sm:gap-4">
+    <header className="flex justify-between items-center py-2.5 sm:py-4 px-3 sm:px-8 bg-topbar sticky top-0 z-40 gap-2 sm:gap-4">
       {/* LOGO */}
       <div className="flex items-center gap-2 cursor-pointer shrink-0">
         <img
@@ -238,12 +243,12 @@ const Header = () => {
       )}
 
       {location.pathname.startsWith("/dashboard") && (
-        <div className="flex items-center text-[#f5f5f5] font-semibold text-sm sm:text-md gap-2 shrink-0">
+        <div className="flex items-center text-fg font-semibold text-sm sm:text-md gap-2 shrink-0">
           <h2>Admin Dashboard</h2>
         </div>
       )}
       {pageName === "" && (
-        <div className="flex items-center text-[#f5f5f5] font-semibold text-sm sm:text-md gap-2 shrink-0">
+        <div className="flex items-center text-fg font-semibold text-sm sm:text-md gap-2 shrink-0">
           <h1>Jayanthi Hotel</h1>
         </div>
       )}
@@ -253,10 +258,12 @@ const Header = () => {
         className="flex items-center gap-1.5 sm:gap-4 relative shrink-0"
         ref={dropdownRef}
       >
+        <ThemeToggle />
+
         {userData.role === "Admin" && (
-          <div className="bg-[#1f1f1f] rounded-xl sm:rounded-[15px] p-2 sm:p-2.5 cursor-pointer hover:bg-[#2a2a2a] transition-colors">
+          <div className="bg-surface rounded-xl sm:rounded-[15px] p-2 sm:p-2.5 cursor-pointer hover:bg-muted transition-colors">
             <MdDashboard
-              className="text-[#f5f5f5] text-xl sm:text-2xl"
+              className="text-fg text-xl sm:text-2xl"
               onClick={() => navigate("/dashboard")}
               title="Dashboard"
             />
@@ -266,24 +273,24 @@ const Header = () => {
         {/* Calendar Icon */}
         {isShowMenuTypeIcon && (
           <div
-            className="bg-[#1f1f1f] rounded-xl sm:rounded-[15px] p-2 sm:p-2.5 cursor-pointer relative hover:bg-[#2a2a2a] transition-colors"
+            className="bg-surface rounded-xl sm:rounded-[15px] p-2 sm:p-2.5 cursor-pointer relative hover:bg-muted transition-colors"
             onClick={() => setCalendarDropdownOpen((prev) => !prev)}
             ref={calendarDropdownRef}
             title="Select Meal"
           >
-            <RiCalendarScheduleFill className="text-[#f5f5f5] text-xl sm:text-2xl" />
+            <RiCalendarScheduleFill className="text-fg text-xl sm:text-2xl" />
 
             {/* Dropdown */}
             {calendarDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-[#1f1f1f] border border-[#333] shadow-2xl rounded-lg py-2 w-36 sm:w-40 z-50">
+              <div className="absolute top-full right-0 mt-2 bg-surface border border-line-strong shadow-2xl rounded-lg py-2 w-36 sm:w-40 z-50">
                 {meals.map((meal) => (
                   <button
                     key={meal.value}
                     onClick={() => handleMealSelect(meal.value)}
                     className={`block w-full text-left px-4 py-2 text-xs sm:text-sm transition cursor-pointer ${
                       selectedMeal === meal.value
-                        ? "bg-[#333] text-[#f6b100] font-semibold"
-                        : "text-[#f5f5f5] hover:bg-[#333]"
+                        ? "bg-strong text-accent font-semibold"
+                        : "text-fg hover:bg-strong"
                     }`}
                   >
                     {meal.name}
@@ -296,15 +303,15 @@ const Header = () => {
 
         {/* User Icon */}
         <div
-          className="flex items-center gap-1.5 sm:gap-3 cursor-pointer bg-[#1f1f1f] sm:bg-transparent rounded-xl p-1 sm:p-0"
+          className="flex items-center gap-1.5 sm:gap-3 cursor-pointer bg-surface sm:bg-transparent rounded-xl p-1 sm:p-0"
           onClick={() => setDropdownOpen((prev) => !prev)}
         >
-          <FaUserCircle className="text-[#f5f5f5] text-2xl sm:text-4xl shrink-0" />
+          <FaUserCircle className="text-fg text-2xl sm:text-4xl shrink-0" />
           <div className="hidden sm:flex flex-col items-start">
-            <h1 className="text-xs sm:text-md text-[#f5f5f5] font-semibold tracking-wide">
+            <h1 className="text-xs sm:text-md text-fg font-semibold tracking-wide">
               {userData.name || "Test User"}
             </h1>
-            <p className="text-[10px] sm:text-xs text-[#ababab] font-medium">
+            <p className="text-[10px] sm:text-xs text-fg-muted font-medium">
               {userData.role || "N/A"}
             </p>
           </div>
@@ -312,16 +319,16 @@ const Header = () => {
 
         {/* User Dropdown */}
         {dropdownOpen && (
-          <div className="absolute top-full right-0 mt-2 bg-[#1f1f1f] border border-[#333] shadow-2xl rounded-lg py-2 w-36 sm:w-40 z-50">
-            <div className="sm:hidden px-4 py-1.5 border-b border-[#333] mb-1">
-              <p className="text-xs text-white font-semibold truncate">
+          <div className="absolute top-full right-0 mt-2 bg-surface border border-line-strong shadow-2xl rounded-lg py-2 w-36 sm:w-40 z-50">
+            <div className="sm:hidden px-4 py-1.5 border-b border-line-strong mb-1">
+              <p className="text-xs text-fg font-semibold truncate">
                 {userData.name || "User"}
               </p>
-              <p className="text-[10px] text-gray-400">{userData.role || ""}</p>
+              <p className="text-[10px] text-fg-dim">{userData.role || ""}</p>
             </div>
             <button
               onClick={handleLogOut}
-              className="block w-full text-left px-4 py-2 text-xs sm:text-sm text-red-400 hover:bg-[#333] transition cursor-pointer"
+              className="block w-full text-left px-4 py-2 text-xs sm:text-sm text-red-400 hover:bg-strong transition cursor-pointer"
             >
               Logout
             </button>
