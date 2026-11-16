@@ -8,7 +8,7 @@ const Auth = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   return (
-    <div className="relative flex min-h-screen w-full bg-base">
+    <div className="relative flex min-h-screen w-full bg-app">
       {/* Theme toggle (the main header is hidden on this page) */}
       <ThemeToggle className="absolute top-4 right-4 z-30" />
 
@@ -34,7 +34,7 @@ const Auth = () => {
       </div>
 
       {/* Right Section - Full width on mobile */}
-      <div className="w-full md:w-1/2 min-h-screen overflow-y-auto bg-base p-6 sm:p-10 flex flex-col justify-center">
+      <div className="w-full md:w-1/2 min-h-screen overflow-y-auto bg-app p-6 sm:p-10 flex flex-col justify-center">
         <div className="max-w-md w-full mx-auto my-auto">
           <div className="flex flex-col items-center gap-2">
             <img

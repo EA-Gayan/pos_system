@@ -72,7 +72,7 @@ const CartInfo = ({ isOpen = true, onClose = () => {} }) => {
 
       <div
         className={`
-          fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-base shadow-2xl flex flex-col px-4 pt-4
+          fixed inset-y-0 right-0 z-50 w-full sm:w-[420px] bg-app shadow-2xl flex flex-col px-4 pt-4
           transition-transform duration-300 ease-in-out
           md:relative md:inset-auto md:z-auto md:flex-1 md:mt-4 md:mr-3 md:rounded-2xl md:shadow-lg md:mb-[5rem]
           ${isOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"}
@@ -252,7 +252,7 @@ const CartInfo = ({ isOpen = true, onClose = () => {} }) => {
       </div>
 
       {/* Static Bill Section */}
-      <div className="px-3 sm:px-5 py-3 border-t border-line-strong bg-base mb-0 md:mb-15 pb-8 md:pb-3 shrink-0">
+      <div className="px-3 sm:px-5 py-3 border-t border-line-strong bg-app mb-0 md:mb-15 pb-8 md:pb-3 shrink-0">
         <Bill />
       </div>
     </div>

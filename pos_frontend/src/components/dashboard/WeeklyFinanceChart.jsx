@@ -138,7 +138,7 @@ const WeeklyFinanceChart = () => {
   };
 
   return (
-    <div className="w-full bg-base border border-line rounded-2xl p-4 sm:p-5 shadow-sm">
+    <div className="w-full bg-app border border-line rounded-2xl p-4 sm:p-5 shadow-sm">
       {/* Quick Trend Badges */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
         <div className="bg-elevated border border-line-strong rounded-xl p-3 flex items-center justify-between">
@@ -182,7 +182,7 @@ const WeeklyFinanceChart = () => {
               Rs. {weekSummary.netBalance.toLocaleString()}
             </p>
           </div>
-          <span className="text-[11px] font-semibold text-fg-dim bg-base px-2 py-1 rounded-md border border-line">
+          <span className="text-[11px] font-semibold text-fg-dim bg-app px-2 py-1 rounded-md border border-line">
             Mon - Sun
           </span>
         </div>

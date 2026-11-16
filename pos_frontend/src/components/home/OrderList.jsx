@@ -36,7 +36,7 @@ const OrderList = ({ order }) => {
 
       {/* Center: Table Badge */}
       <div className="flex items-center justify-center shrink-0">
-        <span className="text-accent font-semibold bg-base border border-[#f6b100]/30 rounded-lg px-2.5 py-1 flex items-center whitespace-nowrap text-[11px] sm:text-xs shadow-inner">
+        <span className="text-accent font-semibold bg-app border border-[#f6b100]/30 rounded-lg px-2.5 py-1 flex items-center whitespace-nowrap text-[11px] sm:text-xs shadow-inner">
           Table <FaLongArrowAltRight className="mx-1 sm:mx-1.5 text-fg-subtle" />
           <span className="font-bold text-fg ml-0.5">{tableNo}</span>
         </span>

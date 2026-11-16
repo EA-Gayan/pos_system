@@ -27,7 +27,7 @@ const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const NEXT_STATUS = { present: "leave", leave: "half-day", "half-day": "present" };
 
 const StatCard = ({ label, value, sub, tone = "text-fg" }) => (
-  <div className="bg-base border border-line rounded-xl p-3">
+  <div className="bg-app border border-line rounded-xl p-3">
     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">{label}</p>
     <p className={`text-lg font-extrabold mt-1 ${tone}`}>{value}</p>
     {sub && <p className="text-[11px] text-gray-500 mt-0.5">{sub}</p>}
@@ -183,7 +183,7 @@ const AttendanceCalendar = ({ employee, month, asOf, attendance, onToggle, pendi
               title={`${prettyDate(date)} — ${style.label}${isFuture ? " (upcoming)" : ""}. Click to change.`}
               className={`aspect-square sm:aspect-auto sm:h-12 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center cursor-pointer transition hover:scale-105 ${
                 isFuture && status === "present"
-                  ? "border-line text-gray-500 bg-base"
+                  ? "border-line text-gray-500 bg-app"
                   : style.cell
               } ${isToday ? "ring-2 ring-[#f6b100]" : ""} ${isPending ? "opacity-50 animate-pulse" : ""}`}
             >
@@ -528,7 +528,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                 </div>
 
                 {ms.rateBreakdown.length > 1 && (
-                  <div className="bg-base border border-line rounded-xl p-3">
+                  <div className="bg-app border border-line rounded-xl p-3">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2">
                       Salary changed this month — each period paid at its own rate
                     </p>
@@ -559,7 +559,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                     </p>
                     <p className="text-[11px] text-fg-dim mt-0.5">Earned − withdrawn in this month</p>
                   </div>
-                  <div className="flex-1 bg-base border border-line rounded-xl p-3.5">
+                  <div className="flex-1 bg-app border border-line rounded-xl p-3.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
                       Overall Balance · Since Joining
                     </p>
@@ -573,7 +573,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                   </div>
                 </div>
 
-                <div className="bg-base border border-line rounded-2xl p-3 sm:p-4">
+                <div className="bg-app border border-line rounded-2xl p-3 sm:p-4">
                   <h3 className="text-sm font-bold text-fg mb-3">Attendance & Leave</h3>
                   <AttendanceCalendar
                     employee={details}
@@ -587,7 +587,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                   />
                 </div>
 
-                <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 space-y-3">
+                <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 space-y-3">
                   <h3 className="text-sm font-bold text-fg">Withdrawals (Advances & Salary Payments)</h3>
                   <WithdrawalForm
                     isPending={addWithdrawalMutation.isPending}
@@ -606,7 +606,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
               </div>
 
               {/* Right column — profile */}
-              <aside className="bg-base border border-line rounded-2xl p-4 h-fit">
+              <aside className="bg-app border border-line rounded-2xl p-4 h-fit">
                 <h3 className="text-sm font-bold text-fg mb-2">Profile Details</h3>
                 <InfoRow label="Position" value={getPositionLabel(details)} />
                 <InfoRow label="Phone" value={details.phone} />

@@ -55,7 +55,7 @@ const CategoryFormModal = ({ category, onClose }) => {
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4">
       <form
         onSubmit={submit}
-        className="bg-base border border-line rounded-2xl shadow-xl w-full max-w-md"
+        className="bg-app border border-line rounded-2xl shadow-xl w-full max-w-md"
       >
         <div className="flex justify-between items-center px-5 py-4 border-b border-line">
           <h2 className="text-base font-bold text-fg">
@@ -201,7 +201,7 @@ const AdminExpenseCategoriesView = () => {
         </button>
       </div>
 
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4">
         <div className="relative w-full sm:w-80">
           <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
           <input
@@ -214,7 +214,7 @@ const AdminExpenseCategoriesView = () => {
         </div>
       </div>
 
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {isLoading ? (
             <p className="p-12 text-center text-sm text-gray-500">Loading...</p>

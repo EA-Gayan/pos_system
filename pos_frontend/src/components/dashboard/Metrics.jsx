@@ -185,7 +185,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-base text-fg">
+    <div className="min-h-screen overflow-y-auto bg-app text-fg">
       <div className="container mx-auto py-6 px-6 md:px-4">
         {isLoading ? (
           <div className="flex justify-center items-center h-32 mt-30">

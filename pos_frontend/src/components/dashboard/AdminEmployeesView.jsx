@@ -281,7 +281,7 @@ const AdminEmployeesView = () => {
       </div>
 
       {/* Toolbar */}
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <MonthSwitcher month={month} onChange={setMonth} />
           <div className="flex bg-elevated border border-line-strong rounded-xl p-1">
@@ -316,7 +316,7 @@ const AdminEmployeesView = () => {
       </div>
 
       {/* Table */}
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-auto">
           {isLoading ? (
             <p className="text-sm text-fg-dim text-center p-12">Loading employees...</p>

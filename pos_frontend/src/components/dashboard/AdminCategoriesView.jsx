@@ -153,7 +153,7 @@ const AdminCategoriesView = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Meal Type Session Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -220,7 +220,7 @@ const AdminCategoriesView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {filteredCategories.length > 0 ? (
             <Table

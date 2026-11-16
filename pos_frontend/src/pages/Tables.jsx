@@ -57,7 +57,7 @@ const Tables = () => {
       : tableData.filter((table) => table.status?.toLowerCase() === status);
 
   return (
-    <section className="bg-gradient-to-br from-surface via-base to-elevated h-full flex flex-col min-h-0 overflow-hidden">
+    <section className="bg-gradient-to-br from-surface via-app to-elevated h-full flex flex-col min-h-0 overflow-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-10 py-4 sm:py-6 bg-bar shadow-lg border-b border-bar-line gap-3 shrink-0">
         <div className="flex items-center gap-3 sm:gap-4">
           <BackButton />

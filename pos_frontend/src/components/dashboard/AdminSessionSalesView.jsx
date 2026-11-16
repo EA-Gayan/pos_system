@@ -218,7 +218,7 @@ const AdminSessionSalesView = ({
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "breakfast"
               ? "bg-elevated border-amber-400 ring-2 ring-amber-400/30"
-              : "bg-base border-line hover:border-line-stronger"
+              : "bg-app border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -245,7 +245,7 @@ const AdminSessionSalesView = ({
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "lunch"
               ? "bg-elevated border-emerald-400 ring-2 ring-emerald-400/30"
-              : "bg-base border-line hover:border-line-stronger"
+              : "bg-app border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -272,7 +272,7 @@ const AdminSessionSalesView = ({
           className={`rounded-2xl p-4 sm:p-5 border cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-sm ${
             activeSession === "dinner"
               ? "bg-elevated border-purple-400 ring-2 ring-purple-400/30"
-              : "bg-base border-line hover:border-line-stronger"
+              : "bg-app border-line hover:border-line-stronger"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -295,7 +295,7 @@ const AdminSessionSalesView = ({
       </div>
 
       {/* Filter Tabs and Search Bar (Only All, Breakfast, Lunch, Dinner - No Common) */}
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Session Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
@@ -362,7 +362,7 @@ const AdminSessionSalesView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center h-48">
