@@ -101,13 +101,13 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-base rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden border border-line-strong flex flex-col">
+      <div className="bg-app rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden border border-line-strong flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-[#f6b100] to-[#e0a100] p-3 flex items-center justify-between shrink-0">
           <h2 className="text-base sm:text-lg font-bold text-[#1a1a1a]">Create Combo Package</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-base/20 hover:bg-base/30 flex items-center justify-center transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-app/20 hover:bg-app/30 flex items-center justify-center transition-all cursor-pointer"
           >
             <FaTimes className="text-[#1a1a1a]" size={16} />
           </button>
@@ -189,7 +189,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
                       </div>
                       
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-2 bg-base rounded-lg p-1.5">
+                      <div className="flex items-center gap-2 bg-app rounded-lg p-1.5">
                         <button
                           onClick={() => decrementProductQuantity(product._id)}
                           className="w-7 h-7 flex items-center justify-center rounded-md bg-muted hover:bg-strong text-fg-dim hover:text-fg transition-colors text-lg font-bold"
@@ -217,7 +217,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
         {/* Footer with Multiplier */}
         <div className="bg-muted p-3 border-t border-line-strong">
           {/* Multiplier Input */}
-          <div className="mb-2 bg-base p-2 rounded-lg border border-[#f6b100]/30">
+          <div className="mb-2 bg-app p-2 rounded-lg border border-[#f6b100]/30">
             <input
               type="number"
               min="0"
@@ -234,7 +234,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
 
 
           {/* Calculation Display */}
-          <div className="bg-base p-2 rounded-lg mb-2">
+          <div className="bg-app p-2 rounded-lg mb-2">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-fg-dim text-xs">Items</p>
@@ -251,7 +251,7 @@ const ComboModal = ({ isOpen, onClose, onCreateCombo }) => {
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="flex-1 bg-base hover:bg-strong text-fg font-semibold py-2 rounded-lg transition-all text-sm"
+              className="flex-1 bg-app hover:bg-strong text-fg font-semibold py-2 rounded-lg transition-all text-sm"
             >
               Cancel
             </button>

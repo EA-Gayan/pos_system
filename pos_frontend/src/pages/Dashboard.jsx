@@ -386,7 +386,7 @@ const Dashboard = () => {
     isCategoriesLoading || isTablesLoading || isItemsLoading;
 
   return (
-    <div className="flex h-full w-full bg-base overflow-hidden">
+    <div className="flex h-full w-full bg-app overflow-hidden">
       {/* Left Navigation Sidebar */}
       <AdminSidebar
         activeSection={activeSection}
@@ -399,7 +399,7 @@ const Dashboard = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-base">
+      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-app">
         {/* Mobile Header Bar */}
         <div className="md:hidden flex items-center justify-between px-4 py-3 bg-bar border-b border-bar-line shrink-0">
           <button

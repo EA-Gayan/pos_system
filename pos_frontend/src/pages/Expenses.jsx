@@ -137,7 +137,7 @@ const Expenses = () => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-elevated via-surface to-base min-h-0">
+    <div className="flex flex-col h-full overflow-hidden bg-gradient-to-br from-elevated via-surface to-app min-h-0">
       <div className="flex-none px-3 sm:px-10 py-3.5 sm:py-6 flex flex-col sm:flex-row sm:items-center justify-between bg-bar shadow-lg border-b border-bar-line gap-3">
         <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-3">
           <BackButton />

@@ -143,7 +143,7 @@ const AdminProductsView = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Category Selector Dropdown (Crucial for scaling to many categories!) */}
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <div className="flex items-center gap-1.5 bg-elevated px-3 py-2 rounded-xl border border-line-strong text-xs text-fg-soft w-full sm:w-auto">
@@ -207,7 +207,7 @@ const AdminProductsView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {filteredProducts.length > 0 ? (
             <Table

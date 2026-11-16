@@ -49,7 +49,7 @@ const AdminReportsView = ({
 
       {/* Financial Summary Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-base border border-line rounded-2xl p-4">
+        <div className="bg-app border border-line rounded-2xl p-4">
           <p className="text-xs text-fg-dim font-medium">Today's Gross Sales</p>
           <p className="text-2xl font-bold text-[#025cca] mt-1">
             Rs. {Number(earnings || 0).toLocaleString()}
@@ -57,7 +57,7 @@ const AdminReportsView = ({
           <p className="text-[11px] text-gray-500 mt-1">From {ordersCount} processed orders</p>
         </div>
 
-        <div className="bg-base border border-line rounded-2xl p-4">
+        <div className="bg-app border border-line rounded-2xl p-4">
           <p className="text-xs text-fg-dim font-medium">Today's Recorded Expenses</p>
           <p className="text-2xl font-bold text-[#02ca3a] mt-1">
             Rs. {Number(expenses || 0).toLocaleString()}
@@ -65,7 +65,7 @@ const AdminReportsView = ({
           <p className="text-[11px] text-gray-500 mt-1">Operational & purchase costs</p>
         </div>
 
-        <div className="bg-base border border-line rounded-2xl p-4">
+        <div className="bg-app border border-line rounded-2xl p-4">
           <p className="text-xs text-fg-dim font-medium">Today's Net Balance</p>
           <p
             className={`text-2xl font-bold mt-1 ${
@@ -77,7 +77,7 @@ const AdminReportsView = ({
           <p className="text-[11px] text-gray-500 mt-1">Gross sales minus expenses</p>
         </div>
 
-        <div className="bg-base border border-line rounded-2xl p-4">
+        <div className="bg-app border border-line rounded-2xl p-4">
           <p className="text-xs text-fg-dim font-medium">Completed Orders</p>
           <p className="text-2xl font-bold text-accent mt-1">{ordersCount}</p>
           <p className="text-[11px] text-gray-500 mt-1">Total orders billed today</p>
@@ -92,7 +92,7 @@ const AdminReportsView = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Income Records Export Card */}
-          <div className="bg-base border border-line hover:border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
+          <div className="bg-app border border-line hover:border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -145,7 +145,7 @@ const AdminReportsView = ({
           </div>
 
           {/* Expense Records Export Card */}
-          <div className="bg-base border border-line hover:border-amber-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
+          <div className="bg-app border border-line hover:border-amber-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-200 shadow-md">
             <div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
@@ -200,7 +200,7 @@ const AdminReportsView = ({
       </div>
 
       {/* Weekly Visual Trends Chart */}
-      <div className="bg-base border border-line rounded-2xl p-4 sm:p-6 shadow-sm">
+      <div className="bg-app border border-line rounded-2xl p-4 sm:p-6 shadow-sm">
         <div className="mb-4">
           <h2 className="font-bold text-fg text-base sm:text-lg tracking-wide">
             Weekly Financial Trend Analysis

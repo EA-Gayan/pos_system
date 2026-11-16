@@ -157,7 +157,7 @@ const AdminSidebar = ({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-base border-r border-line text-fg-soft select-none">
+    <div className="flex flex-col h-full bg-app border-r border-line text-fg-soft select-none">
       {/* Sidebar Header */}
       <div className="p-4 border-b border-line flex items-center justify-between shrink-0">
         <div className={`flex items-center gap-3 overflow-hidden ${isCollapsed ? "justify-center w-full" : ""}`}>
@@ -237,7 +237,7 @@ const AdminSidebar = ({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-3 border-t border-line shrink-0 space-y-2 bg-base">
+      <div className="p-3 border-t border-line shrink-0 space-y-2 bg-app">
         {/* Return to POS button */}
         <button
           onClick={() => navigate("/tables")}

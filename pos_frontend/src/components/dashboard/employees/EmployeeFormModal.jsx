@@ -290,7 +290,7 @@ const EmployeeFormModal = ({ employee, onClose }) => {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-base border border-line rounded-xl p-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-app border border-line rounded-xl p-3">
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"

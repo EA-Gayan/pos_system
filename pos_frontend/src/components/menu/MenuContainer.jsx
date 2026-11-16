@@ -236,7 +236,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between bg-base rounded-xl p-1.5 shadow-inner">
+                    <div className="flex items-center justify-between bg-app rounded-xl p-1.5 shadow-inner">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

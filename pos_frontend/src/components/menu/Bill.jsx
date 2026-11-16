@@ -166,7 +166,7 @@ const Bill = () => {
   return (
     <>
       {/* Bill Section (Sticky at Bottom) */}
-      <div className="py-3 bg-base relative">
+      <div className="py-3 bg-app relative">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-xs text-fg-muted font-medium">

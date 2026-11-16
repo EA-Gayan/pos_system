@@ -74,7 +74,8 @@
 
 /* `inline` makes utilities resolve var() at the element, so .theme-dark works */
 @theme inline {
-  --color-base: var(--base);
+  /* named "app", not "base": `text-base` is Tailwind's font-size utility */
+  --color-app: var(--base);
   --color-surface: var(--surface);
   --color-elevated: var(--elevated);
   --color-muted: var(--muted);

@@ -245,7 +245,7 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="bg-base rounded-lg shadow-lg w-full max-w-lg mx-4"
+        className="bg-app rounded-lg shadow-lg w-full max-w-lg mx-4"
       >
         <div className="flex justify-between items-center px-6 py-4 border-b border-b-line-strong">
           <h2 className="text-xl text-fg font-semibold">

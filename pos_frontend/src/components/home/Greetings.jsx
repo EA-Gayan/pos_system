@@ -29,7 +29,7 @@ const Greetings = () => {
     ).padStart(2, "0")}:${String(date.getSeconds()).padStart(2, "0")}`;
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-surface via-elevated to-base p-4 sm:p-6 rounded-2xl shadow-xl border border-line flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="relative overflow-hidden bg-gradient-to-r from-surface via-elevated to-app p-4 sm:p-6 rounded-2xl shadow-xl border border-line flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       {/* Subtle decorative glow */}
       <div className="absolute -top-10 -right-10 w-36 h-36 bg-[#f6b100]/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -50,7 +50,7 @@ const Greetings = () => {
       </div>
 
       {/* Right Realtime Clock Card */}
-      <div className="relative z-10 flex items-center gap-3 bg-base/90 border border-line py-2 px-4 rounded-xl shadow-inner w-full sm:w-auto justify-between sm:justify-start">
+      <div className="relative z-10 flex items-center gap-3 bg-app/90 border border-line py-2 px-4 rounded-xl shadow-inner w-full sm:w-auto justify-between sm:justify-start">
         <div className="w-10 h-10 rounded-lg bg-[#f6b100]/10 border border-[#f6b100]/25 flex items-center justify-center text-accent shrink-0">
           <FaRegClock className="text-lg" />
         </div>

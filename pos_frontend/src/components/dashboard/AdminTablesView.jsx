@@ -104,7 +104,7 @@ const AdminTablesView = ({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-app border border-line rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="text-xs text-fg-dim font-medium">
           Showing <span className="text-accent font-semibold">{filteredTables.length}</span> table(s)
         </div>
@@ -130,7 +130,7 @@ const AdminTablesView = ({
       </div>
 
       {/* Table Area */}
-      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-app border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {filteredTables.length > 0 ? (
             <Table

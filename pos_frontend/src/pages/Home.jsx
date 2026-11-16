@@ -47,7 +47,7 @@ const Home = () => {
     orderCount > 0 ? Math.round(totalEarning / orderCount) : 0;
 
   return (
-    <section className="bg-gradient-to-br from-base via-base to-elevated h-full flex flex-col min-h-0 overflow-hidden">
+    <section className="bg-gradient-to-br from-app via-app to-elevated h-full flex flex-col min-h-0 overflow-hidden">
       {/* Sub-Header matching Menu Page structure & alignment */}
       <div className="flex items-center justify-between px-3 sm:px-8 md:px-10 py-3 sm:py-4 flex-none bg-bar shadow-md border-b border-bar-line">
         <div className="flex items-center gap-3 sm:gap-4">

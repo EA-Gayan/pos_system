@@ -33,7 +33,7 @@ const Orders = () => {
       : resData?.data?.data || [];
 
   return (
-    <section className="bg-gradient-to-br from-surface via-base to-elevated h-full flex flex-col overflow-hidden min-h-0">
+    <section className="bg-gradient-to-br from-surface via-app to-elevated h-full flex flex-col overflow-hidden min-h-0">
       {/* Header with filter buttons */}
       <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-10 py-4 sm:py-6 bg-bar shadow-lg border-b border-bar-line gap-3">
         <div className="flex items-center gap-3 sm:gap-4">
@@ -92,7 +92,7 @@ const Orders = () => {
       </div>
       {/* Pagination Controls */}
       {resData?.data?.pagination && (
-        <div className="pt-3 pb-20 sm:pb-6 px-4 bg-base border-t border-line-strong flex items-center justify-center gap-3 shrink-0">
+        <div className="pt-3 pb-20 sm:pb-6 px-4 bg-app border-t border-line-strong flex items-center justify-center gap-3 shrink-0">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}

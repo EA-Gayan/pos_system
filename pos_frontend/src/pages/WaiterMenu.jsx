@@ -40,14 +40,14 @@ const WaiterMenu = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-surface via-base to-elevated">
+      <div className="flex h-screen items-center justify-center bg-gradient-to-br from-surface via-app to-elevated">
         <p className="text-accent text-xl font-bold">Loading Menu...</p>
       </div>
     );
   }
 
   return (
-    <section className="bg-gradient-to-br from-surface via-base to-elevated flex flex-col md:flex-row h-screen relative overflow-hidden">
+    <section className="bg-gradient-to-br from-surface via-app to-elevated flex flex-col md:flex-row h-screen relative overflow-hidden">
       {/* Left side: Menu */}
       <div className="flex-1 md:flex-[3] flex flex-col min-h-0 h-full overflow-hidden">
         {/* Header */}
@@ -93,7 +93,7 @@ const WaiterMenu = () => {
             className="w-full bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] font-bold py-3.5 px-5 rounded-2xl shadow-2xl flex items-center justify-between cursor-pointer active:scale-98 transition-transform border border-yellow-300/30"
           >
             <div className="flex items-center gap-2.5">
-              <span className="bg-base text-accent text-xs font-extrabold px-2.5 py-1 rounded-full">
+              <span className="bg-app text-accent text-xs font-extrabold px-2.5 py-1 rounded-full">
                 {cartData.length}
               </span>
               <span className="text-sm font-bold">View Order</span>

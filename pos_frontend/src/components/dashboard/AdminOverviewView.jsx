@@ -244,7 +244,7 @@ const AdminOverviewView = ({
       {sessionSalesSummary && (
         <div
           onClick={() => onSelectSection("session-sales")}
-          className="bg-base border border-line hover:border-[#f6b100]/40 rounded-2xl p-4 sm:p-5 transition-all duration-200 cursor-pointer shadow-sm group"
+          className="bg-app border border-line hover:border-[#f6b100]/40 rounded-2xl p-4 sm:p-5 transition-all duration-200 cursor-pointer shadow-sm group"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
