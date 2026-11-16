@@ -28,8 +28,10 @@ export const deleteTable = (tableId) =>
 
 // Table Cart Endpoints
 export const getTableCart = (tableId) => api.get(`/api/table-cart/${tableId}`);
-export const updateTableCart = (tableId, items) => api.post(`/api/table-cart/${tableId}`, { items });
-export const clearTableCart = (tableId) => api.delete(`/api/table-cart/${tableId}`);
+export const updateTableCart = (tableId, items) =>
+  api.post(`/api/table-cart/${tableId}`, { items });
+export const clearTableCart = (tableId) =>
+  api.delete(`/api/table-cart/${tableId}`);
 
 // Order Endpoints
 export const addOrder = (data) => api.post("/api/order", data);
@@ -94,6 +96,26 @@ export const exportExpenseRecord = async (type) => {
 export const getTotalExpenses = (data) =>
   api.post(`/api/expenses/totalExpenses`, data);
 
+// Employee Management Endpoints (admin only)
+// month = "YYYY-MM", asOf = local today "YYYY-MM-DD"
+export const getEmployees = ({ month, asOf }) =>
+  api.get("/api/employee", { params: { month, asOf } });
+export const getEmployeeDetails = ({ employeeId, month, asOf }) =>
+  api.get(`/api/employee/${employeeId}`, { params: { month, asOf } });
+export const addEmployee = (data) => api.post("/api/employee", data);
+export const updateEmployee = ({ employeeId, ...data }) =>
+  api.put(`/api/employee/${employeeId}`, data);
+export const deleteEmployee = (employeeId) =>
+  api.delete(`/api/employee/${employeeId}`);
+export const deleteEmployeeSalaryEntry = ({ employeeId, entryId }) =>
+  api.delete(`/api/employee/${employeeId}/salary-history/${entryId}`);
+export const markEmployeeAttendance =({ employeeId, date, status }) =>
+  api.put(`/api/employee/${employeeId}/attendance`, { date, status });
+export const addEmployeeWithdrawal = ({ employeeId, ...data }) =>
+  api.post(`/api/employee/${employeeId}/withdrawals`, data);
+export const deleteEmployeeWithdrawal = ({ employeeId, withdrawalId }) =>
+  api.delete(`/api/employee/${employeeId}/withdrawals/${withdrawalId}`);
+
 // //print invoice endpoit
 // export const printInvoice = (data) =>
 //   api
@@ -121,8 +143,8 @@ export const printInvoice = async (data) => {
     const base64 = btoa(
       new Uint8Array(arrayBuffer).reduce(
         (data, byte) => data + String.fromCharCode(byte),
-        ""
-      )
+        "",
+      ),
     );
 
     // Send to print server

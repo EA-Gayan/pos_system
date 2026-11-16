@@ -29,4 +29,12 @@ const isVerifiedUser = async (req, res, next) => {
   }
 };
 
-module.exports = { isVerifiedUser };
+// Use after isVerifiedUser — restricts a route to Admin accounts
+const isAdmin = (req, res, next) => {
+  if (req.user?.role !== "Admin") {
+    return next(createHttpError(403, "Only admins can access this resource!"));
+  }
+  next();
+};
+
+module.exports = { isVerifiedUser, isAdmin };

@@ -3,6 +3,7 @@ import { BiSolidDish } from "react-icons/bi";
 import {
   FaHome,
   FaStar,
+  FaUsers,
 } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import {
@@ -95,6 +96,18 @@ const AdminSidebar = ({
           shortLabel: "Best Sellers",
           icon: <FaStar className="text-lg" />,
           path: "/dashboard/best-selling",
+        },
+      ],
+    },
+    {
+      group: "STAFF",
+      items: [
+        {
+          id: "employees",
+          label: "Employee Management",
+          shortLabel: "Employees",
+          icon: <FaUsers className="text-lg" />,
+          path: "/dashboard/employees",
         },
       ],
     },

@@ -1,9 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { MdMenu } from "react-icons/md";
@@ -16,7 +12,7 @@ import AdminProductsView from "../components/dashboard/AdminProductsView";
 import AdminTablesView from "../components/dashboard/AdminTablesView";
 import AdminReportsView from "../components/dashboard/AdminReportsView";
 import AdminSessionSalesView from "../components/dashboard/AdminSessionSalesView";
-import WeeklyFinanceChart from "../components/dashboard/WeeklyFinanceChart";
+import AdminEmployeesView from "../components/dashboard/AdminEmployeesView";
 import BestSelling from "../components/dashboard/BestSelling";
 import Modal from "../components/dashboard/Modal";
 import EditModal from "../components/dashboard/EditModal";
@@ -70,7 +66,10 @@ const Dashboard = () => {
 
   // Persist sidebar collapsed state
   useEffect(() => {
-    localStorage.setItem("admin_sidebar_collapsed", isCollapsed ? "true" : "false");
+    localStorage.setItem(
+      "admin_sidebar_collapsed",
+      isCollapsed ? "true" : "false",
+    );
   }, [isCollapsed]);
 
   // Determine active section from URL
@@ -79,7 +78,10 @@ const Dashboard = () => {
 
     if (pathname.includes("best-selling")) return "best-selling";
     if (pathname.includes("session-sales")) return "session-sales";
-    if (pathname.includes("total-categories") || pathname.includes("/categories"))
+    if (
+      pathname.includes("total-categories") ||
+      pathname.includes("/categories")
+    )
       return "categories";
     if (
       pathname.includes("total-items") ||
@@ -91,12 +93,12 @@ const Dashboard = () => {
       return "tables";
     if (pathname.includes("reports") || pathname.includes("view-report"))
       return "reports";
+    if (pathname.includes("/employees")) return "employees";
 
     if (urlSection === "session-sales") return "session-sales";
     if (urlSection === "total-categories" || urlSection === "categories")
       return "categories";
-    if (urlSection === "total-items" || urlSection === "items")
-      return "items";
+    if (urlSection === "total-items" || urlSection === "items") return "items";
     if (urlSection === "total-tables" || urlSection === "tables")
       return "tables";
     if (urlSection === "best-selling") return "best-selling";
@@ -121,6 +123,8 @@ const Dashboard = () => {
       navigate("/dashboard/reports");
     } else if (sectionId === "best-selling") {
       navigate("/dashboard/best-selling");
+    } else if (sectionId === "employees") {
+      navigate("/dashboard/employees");
     } else if (sectionId === "orders") {
       navigate("/orders");
     } else if (sectionId === "expenses") {
@@ -184,20 +188,20 @@ const Dashboard = () => {
   // Extracted Data
   const categories = useMemo(
     () => categoriesRes?.data?.data || [],
-    [categoriesRes]
+    [categoriesRes],
   );
   const tables = useMemo(() => tablesRes?.data?.data || [], [tablesRes]);
   const dashboardItemDetails = useMemo(
     () => dashboardItemsRes?.data?.data || dashboardItemsRes?.data || [],
-    [dashboardItemsRes]
+    [dashboardItemsRes],
   );
   const bestSellingList = useMemo(
     () => bestSellingRes?.data?.data || [],
-    [bestSellingRes]
+    [bestSellingRes],
   );
   const sessionSalesData = useMemo(
     () => sessionSalesRes?.data?.data || null,
-    [sessionSalesRes]
+    [sessionSalesRes],
   );
 
   // Counts for sidebar badges
@@ -214,8 +218,7 @@ const Dashboard = () => {
     const rawActiveOrders =
       dashboardItemDetails.find((d) => d.key === "inProgressOrders")?.count ??
       0;
-    const rawSessionSold =
-      sessionSalesData?.summary?.totalItemsSold ?? 0;
+    const rawSessionSold = sessionSalesData?.summary?.totalItemsSold ?? 0;
 
     return {
       categories: rawCategoriesCount,
@@ -265,7 +268,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete category!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -281,7 +284,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete product!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -297,7 +300,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to delete table!",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -340,7 +343,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to export income record",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -369,7 +372,7 @@ const Dashboard = () => {
     onError: (error) => {
       enqueueSnackbar(
         error?.response?.data?.message || "Failed to export expense record",
-        { variant: "error" }
+        { variant: "error" },
       );
     },
   });
@@ -476,6 +479,8 @@ const Dashboard = () => {
                   ordersCount={totalOrders}
                 />
               )}
+
+              {activeSection === "employees" && <AdminEmployeesView />}
 
               {activeSection === "best-selling" && (
                 <div className="flex flex-col space-y-4">
