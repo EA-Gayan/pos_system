@@ -22,11 +22,11 @@ import {
 } from "./employees/employeeUtils";
 
 const SummaryCard = ({ icon, label, value, sub, color }) => (
-  <div className="rounded-2xl p-4 shadow-md" style={{ backgroundColor: color }}>
+  <div className="theme-dark rounded-2xl p-4 shadow-md" style={{ backgroundColor: color }}>
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0">
         <p className="text-[11px] font-medium text-white/80 uppercase tracking-wider">{label}</p>
-        <p className="text-xl sm:text-2xl font-extrabold text-white mt-1.5 truncate">{value}</p>
+        <p className="text-xl sm:text-2xl font-extrabold text-fg mt-1.5 truncate">{value}</p>
       </div>
       <div className="p-2.5 rounded-xl bg-white/15 text-white shrink-0">{icon}</div>
     </div>
@@ -42,7 +42,7 @@ const TodayToggle = ({ employee, asOf, onChange, isPending }) => {
   if (!canMark) return <span className="text-xs text-gray-600">—</span>;
 
   return (
-    <div className={`inline-flex rounded-lg border border-[#383838] overflow-hidden ${isPending ? "opacity-50" : ""}`}>
+    <div className={`inline-flex rounded-lg border border-line-strong overflow-hidden ${isPending ? "opacity-50" : ""}`}>
       {["present", "half-day", "leave"].map((status) => {
         const active = employee.todayStatus === status;
         const s = ATTENDANCE_STYLES[status];
@@ -52,7 +52,7 @@ const TodayToggle = ({ employee, asOf, onChange, isPending }) => {
             disabled={isPending || active}
             onClick={() => onChange(status)}
             className={`px-2 py-1 text-[10px] font-bold uppercase transition cursor-pointer ${
-              active ? `${s.chip} border-0` : "text-gray-500 hover:text-gray-200 hover:bg-[#2a2a2a]"
+              active ? `${s.chip} border-0` : "text-gray-500 hover:text-fg hover:bg-muted"
             }`}
             title={`Mark today as ${s.label}`}
           >
@@ -134,21 +134,21 @@ const AdminEmployeesView = () => {
     return (
       <tr
         key={row._id}
-        className={`border-b border-[#333] hover:bg-[#252525] transition-colors ${row.isActive ? "" : "opacity-60"}`}
+        className={`border-b border-line-strong hover:bg-elevated transition-colors ${row.isActive ? "" : "opacity-60"}`}
       >
         <td className="p-4">
           <button
             onClick={() => setDetailsId(row._id)}
             className="flex items-center gap-3 text-left cursor-pointer group"
           >
-            <span className="h-10 w-10 rounded-xl bg-[#2a2a2a] text-[#f6b100] font-bold text-sm flex items-center justify-center shrink-0">
+            <span className="h-10 w-10 rounded-xl bg-muted text-accent font-bold text-sm flex items-center justify-center shrink-0">
               {getAvatarName(row.name)}
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-white group-hover:text-[#f6b100] truncate">
+              <p className="text-sm font-bold text-fg group-hover:text-accent truncate">
                 {row.name}
               </p>
-              <p className="text-[11px] text-gray-400 truncate">
+              <p className="text-[11px] text-fg-dim truncate">
                 {getPositionLabel(row)}
                 {row.phone ? ` · ${row.phone}` : ""}
                 {!row.isActive && " · Inactive"}
@@ -157,9 +157,9 @@ const AdminEmployeesView = () => {
           </button>
         </td>
         <td className="p-4 whitespace-nowrap">
-          <p className="text-sm text-gray-200">{formatRs(row.currentDailySalary)}</p>
+          <p className="text-sm text-fg">{formatRs(row.currentDailySalary)}</p>
           {row.dailySalary !== row.currentDailySalary && (
-            <p className="text-[11px] text-[#f6b100]/80">
+            <p className="text-[11px] text-accent/80">
               {formatRs(row.dailySalary)} scheduled
             </p>
           )}
@@ -170,10 +170,10 @@ const AdminEmployeesView = () => {
             {ms.leaveDays} leave{ms.halfDays ? ` · ${ms.halfDays} half` : ""}
           </p>
         </td>
-        <td className="p-4 text-sm text-white font-semibold whitespace-nowrap">{formatRs(ms.earned)}</td>
+        <td className="p-4 text-sm text-fg font-semibold whitespace-nowrap">{formatRs(ms.earned)}</td>
         <td className="p-4 text-sm text-purple-300 whitespace-nowrap">{formatRs(ms.withdrawn)}</td>
         <td className="p-4 whitespace-nowrap">
-          <p className={`text-sm font-extrabold ${ms.balance < 0 ? "text-red-400" : "text-[#f6b100]"}`}>
+          <p className={`text-sm font-extrabold ${ms.balance < 0 ? "text-red-400" : "text-accent"}`}>
             {formatRs(ms.balance)}
           </p>
           <p className={`text-[11px] ${os.balance < 0 ? "text-red-400/80" : "text-gray-500"}`}>
@@ -197,7 +197,7 @@ const AdminEmployeesView = () => {
           <div className="flex items-center justify-center gap-2">
             <button
               onClick={() => setDetailsId(row._id)}
-              className="p-2 rounded-lg text-[#f6b100] bg-[#f6b100]/10 hover:bg-[#f6b100]/25 cursor-pointer"
+              className="p-2 rounded-lg text-accent bg-[#f6b100]/10 hover:bg-[#f6b100]/25 cursor-pointer"
               title="View attendance & salary"
             >
               <FaEye className="text-sm" />
@@ -225,17 +225,17 @@ const AdminEmployeesView = () => {
   return (
     <div className="flex flex-col h-full space-y-4">
       {/* Top Banner */}
-      <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5 flex-wrap">
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+            <h2 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
               Employee Management
             </h2>
-            <span className="bg-[#f6b100]/20 text-[#f6b100] border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
+            <span className="bg-[#f6b100]/20 text-accent border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
               {totals?.activeEmployees ?? 0} Active
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-fg-dim mt-0.5">
             Staff profiles, daily attendance, leave, salary advances and remaining balances.
           </p>
         </div>
@@ -281,10 +281,10 @@ const AdminEmployeesView = () => {
       </div>
 
       {/* Toolbar */}
-      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <MonthSwitcher month={month} onChange={setMonth} />
-          <div className="flex bg-[#242424] border border-[#383838] rounded-xl p-1">
+          <div className="flex bg-elevated border border-line-strong rounded-xl p-1">
             {[
               ["active", "Active"],
               ["inactive", "Inactive"],
@@ -294,7 +294,7 @@ const AdminEmployeesView = () => {
                 key={key}
                 onClick={() => setStatusFilter(key)}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer ${
-                  statusFilter === key ? "bg-[#f6b100] text-black" : "text-gray-400 hover:text-white"
+                  statusFilter === key ? "bg-[#f6b100] text-black" : "text-fg-dim hover:text-fg"
                 }`}
               >
                 {label}
@@ -310,16 +310,16 @@ const AdminEmployeesView = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search name, position, phone, NIC..."
-            className="w-full bg-[#242424] text-white text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none transition"
+            className="w-full bg-elevated text-fg text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none transition"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="flex-1 bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-auto">
           {isLoading ? (
-            <p className="text-sm text-gray-400 text-center p-12">Loading employees...</p>
+            <p className="text-sm text-fg-dim text-center p-12">Loading employees...</p>
           ) : isError ? (
             <p className="text-sm text-red-400 text-center p-12">
               {apiError(error, "Failed to load employees.")}
@@ -329,7 +329,7 @@ const AdminEmployeesView = () => {
           ) : (
             <div className="flex flex-col items-center justify-center p-12 text-center">
               <MdBadge className="text-4xl text-gray-600 mb-3" />
-              <h3 className="text-base font-semibold text-gray-300">
+              <h3 className="text-base font-semibold text-fg-soft">
                 {employees.length ? "No matching employees" : "No employee profiles yet"}
               </h3>
               <p className="text-xs text-gray-500 mt-1 max-w-sm">

@@ -386,7 +386,7 @@ const Dashboard = () => {
     isCategoriesLoading || isTablesLoading || isItemsLoading;
 
   return (
-    <div className="flex h-full w-full bg-[#121212] overflow-hidden">
+    <div className="flex h-full w-full bg-base overflow-hidden">
       {/* Left Navigation Sidebar */}
       <AdminSidebar
         activeSection={activeSection}
@@ -399,17 +399,17 @@ const Dashboard = () => {
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-[#121212]">
+      <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden bg-base">
         {/* Mobile Header Bar */}
-        <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#181818] border-b border-[#2d2d2d] shrink-0">
+        <div className="md:hidden flex items-center justify-between px-4 py-3 bg-bar border-b border-bar-line shrink-0">
           <button
             onClick={() => setIsMobileOpen(true)}
-            className="flex items-center gap-2 text-gray-300 hover:text-white p-1 rounded-lg bg-[#242424] px-2.5 py-1.5 cursor-pointer"
+            className="flex items-center gap-2 text-fg-soft hover:text-fg p-1 rounded-lg bg-elevated px-2.5 py-1.5 cursor-pointer"
           >
-            <MdMenu className="text-lg text-[#f6b100]" />
+            <MdMenu className="text-lg text-accent" />
             <span className="text-xs font-semibold">Admin Nav</span>
           </button>
-          <span className="text-xs font-bold text-[#f6b100] uppercase tracking-wider">
+          <span className="text-xs font-bold text-accent uppercase tracking-wider">
             {activeSection.replace("-", " ")}
           </span>
         </div>
@@ -491,11 +491,11 @@ const Dashboard = () => {
 
               {activeSection === "best-selling" && (
                 <div className="flex flex-col space-y-4">
-                  <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 shadow-sm">
-                    <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+                  <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <h2 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
                       Best Selling Products
                     </h2>
-                    <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+                    <p className="text-xs sm:text-sm text-fg-dim mt-0.5">
                       Top performing items ranked by sales volume and income.
                     </p>
                   </div>

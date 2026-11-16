@@ -231,23 +231,23 @@ const DashBoardTable = () => {
   };
 
   const renderRow = (row, index) => (
-    <tr className="border-b border-[#444] hover:bg-[#2a2a2a] transition-colors duration-200" key={index}>
+    <tr className="border-b border-line-stronger hover:bg-muted transition-colors duration-200" key={index}>
       {section === "total-categories" && (
         <>
           <td className="p-4 font-medium">{row.name}</td>
           <td className="p-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#f6b100] bg-opacity-20 text-[#f6b100]">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#f6b100]/20 text-accent">
               {statusGetting(row.mealType)}
             </span>
           </td>
-          <td className="p-4 text-gray-400">{row.description}</td>
+          <td className="p-4 text-fg-dim">{row.description}</td>
         </>
       )}
       {section === "total-items" && (
         <>
           <td className="p-4 font-medium">{row.name}</td>
-          <td className="p-4 text-[#f6b100] font-semibold">Rs. {row.price}</td>
-          <td className="p-4 text-gray-400">{row.description}</td>
+          <td className="p-4 text-accent font-semibold">Rs. {row.price}</td>
+          <td className="p-4 text-fg-dim">{row.description}</td>
         </>
       )}
       {section === "total-tables" && (
@@ -260,21 +260,21 @@ const DashBoardTable = () => {
         <div className="gap-3 flex justify-center">
           <button
             onClick={() => handleEdit(row)}
-            className="text-blue-400 hover:text-blue-300 cursor-pointer bg-blue-500 bg-opacity-10 hover:bg-opacity-20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
+            className="text-blue-400 hover:text-blue-300 cursor-pointer bg-blue-500/10 hover:bg-blue-500/20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
             title="Edit"
           >
             <FaEdit />
           </button>
           <button
             onClick={() => handleDelete(row)}
-            className="text-red-400 hover:text-red-300 cursor-pointer bg-red-500 bg-opacity-10 hover:bg-opacity-20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
+            className="text-red-400 hover:text-red-300 cursor-pointer bg-red-500/10 hover:bg-red-500/20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
             title="Delete"
           >
             <FaTrash />
           </button>
           <button
             onClick={() => handleDelete(row)}
-            className="text-gray-400 hover:text-gray-300 cursor-pointer bg-gray-500 bg-opacity-10 hover:bg-opacity-20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
+            className="text-fg-dim hover:text-fg-soft cursor-pointer bg-gray-500/10 hover:bg-gray-500/20 p-2 rounded-lg transition-all duration-200 hover:scale-110"
             title="Disable"
           >
             <FaBan />
@@ -289,24 +289,24 @@ const DashBoardTable = () => {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
   return (
-    <div className="bg-[#262626] p-3 sm:p-6 w-full h-full overflow-hidden flex flex-col pb-20 md:pb-6 min-h-0">
+    <div className="bg-elevated p-3 sm:p-6 w-full h-full overflow-hidden flex flex-col pb-20 md:pb-6 min-h-0">
       {queryLoading ? (
         <div className="flex justify-center items-center h-32">
           <FullScreenLoader />
         </div>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 sm:px-6 py-3 sm:py-5 gap-2 sm:gap-3 bg-[#1f1f1f] rounded-lg shadow-md mb-3 sm:mb-4 shrink-0">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-3 sm:px-6 py-3 sm:py-5 gap-2 sm:gap-3 bg-surface rounded-lg shadow-md mb-3 sm:mb-4 shrink-0">
             {/* Left: Back + Title */}
             <div className="flex items-center gap-3 sm:gap-4">
               <BackButton />
-              <h2 className="text-lg sm:text-2xl text-white font-bold tracking-wide">{readableTitle}</h2>
+              <h2 className="text-lg sm:text-2xl text-fg font-bold tracking-wide">{readableTitle}</h2>
             </div>
 
             {/* Right: Result Count */}
             {section === "total-items" && (
-              <span className="text-xs sm:text-sm text-gray-400 self-start sm:self-auto bg-[#2a2a2a] px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
-                Showing <span className="text-[#f6b100] font-semibold">{tableData.length}</span> result(s)
+              <span className="text-xs sm:text-sm text-fg-dim self-start sm:self-auto bg-muted px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">
+                Showing <span className="text-accent font-semibold">{tableData.length}</span> result(s)
               </span>
             )}
           </div>

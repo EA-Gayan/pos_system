@@ -16,7 +16,7 @@ const OrderCard = ({ order }) => {
   return (
     <>
       <div
-        className="w-full bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-3.5 sm:p-5 rounded-xl mb-3 sm:mb-4 mx-auto shadow-lg hover:shadow-2xl hover:scale-102 active:scale-98 transition-all duration-300 cursor-pointer border border-[#333]"
+        className="w-full bg-gradient-to-br from-elevated to-surface p-3.5 sm:p-5 rounded-xl mb-3 sm:mb-4 mx-auto shadow-lg hover:shadow-2xl hover:scale-102 active:scale-98 transition-all duration-300 cursor-pointer border border-line-strong"
         onClick={handleorderclick}
       >
         <div className="flex items-center gap-3 sm:gap-5">
@@ -25,10 +25,10 @@ const OrderCard = ({ order }) => {
           </button>
           <div className="flex items-center justify-between w-full min-w-0">
             <div className="flex flex-col items-start gap-0.5 sm:gap-1 min-w-0 pr-2">
-              <h1 className="text-[#f5f5f5] text-sm sm:text-lg font-semibold tracking-wide truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
+              <h1 className="text-fg text-sm sm:text-lg font-semibold tracking-wide truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
                 {order?.customerDetails?.name ?? "N/A"}
               </h1>
-              <p className="text-[#ababab] text-xs sm:text-sm truncate">#{order?.orderId}</p>
+              <p className="text-fg-muted text-xs sm:text-sm truncate">#{order?.orderId}</p>
             </div>
             <div className="flex flex-col items-end gap-1 sm:gap-2 shrink-0">
               {order?.orderStatus === OrderTypes.COMPLETE ? (
@@ -36,7 +36,7 @@ const OrderCard = ({ order }) => {
                   <p className="text-green-400 bg-green-500/20 px-2 sm:px-3 py-1 rounded-lg font-semibold text-xs sm:text-sm">
                     <FaCheckDouble className="inline" />
                   </p>
-                  <p className="text-[#ababab] text-[11px] sm:text-sm">
+                  <p className="text-fg-muted text-[11px] sm:text-sm">
                     <FaCircle className="inline mr-1 text-green-400 text-[9px] sm:text-xs" /> Order Delivered
                   </p>
                 </>
@@ -45,7 +45,7 @@ const OrderCard = ({ order }) => {
                   <p className="text-yellow-400 bg-yellow-500/20 px-2 sm:px-3 py-1 rounded-lg font-semibold text-xs sm:text-sm">
                     <FaCircle className="inline text-[9px]" />
                   </p>
-                  <p className="text-[#ababab] text-[11px] sm:text-sm">
+                  <p className="text-fg-muted text-[11px] sm:text-sm">
                     <FaCircle className="inline mr-1 text-yellow-400 text-[9px] sm:text-xs" /> In Progress
                   </p>
                 </>
@@ -53,14 +53,14 @@ const OrderCard = ({ order }) => {
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center mt-3 sm:mt-4 text-[#ababab] text-xs sm:text-sm">
+        <div className="flex justify-between items-center mt-3 sm:mt-4 text-fg-muted text-xs sm:text-sm">
           <p>{formatDateAndTime(order?.createdAt)}</p>
           <p>{order?.items?.length} Items</p>
         </div>
-        <hr className="w-full mt-3 sm:mt-4 border-t border-[#333]" />
+        <hr className="w-full mt-3 sm:mt-4 border-t border-line-strong" />
         <div className="flex items-center justify-between mt-3 sm:mt-4">
-          <h1 className="text-[#f5f5f5] text-sm sm:text-lg font-semibold">Total</h1>
-          <p className="text-[#f6b100] text-sm sm:text-lg font-bold">
+          <h1 className="text-fg text-sm sm:text-lg font-semibold">Total</h1>
+          <p className="text-accent text-sm sm:text-lg font-bold">
             Rs {order?.bills?.totalPayable?.toFixed(2)}
           </p>
         </div>

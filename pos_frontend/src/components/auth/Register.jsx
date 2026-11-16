@@ -54,71 +54,71 @@ const Register = ({ setIsRegister }) => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label className="block text-[#ababab] mb-2 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 text-sm font-medium">
             Employee Name
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter employee name"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Employee Email
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter employee email"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Employee Phone
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type="text"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter employee phone"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Password
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter password"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Choose your role
           </label>
 
@@ -129,8 +129,10 @@ const Register = ({ setIsRegister }) => {
                   key={role}
                   type="button"
                   onClick={() => handleRoleSelection(role)}
-                  className={`bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] cursor-pointer ${
-                    formData.role === role ? "bg-indigo-700" : ""
+                  className={`px-4 py-3 w-full rounded-lg cursor-pointer border border-line ${
+                    formData.role === role
+                      ? "bg-indigo-700 text-white"
+                      : "bg-surface text-fg-muted"
                   }`}
                 >
                   {role}

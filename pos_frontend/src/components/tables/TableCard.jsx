@@ -38,10 +38,10 @@ const TableCard = ({ id, name, status, initials, seats, draftTotal }) => {
     <div
       onClick={() => handleClick(name)}
       key={id}
-      className="hover:bg-[#2c2c2c] bg-gradient-to-br from-[#262626] to-[#1f1f1f] p-3 sm:p-5 rounded-xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-98 transition-all duration-300 border border-[#333] flex flex-col justify-between"
+      className="hover:bg-muted bg-gradient-to-br from-elevated to-surface p-3 sm:p-5 rounded-xl cursor-pointer shadow-lg hover:shadow-2xl hover:scale-105 active:scale-98 transition-all duration-300 border border-line-strong flex flex-col justify-between"
     >
       <div className="flex items-center justify-between gap-1 px-0.5">
-        <h1 className="text-[#f5f5f5] text-sm sm:text-xl font-bold truncate">
+        <h1 className="text-fg text-sm sm:text-xl font-bold truncate">
           Table {name}
         </h1>
         <p
@@ -57,16 +57,16 @@ const TableCard = ({ id, name, status, initials, seats, draftTotal }) => {
       </div>
       <div className="flex items-center justify-center my-4 sm:my-7">
         <div
-          className={`text-white rounded-full h-16 w-16 sm:h-20 sm:w-20 flex items-center justify-center text-center font-bold shadow-lg text-xs sm:text-lg px-1 ${
+          className={`text-fg rounded-full h-16 w-16 sm:h-20 sm:w-20 flex items-center justify-center text-center font-bold shadow-lg text-xs sm:text-lg px-1 ${
             draftTotal !== null && draftTotal !== undefined ? "text-[11px] sm:text-base leading-tight" : ""
           }`}
-          style={{ backgroundColor: hasContent ? "#e5a400" : "#2a2a2a" }}
+          style={{ backgroundColor: hasContent ? "#e5a400" : "var(--muted)" }}
         >
           <span className="truncate">{avatarContent()}</span>
         </div>
       </div>
-      <p className="text-[#ababab] text-[11px] sm:text-xs">
-        Seats: <span className="text-[#f5f5f5] font-semibold">{seats}</span>
+      <p className="text-fg-muted text-[11px] sm:text-xs">
+        Seats: <span className="text-fg font-semibold">{seats}</span>
       </p>
     </div>
   );

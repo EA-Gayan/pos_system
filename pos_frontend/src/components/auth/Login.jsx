@@ -63,10 +63,10 @@ const Login = () => {
     <div>
       <form>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Employee Email
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type="email"
               name="email"
@@ -75,16 +75,16 @@ const Login = () => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               placeholder="Enter employee email"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
           </div>
         </div>
         <div>
-          <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 mt-3 text-sm font-medium">
             Password
           </label>
-          <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex items-center rounded-lg p-5 px-4 bg-surface border border-line focus-within:border-[#f6b100]/60">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -93,13 +93,13 @@ const Login = () => {
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               placeholder="Enter password"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-fg focus:outline-none"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="text-[#ababab] hover:text-white focus:outline-none ml-2"
+              className="text-fg-muted hover:text-fg focus:outline-none ml-2"
             >
               {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
             </button>

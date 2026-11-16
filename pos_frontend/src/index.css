@@ -1,7 +1,110 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 @import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Theme tokens
+   Dark is the default. <html data-theme="light"> switches to light.
+   Add `theme-dark` to any element sitting on a strong colored background
+   (e.g. inline-styled stat cards) to keep its text light in both themes.
+   ------------------------------------------------------------------ */
+:root,
+.theme-dark {
+  --base: #1a1a1a; /* page background */
+  --surface: #1f1f1f; /* cards, panels, header buttons */
+  --elevated: #252525; /* nested blocks inside cards */
+  --muted: #2a2a2a; /* inputs, hover states */
+  --strong: #333333; /* selected / pressed states */
+  --stronger: #444444;
+  --topbar: #1a1a1a; /* main app header */
+  --bar: #1a1a1a; /* page sub-header bars (Home, Menu, Orders...) */
+  --bar-line: #2d2d2d;
+  --field: #1f1f1f; /* search box in the top header */
+
+  --line-soft: #262626;
+  --line: #2d2d2d;
+  --line-strong: #333333;
+  --line-stronger: #444444;
+
+  --fg: #f5f5f5;
+  --fg-soft: #d1d5db;
+  --fg-muted: #ababab;
+  --fg-dim: #9ca3af;
+  --fg-subtle: #888888;
+  --fg-faint: #666666;
+
+  --accent: #f6b100; /* accent used as text */
+  --accent-soft: #ffcc33;
+
+  --scrollbar: rgba(255, 255, 255, 0.25);
+  --scrollbar-track: rgba(255, 255, 255, 0.05);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --base: #f3f4f6;
+  --surface: #ffffff;
+  --elevated: #f6f7f8;
+  --muted: #eceef1;
+  --strong: #e2e5e9;
+  --stronger: #d1d5db;
+  --topbar: #ffffff;
+  --bar: #fbfbfc; /* faintest ash, almost white */
+  --bar-line: #e3e5e8;
+  --field: #f1f2f4;
+
+  --line-soft: #eef0f2;
+  --line: #e3e5e8;
+  --line-strong: #d4d7dc;
+  --line-stronger: #b8bcc3;
+
+  --fg: #1a1a1a;
+  --fg-soft: #374151;
+  --fg-muted: #5c6066;
+  --fg-dim: #6b7280;
+  --fg-subtle: #80858c;
+  --fg-faint: #9ca3af;
+
+  --accent: #a36f00; /* darker amber so it stays readable on white */
+  --accent-soft: #b57d00;
+
+  --scrollbar: rgba(0, 0, 0, 0.22);
+  --scrollbar-track: rgba(0, 0, 0, 0.05);
+  color-scheme: light;
+}
+
+/* `inline` makes utilities resolve var() at the element, so .theme-dark works */
+@theme inline {
+  --color-base: var(--base);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-muted: var(--muted);
+  --color-strong: var(--strong);
+  --color-stronger: var(--stronger);
+  --color-topbar: var(--topbar);
+  --color-bar: var(--bar);
+  --color-bar-line: var(--bar-line);
+  --color-field: var(--field);
+
+  --color-line-soft: var(--line-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-stronger: var(--line-stronger);
+
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-dim: var(--fg-dim);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-faint: var(--fg-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+}
+
 body {
   font-family: "Inter", sans-serif;
+  background-color: var(--base);
+  color: var(--fg);
 }
 
 html {
@@ -19,7 +122,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--scrollbar);
   border-radius: 9999px;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -40,7 +143,7 @@ html {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: var(--scrollbar) transparent;
 }
 
 /* Touch Screen Friendly Larger Scrollbar for POS Lists */
@@ -50,15 +153,15 @@ html {
 }
 
 .touch-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--scrollbar-track);
   border-radius: 9999px;
   margin: 4px 0;
 }
 
 .touch-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--scrollbar);
   border-radius: 9999px;
-  border: 2px solid #1f1f1f;
+  border: 2px solid var(--surface);
   transition: all 0.2s ease-in-out;
 }
 
@@ -70,7 +173,7 @@ html {
 
 .touch-scrollbar {
   scrollbar-width: auto;
-  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.05);
+  scrollbar-color: var(--scrollbar) var(--scrollbar-track);
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
 }
@@ -83,7 +186,7 @@ html {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #1f1f1f; /* White background with some transparency */
+  background-color: var(--surface);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,7 +194,7 @@ html {
 }
 
 .spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
+  border: 4px solid var(--scrollbar);
   border-top: 4px solid #f6b100; /* Blue color for spinner */
   border-radius: 50%;
   width: 50px;

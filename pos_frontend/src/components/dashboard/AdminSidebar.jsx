@@ -157,19 +157,19 @@ const AdminSidebar = ({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#181818] border-r border-[#2d2d2d] text-gray-300 select-none">
+    <div className="flex flex-col h-full bg-base border-r border-line text-fg-soft select-none">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-[#2d2d2d] flex items-center justify-between shrink-0">
+      <div className="p-4 border-b border-line flex items-center justify-between shrink-0">
         <div className={`flex items-center gap-3 overflow-hidden ${isCollapsed ? "justify-center w-full" : ""}`}>
           <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#f6b100] to-amber-500 flex items-center justify-center text-black font-extrabold text-lg shadow-md shrink-0">
             A
           </div>
           {!isCollapsed && (
             <div className="min-w-0">
-              <h2 className="text-sm font-bold text-white tracking-wide truncate">
+              <h2 className="text-sm font-bold text-fg tracking-wide truncate">
                 Admin Panel
               </h2>
-              <p className="text-[11px] text-gray-400 truncate">
+              <p className="text-[11px] text-fg-dim truncate">
                 Jayanthi Hotel POS
               </p>
             </div>
@@ -179,7 +179,7 @@ const AdminSidebar = ({
         {/* Mobile close button */}
         <button
           onClick={() => setIsMobileOpen(false)}
-          className="md:hidden text-gray-400 hover:text-white p-1 rounded-lg hover:bg-[#262626] cursor-pointer"
+          className="md:hidden text-fg-dim hover:text-fg p-1 rounded-lg hover:bg-elevated cursor-pointer"
           title="Close Navigation"
         >
           <MdClose className="text-xl" />
@@ -204,13 +204,13 @@ const AdminSidebar = ({
                   title={isCollapsed ? item.label : undefined}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all duration-150 cursor-pointer text-left group ${
                     isSelected
-                      ? "bg-[#282828] text-[#f6b100] font-semibold shadow-inner border-l-4 border-[#f6b100]"
-                      : "text-gray-400 hover:text-gray-100 hover:bg-[#222222]"
+                      ? "bg-elevated text-accent font-semibold shadow-inner border-l-4 border-[#f6b100]"
+                      : "text-fg-dim hover:text-fg hover:bg-elevated"
                   } ${isCollapsed ? "justify-center px-2" : ""}`}
                 >
                   <span
                     className={`shrink-0 transition-transform duration-150 group-hover:scale-110 ${
-                      isSelected ? "text-[#f6b100]" : "text-gray-400 group-hover:text-gray-200"
+                      isSelected ? "text-accent" : "text-fg-dim group-hover:text-fg"
                     }`}
                   >
                     {item.icon}
@@ -222,8 +222,8 @@ const AdminSidebar = ({
                     <span
                       className={`text-[11px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${
                         isSelected
-                          ? "bg-[#f6b100]/20 text-[#f6b100]"
-                          : "bg-[#262626] text-gray-400 group-hover:text-gray-200"
+                          ? "bg-[#f6b100]/20 text-accent"
+                          : "bg-elevated text-fg-dim group-hover:text-fg"
                       }`}
                     >
                       {item.count}
@@ -237,23 +237,23 @@ const AdminSidebar = ({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-3 border-t border-[#2d2d2d] shrink-0 space-y-2 bg-[#141414]">
+      <div className="p-3 border-t border-line shrink-0 space-y-2 bg-base">
         {/* Return to POS button */}
         <button
           onClick={() => navigate("/tables")}
-          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-[#222222] transition cursor-pointer ${
+          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-fg-soft hover:text-fg hover:bg-elevated transition cursor-pointer ${
             isCollapsed ? "justify-center px-2" : ""
           }`}
           title="Return to Cashier / Dining Tables"
         >
-          <FaHome className="text-base text-[#f6b100] shrink-0" />
+          <FaHome className="text-base text-accent shrink-0" />
           {!isCollapsed && <span className="truncate">Back to POS</span>}
         </button>
 
         {/* Desktop Collapse Toggle */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="hidden md:flex w-full items-center justify-center gap-2 px-3 py-1.5 rounded-lg text-xs text-gray-500 hover:text-gray-300 hover:bg-[#1f1f1f] transition cursor-pointer"
+          className="hidden md:flex w-full items-center justify-center gap-2 px-3 py-1.5 rounded-lg text-xs text-gray-500 hover:text-fg-soft hover:bg-surface transition cursor-pointer"
           title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
           {isCollapsed ? (

@@ -95,8 +95,8 @@ const CategorySelect = ({ categories, value, onChange, loading, autoFocus }) => 
   return (
     <div ref={wrapRef} className="relative">
       <div
-        className={`flex items-center gap-2 rounded-lg px-4 bg-[#1f1f1f] border transition ${
-          open ? "border-[#f6b100]" : selectedCat ? "border-[#f6b100]/60" : "border-[#2f2f2f]"
+        className={`flex items-center gap-2 rounded-lg px-4 bg-surface border transition ${
+          open ? "border-[#f6b100]" : selectedCat ? "border-[#f6b100]/60" : "border-line"
         }`}
       >
         <FaSearch className="text-gray-500 text-xs shrink-0" />
@@ -112,7 +112,7 @@ const CategorySelect = ({ categories, value, onChange, loading, autoFocus }) => 
           onClick={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={loading ? "Loading..." : "Search category / වර්ගය සොයන්න"}
-          className="bg-transparent flex-1 min-w-0 py-3 text-white focus:outline-none placeholder:text-gray-500"
+          className="bg-transparent flex-1 min-w-0 py-3 text-fg focus:outline-none placeholder:text-gray-500"
           role="combobox"
           aria-expanded={open}
           aria-autocomplete="list"
@@ -126,7 +126,7 @@ const CategorySelect = ({ categories, value, onChange, loading, autoFocus }) => 
         <ul
           ref={listRef}
           role="listbox"
-          className="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-lg bg-[#242424] border border-[#383838] shadow-2xl py-1"
+          className="absolute z-20 mt-1 w-full max-h-60 overflow-y-auto rounded-lg bg-elevated border border-line-strong shadow-2xl py-1"
         >
           {filtered.length === 0 ? (
             <li className="px-4 py-3 text-sm text-gray-500">
@@ -148,10 +148,10 @@ const CategorySelect = ({ categories, value, onChange, loading, autoFocus }) => 
                 onMouseEnter={() => setHighlight(i)}
                 className={`flex items-baseline justify-between gap-3 px-4 py-2.5 cursor-pointer ${
                   i === highlight ? "bg-[#f6b100]/15" : ""
-                } ${c._id === value ? "text-[#f6b100]" : "text-white"}`}
+                } ${c._id === value ? "text-accent" : "text-fg"}`}
               >
                 <span className="text-sm font-semibold truncate">{c.nameSi}</span>
-                <span className="text-xs text-gray-400 truncate">{c.nameEn}</span>
+                <span className="text-xs text-fg-dim truncate">{c.nameEn}</span>
               </li>
             ))
           )}
@@ -245,15 +245,15 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="bg-[#1a1a1a] rounded-lg shadow-lg w-full max-w-lg mx-4"
+        className="bg-base rounded-lg shadow-lg w-full max-w-lg mx-4"
       >
-        <div className="flex justify-between items-center px-6 py-4 border-b border-b-[#333]">
-          <h2 className="text-xl text-[#f5f5f5] font-semibold">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-b-line-strong">
+          <h2 className="text-xl text-fg font-semibold">
             {isEdit ? "Update Expense" : "Add Expense"}
           </h2>
           <button
             type="button"
-            className="text-gray-500 text-2xl hover:text-gray-300 cursor-pointer"
+            className="text-gray-500 text-2xl hover:text-fg-soft cursor-pointer"
             onClick={onClose}
           >
             &times;
@@ -261,13 +261,13 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
         </div>
 
         <div className="p-6">
-          <label className="block text-[#ababab] mb-2 text-sm font-medium">
+          <label className="block text-fg-muted mb-2 text-sm font-medium">
             Category / වර්ගය
           </label>
 
           {legacyDescription && !selected && (
-            <p className="text-xs text-gray-400 mb-2">
-              Current: <span className="text-white">{legacyDescription}</span> — pick a
+            <p className="text-xs text-fg-dim mb-2">
+              Current: <span className="text-fg">{legacyDescription}</span> — pick a
               category to change it, or just update the amount.
             </p>
           )}
@@ -296,13 +296,13 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
 
           {isEmployee && (
             <div className="mt-4">
-              <label className="block text-[#ababab] mb-2 text-sm font-medium">
+              <label className="block text-fg-muted mb-2 text-sm font-medium">
                 Employee / සේවකයා
               </label>
               <select
                 value={employeeId}
                 onChange={(e) => setEmployeeId(e.target.value)}
-                className="w-full rounded-lg p-3 px-4 bg-[#1f1f1f] text-white focus:outline-none border border-[#2f2f2f] focus:border-[#f6b100]"
+                className="w-full rounded-lg p-3 px-4 bg-surface text-fg focus:outline-none border border-line focus:border-[#f6b100]"
               >
                 <option value="">
                   {loadingEmployees ? "Loading..." : "Select employee"}
@@ -328,10 +328,10 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
           )}
 
           <div className="mt-4">
-            <label className="block text-[#ababab] mb-2 text-sm font-medium">
+            <label className="block text-fg-muted mb-2 text-sm font-medium">
               Amount (Rs.) / මුදල
             </label>
-            <div className="flex items-center rounded-lg p-3 px-4 bg-[#1f1f1f]">
+            <div className="flex items-center rounded-lg p-3 px-4 bg-surface">
               <input
                 ref={amountRef}
                 type="number"
@@ -339,7 +339,7 @@ const Modal = ({ currentData, onRecordAdded, onClose }) => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
-                className="bg-transparent flex-1 text-white text-lg focus:outline-none"
+                className="bg-transparent flex-1 text-fg text-lg focus:outline-none"
                 min="0"
                 step="0.01"
               />

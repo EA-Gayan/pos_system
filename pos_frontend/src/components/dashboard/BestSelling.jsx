@@ -59,7 +59,7 @@ const BestSelling = ({ products }) => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#262626] overflow-hidden min-h-0">
+    <div className="flex flex-col h-full bg-elevated overflow-hidden min-h-0">
       <div className="flex-none px-3 sm:px-10 py-3 sm:py-4 flex items-center justify-between">
         <BackButton />
       </div>

@@ -18,7 +18,7 @@ const BottomNav = ({ isVisible = true }) => {
   return (
     <div
       className={[
-        "fixed bottom-0 left-0 right-0 bg-[#262626]/95 backdrop-blur-md border-t border-[#333] px-3 sm:px-8 md:px-12 lg:px-16 h-16 flex items-center justify-center z-50",
+        "fixed bottom-0 left-0 right-0 bg-elevated/95 backdrop-blur-md border-t border-line-strong px-3 sm:px-8 md:px-12 lg:px-16 h-16 flex items-center justify-center z-50",
         "transition-transform duration-300 ease-out will-change-transform pb-safe",
         isVisible ? "translate-y-0" : "translate-y-20",
       ].join(" ")}
@@ -32,8 +32,8 @@ const BottomNav = ({ isVisible = true }) => {
               onClick={() => navigate("/")}
               className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
                 isActive("/")
-                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+                  ? "text-accent bg-strong shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-fg-muted hover:text-fg hover:bg-muted"
               }`}
             >
               <FaHome className="shrink-0 text-base sm:text-xl" />
@@ -45,8 +45,8 @@ const BottomNav = ({ isVisible = true }) => {
             onClick={() => navigate("/tables")}
             className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
               isActive("/tables")
-                ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+                ? "text-accent bg-strong shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                : "text-fg-muted hover:text-fg hover:bg-muted"
             }`}
           >
             <MdTableBar className="shrink-0 text-base sm:text-xl" />
@@ -59,7 +59,7 @@ const BottomNav = ({ isVisible = true }) => {
           <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 -mt-7 sm:-mt-8 z-20 flex items-center justify-center pointer-events-auto">
             <button
               onClick={() => navigate("/menu")}
-              className={`bg-gradient-to-tr from-[#e5a400] to-[#f6b100] text-[#1a1a1a] rounded-full p-3.5 sm:p-4 shadow-2xl border-4 border-[#262626] cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ${
+              className={`bg-gradient-to-tr from-[#e5a400] to-[#f6b100] text-[#1a1a1a] rounded-full p-3.5 sm:p-4 shadow-2xl border-4 border-line-soft cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ${
                 isActive("/menu") ? "ring-4 ring-[#f6b100]/40 shadow-[#f6b100]/40" : ""
               }`}
               title="Menu"
@@ -76,8 +76,8 @@ const BottomNav = ({ isVisible = true }) => {
               onClick={() => navigate("/orders")}
               className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
                 isActive("/orders")
-                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+                  ? "text-accent bg-strong shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-fg-muted hover:text-fg hover:bg-muted"
               }`}
             >
               <MdOutlineReorder className="shrink-0 text-base sm:text-xl" />
@@ -90,8 +90,8 @@ const BottomNav = ({ isVisible = true }) => {
               onClick={() => navigate("/expenses")}
               className={`flex-1 max-w-[110px] sm:max-w-[160px] md:max-w-[200px] flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2.5 py-1.5 sm:py-2 px-1.5 sm:px-4 rounded-2xl font-semibold cursor-pointer transition-all duration-200 ${
                 isActive("/expenses")
-                  ? "text-[#f6b100] bg-[#333333] shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
-                  : "text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2e2e2e]"
+                  ? "text-accent bg-strong shadow-lg shadow-black/40 border border-[#f6b100]/25 font-bold scale-102"
+                  : "text-fg-muted hover:text-fg hover:bg-muted"
               }`}
             >
               <CiCircleMore className="shrink-0 text-base sm:text-xl" />

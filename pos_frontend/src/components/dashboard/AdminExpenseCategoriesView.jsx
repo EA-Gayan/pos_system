@@ -49,22 +49,22 @@ const CategoryFormModal = ({ category, onClose }) => {
   };
 
   const input =
-    "w-full bg-[#242424] text-white text-sm px-3 py-2.5 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none";
+    "w-full bg-elevated text-fg text-sm px-3 py-2.5 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none";
 
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4">
       <form
         onSubmit={submit}
-        className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl shadow-xl w-full max-w-md"
+        className="bg-base border border-line rounded-2xl shadow-xl w-full max-w-md"
       >
-        <div className="flex justify-between items-center px-5 py-4 border-b border-[#2d2d2d]">
-          <h2 className="text-base font-bold text-white">
+        <div className="flex justify-between items-center px-5 py-4 border-b border-line">
+          <h2 className="text-base font-bold text-fg">
             {isEdit ? "Edit Expense Category" : "Add Expense Category"}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-white text-xl cursor-pointer"
+            className="text-fg-dim hover:text-fg text-xl cursor-pointer"
           >
             <IoMdClose />
           </button>
@@ -72,7 +72,7 @@ const CategoryFormModal = ({ category, onClose }) => {
 
         <div className="p-5 space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-400 mb-1.5">
+            <label className="block text-xs font-semibold text-fg-dim mb-1.5">
               Name in Sinhala (සිංහල)
             </label>
             <input
@@ -84,7 +84,7 @@ const CategoryFormModal = ({ category, onClose }) => {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-400 mb-1.5">
+            <label className="block text-xs font-semibold text-fg-dim mb-1.5">
               Name in English
             </label>
             <input
@@ -142,17 +142,17 @@ const AdminExpenseCategoriesView = () => {
   const renderRow = (row, index) => (
     <tr
       key={row._id || index}
-      className="border-b border-[#333] hover:bg-[#252525] transition-colors duration-150"
+      className="border-b border-line-strong hover:bg-elevated transition-colors duration-150"
     >
-      <td className="p-4 font-semibold text-white">
+      <td className="p-4 font-semibold text-fg">
         <div className="flex items-center gap-2.5">
-          <span className="p-2 rounded-lg bg-[#2a2a2a] text-[#f6b100]">
+          <span className="p-2 rounded-lg bg-muted text-accent">
             <RiMoneyDollarCircleLine className="text-base" />
           </span>
           <span>{row.nameSi}</span>
         </div>
       </td>
-      <td className="p-4 text-gray-300">{row.nameEn}</td>
+      <td className="p-4 text-fg-soft">{row.nameEn}</td>
       <td className="p-4">
         <div className="flex items-center justify-center gap-2">
           <button
@@ -176,17 +176,17 @@ const AdminExpenseCategoriesView = () => {
 
   return (
     <div className="flex flex-col h-full space-y-4">
-      <div className="bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="bg-surface border border-line rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div>
           <div className="flex items-center gap-2.5">
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-wide">
+            <h2 className="text-lg sm:text-xl font-bold text-fg tracking-wide">
               Expense Categories
             </h2>
-            <span className="bg-[#f6b100]/20 text-[#f6b100] border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
+            <span className="bg-[#f6b100]/20 text-accent border border-[#f6b100]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
               {categories.length} Total
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-fg-dim mt-0.5">
             Staff pick one of these when adding an expense. "Employee Advance" is
             always available and is deducted from the employee's salary.
           </p>
@@ -201,7 +201,7 @@ const AdminExpenseCategoriesView = () => {
         </button>
       </div>
 
-      <div className="bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl p-3 sm:p-4">
+      <div className="bg-base border border-line rounded-2xl p-3 sm:p-4">
         <div className="relative w-full sm:w-80">
           <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs" />
           <input
@@ -209,12 +209,12 @@ const AdminExpenseCategoriesView = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search categories..."
-            className="w-full bg-[#242424] text-white text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none transition"
+            className="w-full bg-elevated text-fg text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none transition"
           />
         </div>
       </div>
 
-      <div className="flex-1 bg-[#1a1a1a] border border-[#2d2d2d] rounded-2xl overflow-hidden flex flex-col min-h-0">
+      <div className="flex-1 bg-base border border-line rounded-2xl overflow-hidden flex flex-col min-h-0">
         <div className="flex-1 overflow-x-auto overflow-y-auto">
           {isLoading ? (
             <p className="p-12 text-center text-sm text-gray-500">Loading...</p>
@@ -227,7 +227,7 @@ const AdminExpenseCategoriesView = () => {
           ) : (
             <div className="flex flex-col items-center justify-center p-12 text-center h-full">
               <RiMoneyDollarCircleLine className="text-4xl text-gray-600 mb-3" />
-              <h3 className="text-base font-semibold text-gray-300">
+              <h3 className="text-base font-semibold text-fg-soft">
                 {searchTerm ? "No matching categories" : "No expense categories yet"}
               </h3>
               <p className="text-xs text-gray-500 mt-1 max-w-sm">

@@ -185,7 +185,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen overflow-y-auto bg-[#121212] text-white">
+    <div className="min-h-screen overflow-y-auto bg-base text-fg">
       <div className="container mx-auto py-6 px-6 md:px-4">
         {isLoading ? (
           <div className="flex justify-center items-center h-32 mt-30">
@@ -195,7 +195,7 @@ useEffect(() => {
           <>
             <div className="flex flex-col justify-between ">
               <div>
-                <h2 className="font-semibold text-[#f5f5f5] text-xl">
+                <h2 className="font-semibold text-fg text-xl">
                   Item Details
                 </h2>
               </div>
@@ -206,16 +206,16 @@ useEffect(() => {
                     return (
                       <div
                         key={index}
-                        className="shadow-sm rounded-lg p-4"
+                        className="theme-dark shadow-sm rounded-lg p-4"
                         style={{ backgroundColor: item.color }}
                         onClick={() => handleClick(item.title)}
                       >
                         <div className="flex justify-between items-center">
-                          <p className="font-medium text-xs text-[#f5f5f5]">
+                          <p className="font-medium text-xs text-fg">
                             {item.title}
                           </p>
                         </div>
-                        <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                        <p className="mt-1 font-semibold text-2xl text-fg">
                           {item.count}
                         </p>
                       </div>
@@ -225,7 +225,7 @@ useEffect(() => {
             </div>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-8 sm:mt-12 gap-3">
               <div>
-                <h2 className="font-semibold text-[#f5f5f5] text-lg sm:text-xl">
+                <h2 className="font-semibold text-fg text-lg sm:text-xl">
                   Overall Performance
                 </h2>
               </div>
@@ -243,16 +243,16 @@ useEffect(() => {
                     Export Income
                   </button>
                   {exportOpen && (
-                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
+                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-surface border border-line-strong rounded-md shadow-2xl z-20">
                       <button
                         onClick={() => handleExport("today")}
-                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                       >
                         Today
                       </button>
                       <button
                         onClick={() => handleExport("week")}
-                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                       >
                         This Week
                       </button>
@@ -272,16 +272,16 @@ useEffect(() => {
                     Export Expense
                   </button>
                   {expenseExport && (
-                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-[#1f1f1f] border border-[#333] rounded-md shadow-2xl z-20">
+                    <div className="absolute right-0 mt-2 w-36 sm:w-40 bg-surface border border-line-strong rounded-md shadow-2xl z-20">
                       <button
                         onClick={() => handleExpenseExport("today")}
-                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                       >
                         Today
                       </button>
                       <button
                         onClick={() => handleExpenseExport("week")}
-                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-white hover:bg-gray-700 cursor-pointer"
+                        className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
                       >
                         This Week
                       </button>
@@ -293,11 +293,11 @@ useEffect(() => {
 
             <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 pb-20">
               <div
-                className="shadow-sm rounded-lg p-4"
+                className="theme-dark shadow-sm rounded-lg p-4"
                 style={{ backgroundColor: "#025cca" }}
               >
                 <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-[#f5f5f5]">
+                  <p className="font-medium text-xs text-fg">
                     Today Income
                   </p>
                   {/* <div className="flex items-center gap-1">
@@ -325,47 +325,47 @@ useEffect(() => {
                       </p>
                     </div> */}
                 </div>
-                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                <p className="mt-1 font-semibold text-2xl text-fg">
                   {totalEarning}
                 </p>
               </div>
               <div
-                className="shadow-sm rounded-lg p-4"
+                className="theme-dark shadow-sm rounded-lg p-4"
                 style={{ backgroundColor: "#02ca3a" }}
               >
                 <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-[#f5f5f5]">
+                  <p className="font-medium text-xs text-fg">
                     Today Expense
                   </p>
                 </div>
-                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                <p className="mt-1 font-semibold text-2xl text-fg">
                   {totalExpenses}
                 </p>
               </div>
               <div
-                className="shadow-sm rounded-lg p-4"
+                className="theme-dark shadow-sm rounded-lg p-4"
                 style={{ backgroundColor: "#be3e3f" }}
               >
                 <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-[#f5f5f5]">
+                  <p className="font-medium text-xs text-fg">
                     Today Orders Count
                   </p>
                 </div>
-                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                <p className="mt-1 font-semibold text-2xl text-fg">
                   {totalOrders}
                 </p>
               </div>
               <div
-                className="shadow-sm rounded-lg p-4 cursor-pointer hover:opacity-90 transition"
+                className="theme-dark shadow-sm rounded-lg p-4 cursor-pointer hover:opacity-90 transition"
                 style={{ backgroundColor: "#999400" }}
                 onClick={() => navigate("/dashboard/best-selling")}
               >
                 <div className="flex justify-between items-center">
-                  <p className="font-medium text-xs text-[#f5f5f5]">
+                  <p className="font-medium text-xs text-fg">
                     Best Selling Products
                   </p>
                 </div>
-                <p className="mt-1 font-semibold text-2xl text-[#f5f5f5]">
+                <p className="mt-1 font-semibold text-2xl text-fg">
                   {bestSellingCount} items
                 </p>
               </div>

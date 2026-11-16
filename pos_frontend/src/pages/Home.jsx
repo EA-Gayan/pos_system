@@ -47,20 +47,20 @@ const Home = () => {
     orderCount > 0 ? Math.round(totalEarning / orderCount) : 0;
 
   return (
-    <section className="bg-gradient-to-br from-[#1c1c1c] via-[#171717] to-[#222222] h-full flex flex-col min-h-0 overflow-hidden">
+    <section className="bg-gradient-to-br from-base via-base to-elevated h-full flex flex-col min-h-0 overflow-hidden">
       {/* Sub-Header matching Menu Page structure & alignment */}
-      <div className="flex items-center justify-between px-3 sm:px-8 md:px-10 py-3 sm:py-4 flex-none bg-[#1a1a1a] shadow-md border-b border-[#2c2c2c]">
+      <div className="flex items-center justify-between px-3 sm:px-8 md:px-10 py-3 sm:py-4 flex-none bg-bar shadow-md border-b border-bar-line">
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="bg-[#f6b100] text-[#1a1a1a] p-2 sm:p-2.5 rounded-xl text-lg sm:text-xl font-bold flex items-center justify-center shadow-md">
             <FaHome />
           </div>
-          <h1 className="text-[#f5f5f5] text-lg sm:text-2xl font-bold tracking-wider">
+          <h1 className="text-fg text-lg sm:text-2xl font-bold tracking-wider">
             Home
           </h1>
         </div>
 
         {/* Live Status indicator badge */}
-        <div className="flex items-center gap-2 bg-[#222] border border-[#333] px-3.5 py-1.5 rounded-full text-xs text-[#ababab] shadow-sm">
+        <div className="flex items-center gap-2 bg-elevated border border-line-strong px-3.5 py-1.5 rounded-full text-xs text-fg-muted shadow-sm">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="text-emerald-400 font-semibold">Live POS</span>
         </div>

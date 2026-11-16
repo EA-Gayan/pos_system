@@ -125,8 +125,8 @@ const MenuContainer = ({ isWaiterMode = false }) => {
   return (
     <div className="flex flex-col md:flex-row w-full h-full gap-2 sm:gap-4 p-2 sm:p-4 overflow-hidden">
       {/* Categories: Horizontal pills on mobile (< md), vertical sidebar on desktop (md+) */}
-      <div className="w-full md:w-44 lg:w-48 xl:w-52 md:h-full flex flex-col bg-[#1f1f1f] rounded-2xl p-2.5 sm:p-3 shadow-xl shrink-0">
-        <h2 className="hidden md:block text-base lg:text-lg font-bold text-white mb-2.5 px-1 border-l-4 border-[#f6b100] pl-2.5 sticky top-0 bg-[#1f1f1f] z-20 py-0.5">
+      <div className="w-full md:w-44 lg:w-48 xl:w-52 md:h-full flex flex-col bg-surface rounded-2xl p-2.5 sm:p-3 shadow-xl shrink-0">
+        <h2 className="hidden md:block text-base lg:text-lg font-bold text-fg mb-2.5 px-1 border-l-4 border-[#f6b100] pl-2.5 sticky top-0 bg-surface z-20 py-0.5">
           Categories
         </h2>
 
@@ -141,7 +141,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                 className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer min-h-[40px] flex items-center ${
                   isSelected
                     ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] shadow-md font-extrabold"
-                    : "bg-[#2a2a2a] text-gray-300 hover:bg-[#333]"
+                    : "bg-muted text-fg-soft hover:bg-strong"
                 }`}
               >
                 {category.name} ({category?.products?.length || 0})
@@ -162,20 +162,20 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                   relative overflow-hidden group cursor-pointer px-3 py-2.5 sm:px-3.5 sm:py-3 rounded-xl transition-all duration-200 transform hover:scale-[1.01] active:scale-95 min-h-[52px] flex flex-col justify-center
                   ${isSelected
                     ? "bg-gradient-to-r from-[#f6b100] to-[#e0a100] shadow-lg shadow-[#f6b100]/25 border border-yellow-300/30"
-                    : "bg-[#272727] hover:bg-[#303030] border border-[#333]"
+                    : "bg-elevated hover:bg-muted border border-line-strong"
                   }
                 `}
               >
                 <div className="flex items-center justify-between relative z-10 gap-1.5">
                   <h3
-                    className={`font-bold text-xs sm:text-sm leading-snug line-clamp-2 break-words ${isSelected ? "text-[#1a1a1a]" : "text-gray-100"}`}
+                    className={`font-bold text-xs sm:text-sm leading-snug line-clamp-2 break-words ${isSelected ? "text-[#1a1a1a]" : "text-fg"}`}
                     title={category.name}
                   >
                     {category.name}
                   </h3>
                   {isSelected && <GrRadialSelected className="text-[#1a1a1a] text-lg shrink-0 ml-1" />}
                 </div>
-                <p className={`text-[11px] sm:text-xs mt-0.5 font-semibold ${isSelected ? "text-[#1a1a1a]/80" : "text-gray-400"}`}>
+                <p className={`text-[11px] sm:text-xs mt-0.5 font-semibold ${isSelected ? "text-[#1a1a1a]/80" : "text-fg-dim"}`}>
                   {category?.products?.length || 0} Items
                 </p>
 
@@ -188,18 +188,18 @@ const MenuContainer = ({ isWaiterMode = false }) => {
       </div>
 
       {/* Main Content - Products */}
-      <div className="w-full flex-1 md:h-full bg-[#1f1f1f] rounded-2xl p-3 sm:p-6 shadow-xl overflow-hidden flex flex-col min-h-0 min-w-0">
+      <div className="w-full flex-1 md:h-full bg-surface rounded-2xl p-3 sm:p-6 shadow-xl overflow-hidden flex flex-col min-h-0 min-w-0">
         {/* Header Area */}
         {searchData?.length > 0 ? (
-          <h2 className="text-lg sm:text-2xl font-bold text-white mb-3 sm:mb-6 flex items-center gap-3">
-            <span className="text-[#f6b100]">Search Results</span>
-            <span className="text-xs sm:text-sm font-normal text-gray-500 bg-[#2a2a2a] px-3 py-1 rounded-full">
+          <h2 className="text-lg sm:text-2xl font-bold text-fg mb-3 sm:mb-6 flex items-center gap-3">
+            <span className="text-accent">Search Results</span>
+            <span className="text-xs sm:text-sm font-normal text-gray-500 bg-muted px-3 py-1 rounded-full">
               Found {searchData.length} items
             </span>
           </h2>
         ) : (
-          <div className="mb-3 sm:mb-6 pb-2 sm:pb-4 border-b border-[#333] flex items-center justify-between gap-2">
-            <h2 className="text-lg sm:text-3xl font-bold text-white tracking-tight truncate">
+          <div className="mb-3 sm:mb-6 pb-2 sm:pb-4 border-b border-line-strong flex items-center justify-between gap-2">
+            <h2 className="text-lg sm:text-3xl font-bold text-fg tracking-tight truncate">
               {selectedItem?.name || "Select a Category"}
             </h2>
             {!isWaiterMode && (
@@ -223,26 +223,26 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                 <div
                   key={item._id}
                   onClick={() => handleAddToCart(item)}
-                  className="group relative bg-[#2a2a2a] rounded-2xl p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:bg-[#333] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-[#f6b100]/30 overflow-hidden"
+                  className="group relative bg-muted rounded-2xl p-3 sm:p-4 cursor-pointer transition-all duration-300 hover:bg-strong hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-[#f6b100]/30 overflow-hidden"
                 >
                   <div className="flex flex-col h-full justify-between gap-3 sm:gap-4 relative z-10">
                     <div>
-                      <h3 className="text-white text-base sm:text-lg font-bold leading-tight mb-1 group-hover:text-[#f6b100] transition-colors">
+                      <h3 className="text-fg text-base sm:text-lg font-bold leading-tight mb-1 group-hover:text-accent transition-colors">
                         {item.name}
                       </h3>
-                      <p className="text-[#f6b100] font-bold text-base sm:text-lg">
+                      <p className="text-accent font-bold text-base sm:text-lg">
                         <span className="text-gray-500 text-xs sm:text-sm font-normal">Rs. </span>
                         {item.price}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between bg-[#1a1a1a] rounded-xl p-1.5 shadow-inner">
+                    <div className="flex items-center justify-between bg-base rounded-xl p-1.5 shadow-inner">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           decrement(item._id)();
                         }}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-[#333] hover:text-white transition-colors text-lg"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-fg-dim hover:bg-strong hover:text-fg transition-colors text-lg"
                       >
                         &minus;
                       </button>
@@ -250,7 +250,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                       <input
                         type="number"
                         min="0"
-                        className="w-10 bg-transparent text-center text-white font-bold outline-none no-spinner text-sm sm:text-base"
+                        className="w-10 bg-transparent text-center text-fg font-bold outline-none no-spinner text-sm sm:text-base"
                         value={qty}
                         onChange={(e) => {
                           e.stopPropagation();
@@ -265,7 +265,7 @@ const MenuContainer = ({ isWaiterMode = false }) => {
                           e.stopPropagation();
                           increment(item._id)();
                         }}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg text-[#f6b100] hover:bg-[#f6b100]/20 transition-colors text-lg"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg text-accent hover:bg-[#f6b100]/20 transition-colors text-lg"
                       >
                         &#43;
                       </button>

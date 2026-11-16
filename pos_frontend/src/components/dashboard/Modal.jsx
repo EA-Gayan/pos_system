@@ -141,21 +141,21 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
   });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-[#262626] p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md"
+        className="bg-elevated p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[#f5f5f5] text-lg sm:text-xl font-semibold">
+          <h2 className="text-fg text-lg sm:text-xl font-semibold">
             Add {labelType}
           </h2>
           <button
             onClick={handleCloseModal}
-            className="text-[#f5f5f5] hover:text-red-500 cursor-pointer"
+            className="text-fg hover:text-red-500 cursor-pointer"
           >
             <IoMdClose size={24} />
           </button>
@@ -165,7 +165,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           {labelType === "Table" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Table Number
                 </label>
                 <input
@@ -173,12 +173,12 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="tableNo"
                   value={tableData.tableNo}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Number of Seats
                 </label>
                 <input
@@ -187,7 +187,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   placeholder="0"
                   value={tableData.seats}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 />
               </div>
@@ -197,7 +197,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           {labelType === "Category" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Category Name
                 </label>
                 <input
@@ -205,7 +205,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="categoryName"
                   value={categoryData.categoryName}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 />
               </div>
@@ -231,7 +231,7 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
           {labelType === "Product" && (
             <>
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Item Name
                 </label>
                 <input
@@ -239,13 +239,13 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="name"
                   value={productData.productName}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Short Name
                 </label>
                 <input
@@ -253,12 +253,12 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="sName"
                   value={productData.sName}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 />
               </div>
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Item Price
                 </label>
                 <input
@@ -266,14 +266,14 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="price"
                   value={productData.price}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                   inputMode="decimal"
                 />
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Description
                 </label>
                 <input
@@ -281,19 +281,19 @@ const Modal = ({ setIsTableModalOpen, labelType }) => {
                   name="description"
                   value={productData.description}
                   onChange={handleInputChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-[#ababab] mb-2 text-sm font-medium">
+                <label className="block text-fg-muted mb-2 text-sm font-medium">
                   Category Type
                 </label>
                 <select
                   name="categoryId"
                   value={productData.category}
                   onChange={handleProductDownChange}
-                  className="w-full rounded-lg p-3 bg-[#1f1f1f] text-white focus:outline-none"
+                  className="w-full rounded-lg p-3 bg-surface text-fg focus:outline-none"
                   required
                 >
                   <option value="">Select a Category</option>

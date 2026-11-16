@@ -13,14 +13,14 @@ const Menu = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
-    <section className="bg-gradient-to-br from-[#1f1f1f] via-[#1a1a1a] to-[#262626] flex flex-col md:flex-row h-screen relative overflow-hidden">
+    <section className="bg-gradient-to-br from-surface via-base to-elevated flex flex-col md:flex-row h-screen relative overflow-hidden">
       {/* Left side: Menu */}
       <div className="flex-1 md:flex-[3] flex flex-col min-h-0 h-full overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 sm:px-10 py-3 sm:py-6 flex-none bg-[#1a1a1a] shadow-lg">
+        <div className="flex items-center justify-between px-4 sm:px-10 py-3 sm:py-6 flex-none bg-bar shadow-lg border-b border-bar-line">
           <div className="flex items-center gap-3 sm:gap-4">
             <BackButton />
-            <h1 className="text-[#f5f5f5] text-xl sm:text-3xl font-bold tracking-wider">
+            <h1 className="text-fg text-xl sm:text-3xl font-bold tracking-wider">
               Menu
             </h1>
           </div>
@@ -29,7 +29,7 @@ const Menu = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsCartOpen(true)}
-              className="md:hidden relative bg-[#262626] p-2.5 rounded-xl text-[#f6b100] cursor-pointer hover:bg-[#333] transition-all"
+              className="md:hidden relative bg-elevated p-2.5 rounded-xl text-accent cursor-pointer hover:bg-strong transition-all"
               title="View Order"
             >
               <FaShoppingCart size={20} />
@@ -40,7 +40,7 @@ const Menu = () => {
               )}
             </button>
             <div className="hidden sm:flex items-center gap-3">
-              <MdRestaurantMenu className="text-[#f5f5f5] text-3xl sm:text-4xl" />
+              <MdRestaurantMenu className="text-fg text-3xl sm:text-4xl" />
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@ const Menu = () => {
             className="w-full bg-gradient-to-r from-[#f6b100] to-[#e0a100] text-[#1a1a1a] font-bold py-3.5 px-5 rounded-2xl shadow-2xl flex items-center justify-between cursor-pointer active:scale-98 transition-transform border border-yellow-300/30"
           >
             <div className="flex items-center gap-2.5">
-              <span className="bg-[#1a1a1a] text-[#f6b100] text-xs font-extrabold px-2.5 py-1 rounded-full">
+              <span className="bg-base text-accent text-xs font-extrabold px-2.5 py-1 rounded-full">
                 {cartData.length}
               </span>
               <span className="text-sm font-bold">View Order</span>

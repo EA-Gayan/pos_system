@@ -26,7 +26,7 @@ const emptyForm = () => ({
 });
 
 const inputClass =
-  "w-full bg-[#242424] text-white text-sm px-3 py-2.5 rounded-xl border border-[#383838] focus:border-[#f6b100] focus:outline-none transition";
+  "w-full bg-elevated text-fg text-sm px-3 py-2.5 rounded-xl border border-line-strong focus:border-[#f6b100] focus:outline-none transition";
 
 // Dropdown options, built from the enum — "Other" is rendered separately last
 const POSITION_OPTIONS = Object.entries(EmployeePositionLabels)
@@ -35,8 +35,8 @@ const POSITION_OPTIONS = Object.entries(EmployeePositionLabels)
 
 const Field = ({ label, required, children, hint }) => (
   <label className="flex flex-col gap-1.5">
-    <span className="text-xs font-semibold text-gray-300">
-      {label} {required && <span className="text-[#f6b100]">*</span>}
+    <span className="text-xs font-semibold text-fg-soft">
+      {label} {required && <span className="text-accent">*</span>}
     </span>
     {children}
     {hint && <span className="text-[11px] text-gray-500">{hint}</span>}
@@ -140,17 +140,17 @@ const EmployeeFormModal = ({ employee, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-3">
-      <div className="w-full max-w-2xl max-h-[92vh] flex flex-col bg-[#1f1f1f] border border-[#2d2d2d] rounded-2xl shadow-2xl">
+      <div className="w-full max-w-2xl max-h-[92vh] flex flex-col bg-surface border border-line rounded-2xl shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#2d2d2d] shrink-0">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line shrink-0">
           <div>
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="text-lg font-bold text-fg">
               {isEdit ? "Edit Employee Profile" : "Create Employee Profile"}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#2a2a2a] cursor-pointer"
+            className="p-1.5 rounded-lg text-fg-dim hover:text-fg hover:bg-muted cursor-pointer"
           >
             <IoMdClose className="text-xl" />
           </button>
@@ -271,10 +271,10 @@ const EmployeeFormModal = ({ employee, onClose }) => {
             {salaryChanged && (
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-[#f6b100]/10 border border-[#f6b100]/30 rounded-xl p-3">
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-[#f6b100]">
+                  <p className="text-sm font-semibold text-accent">
                     New salary effective from
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">
+                  <p className="text-[11px] text-fg-dim mt-0.5">
                     Days before this date stay at the old rate of{" "}
                     {formatRs(employee.dailySalary)}. Past salary is not
                     recalculated.
@@ -290,7 +290,7 @@ const EmployeeFormModal = ({ employee, onClose }) => {
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-[#1a1a1a] border border-[#2d2d2d] rounded-xl p-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 bg-base border border-line rounded-xl p-3">
               <label className="flex items-center gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
@@ -298,13 +298,13 @@ const EmployeeFormModal = ({ employee, onClose }) => {
                   onChange={update("isActive")}
                   className="w-4 h-4 accent-[#f6b100]"
                 />
-                <span className="text-sm text-gray-200 font-medium">
+                <span className="text-sm text-fg font-medium">
                   Currently employed (active)
                 </span>
               </label>
               {!form.isActive && (
                 <div className="flex items-center gap-2 sm:ml-auto">
-                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                  <span className="text-xs text-fg-dim whitespace-nowrap">
                     Last working day
                   </span>
                   <input
@@ -335,7 +335,7 @@ const EmployeeFormModal = ({ employee, onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-300 bg-[#2a2a2a] hover:bg-[#333] cursor-pointer"
+              className="px-4 py-2.5 rounded-xl text-sm font-semibold text-fg-soft bg-muted hover:bg-strong cursor-pointer"
             >
               Cancel
             </button>
