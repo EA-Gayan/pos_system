@@ -53,6 +53,13 @@ const employeeSchema = new mongoose.Schema(
       match: [/^\d{4}-\d{2}-\d{2}$/, "End date must be YYYY-MM-DD"],
     },
     notes: { type: String, trim: true, default: "" },
+    // Set when the admin clears the employee's history: salary, attendance and
+    // withdrawals are only counted from this day onward (null = from joinDate)
+    historyStart: {
+      type: String,
+      default: null,
+      match: [/^\d{4}-\d{2}-\d{2}$/, "History start must be YYYY-MM-DD"],
+    },
   },
   { timestamps: true }
 );

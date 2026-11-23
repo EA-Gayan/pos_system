@@ -5,6 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaEdit, FaTrash, FaPlus, FaFilePdf } from "react-icons/fa";
 import {
   addEmployeeWithdrawal,
+  clearEmployeeHistory,
   deleteEmployeeSalaryEntry,
   downloadEmployeePayslip,
   deleteEmployeeWithdrawal,
@@ -12,6 +13,7 @@ import {
   markEmployeeAttendance,
 } from "../../../https";
 import MonthSwitcher from "./MonthSwitcher";
+import ConfirmationPopup from "../../shared/ConfirmationPopup";
 import {
   ATTENDANCE_STYLES,
   apiError,
@@ -156,7 +158,9 @@ const AttendanceCalendar = ({ employee, month, asOf, attendance, onToggle, pendi
           if (!date) return <span key={`b${i}`} />;
 
           const outOfEmployment =
-            date < employee.joinDate || (employee.endDate && date > employee.endDate);
+            date < employee.joinDate ||
+            (employee.historyStart && date < employee.historyStart) ||
+            (employee.endDate && date > employee.endDate);
           const isFuture = date > asOf;
           const status = statusByDate[date] || "present";
           const style = ATTENDANCE_STYLES[status];
@@ -346,6 +350,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
   const queryClient = useQueryClient();
   const [month, setMonth] = useState(initialMonth);
   const [pendingDate, setPendingDate] = useState(null);
+  const [confirmClear, setConfirmClear] = useState(false);
   const asOf = localToday();
 
   const { data: res, isLoading, isError, error } = useQuery({
@@ -428,6 +433,20 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
     },
     onError: (err) =>
       enqueueSnackbar(apiError(err, "Failed to remove salary change!"), { variant: "error" }),
+  });
+
+  const clearHistoryMutation = useMutation({
+    mutationFn: clearEmployeeHistory,
+    onSuccess: () => {
+      enqueueSnackbar("Employee history cleared!", { variant: "success" });
+      setConfirmClear(false);
+      setMonth(asOf.slice(0, 7));
+      refresh();
+      // Linked advance expenses are unlinked from the employee
+      queryClient.invalidateQueries({ queryKey: ["records"] });
+    },
+    onError: (err) =>
+      enqueueSnackbar(apiError(err, "Failed to clear history!"), { variant: "error" }),
   });
 
   const ms = details?.monthSummary;
@@ -561,7 +580,7 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                   </div>
                   <div className="flex-1 bg-app border border-line rounded-xl p-3.5">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">
-                      Overall Balance · Since Joining
+                      Overall Balance · {details.historyStart ? "Since History Cleared" : "Since Joining"}
                     </p>
                     <p className={`text-2xl font-extrabold mt-1 ${balanceTone(os.balance)}`}>
                       {formatRs(os.balance)}
@@ -641,11 +660,33 @@ const EmployeeDetailsModal = ({ employeeId, initialMonth, onClose, onEdit }) => 
                 >
                   <FaEdit /> Edit Profile
                 </button>
+                <button
+                  onClick={() => setConfirmClear(true)}
+                  disabled={clearHistoryMutation.isPending}
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-red-300 bg-red-500/10 hover:bg-red-500/25 px-3 py-2 rounded-xl cursor-pointer disabled:opacity-60"
+                  title="Delete all attendance and withdrawals, keep the profile"
+                >
+                  <FaTrash />
+                  {clearHistoryMutation.isPending ? "Clearing..." : "Clear History"}
+                </button>
+                {details.historyStart && (
+                  <p className="text-[11px] text-gray-500 mt-1.5 text-center">
+                    History cleared · counting from {prettyDate(details.historyStart)}
+                  </p>
+                )}
               </aside>
             </div>
           )}
         </div>
       </div>
+      {confirmClear && details && (
+        <ConfirmationPopup
+          title="Clear employee history"
+          message={`Clear all attendance and withdrawal records for "${details.name}"? Their profile and salary stay, and salary is counted again from today (${prettyDate(asOf)}), so the balance starts at zero. Download any payslips you need first — this cannot be undone.`}
+          onConfirm={() => clearHistoryMutation.mutate({ employeeId, asOf })}
+          onCancel={() => setConfirmClear(false)}
+        />
+      )}
     </div>
   );
 };

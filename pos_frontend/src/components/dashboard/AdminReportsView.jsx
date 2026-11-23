@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  FaCalendarAlt,
   FaCalendarDay,
   FaCalendarWeek,
   FaDownload,
@@ -35,7 +36,7 @@ const AdminReportsView = ({
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-fg-dim mt-1">
-            Download financial records in Excel (.xlsx) format and review weekly performance metrics.
+            Download financial records in Excel (.xlsx) format and review weekly performance metrics. Orders and expenses are kept for the current month only — download last month's reports before the 1st.
           </p>
         </div>
 
@@ -115,7 +116,7 @@ const AdminReportsView = ({
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
               <button
                 disabled={isExportingIncome}
                 onClick={() => onExportIncome("today")}
@@ -140,6 +141,19 @@ const AdminReportsView = ({
                   <FaCalendarWeek className="text-sm text-accent" />
                 )}
                 <span>Download This Week's</span>
+              </button>
+
+              <button
+                disabled={isExportingIncome}
+                onClick={() => onExportIncome("month")}
+                className="flex-1 flex items-center justify-center gap-2 bg-elevated hover:bg-strong hover:text-accent text-fg border border-line-strong font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
+              >
+                {isExportingIncome ? (
+                  <FaSpinner className="animate-spin text-sm" />
+                ) : (
+                  <FaCalendarAlt className="text-sm text-accent" />
+                )}
+                <span>Download This Month's</span>
               </button>
             </div>
           </div>
@@ -168,7 +182,7 @@ const AdminReportsView = ({
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2.5 pt-4 border-t border-line">
               <button
                 disabled={isExportingExpense}
                 onClick={() => onExportExpense("today")}
@@ -193,6 +207,19 @@ const AdminReportsView = ({
                   <FaCalendarWeek className="text-sm text-accent" />
                 )}
                 <span>Download This Week's</span>
+              </button>
+
+              <button
+                disabled={isExportingExpense}
+                onClick={() => onExportExpense("month")}
+                className="flex-1 flex items-center justify-center gap-2 bg-elevated hover:bg-strong hover:text-accent text-fg border border-line-strong font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition cursor-pointer"
+              >
+                {isExportingExpense ? (
+                  <FaSpinner className="animate-spin text-sm" />
+                ) : (
+                  <FaCalendarAlt className="text-sm text-accent" />
+                )}
+                <span>Download This Month's</span>
               </button>
             </div>
           </div>

@@ -6,6 +6,7 @@ const {
   addEmployee,
   updateEmployee,
   deleteEmployee,
+  clearEmployeeHistory,
   deleteSalaryEntry,
   markAttendance,
   addWithdrawal,
@@ -21,6 +22,7 @@ router.use(isVerifiedUser, isAdmin);
 router.route("/").get(getEmployees).post(addEmployee);
 router.route("/:id").get(getEmployeeDetails).put(updateEmployee).delete(deleteEmployee);
 router.route("/:id/payslip").get(downloadPayslip);
+router.route("/:id/history").delete(clearEmployeeHistory);
 router.route("/:id/salary-history/:entryId").delete(deleteSalaryEntry);
 router.route("/:id/attendance").put(markAttendance);
 router.route("/:id/withdrawals").post(addWithdrawal);

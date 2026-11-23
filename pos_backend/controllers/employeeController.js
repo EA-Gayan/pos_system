@@ -100,8 +100,10 @@ const rateOn = (schedule, date) => {
  * Every day between join date and today counts as a working day unless
  * marked "leave" (0 days) or "half-day" (0.5 days). Each day is paid at the
  * rate in effect on that day, so salary changes only affect later days.
+ * Nothing before employee.historyStart (set by "clear history") is counted.
  */
 const summarize = (employee, attendance, withdrawals, rangeStart, rangeEnd, asOf) => {
+  rangeStart = maxDate(rangeStart, employee.historyStart);
   const from = maxDate(rangeStart, employee.joinDate);
   const to = minDate(rangeEnd, asOf, employee.endDate);
   const schedule = getRateSchedule(employee);
@@ -449,6 +451,43 @@ const updateEmployee = async (req, res, next) => {
 
 // DELETE /api/employee/:id — also removes the employee's attendance and withdrawals.
 // Expenses paid to them stay (the cash did leave the till) but are unlinked.
+// DELETE /api/employee/:id/history?asOf=YYYY-MM-DD — wipes all attendance and
+// withdrawals but keeps the profile and salary rates. Salary is counted again
+// from asOf (the admin's local today), so the balance starts fresh at zero.
+// Expenses paid to them stay (the cash did leave the till) but are unlinked.
+const clearEmployeeHistory = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    ensureObjectId(id);
+    const historyStart = isValidDate(req.query.asOf) ? req.query.asOf : serverToday();
+
+    const employee = await Employee.findByIdAndUpdate(
+      id,
+      { historyStart },
+      { new: true, runValidators: true }
+    );
+    if (!employee) throw createHttpError(404, "Employee not found!");
+
+    const [attendance, withdrawals] = await Promise.all([
+      EmployeeAttendance.deleteMany({ employee: id }),
+      EmployeeWithdrawal.deleteMany({ employee: id }),
+      Expenses.updateMany({ employee: id }, { employee: null, withdrawal: null }),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Employee history cleared successfully!",
+      data: {
+        employee,
+        deletedAttendance: attendance.deletedCount,
+        deletedWithdrawals: withdrawals.deletedCount,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteEmployee = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -526,6 +565,9 @@ const markAttendance = async (req, res, next) => {
     if (date < employee.joinDate) {
       throw createHttpError(400, "Cannot mark attendance before the join date!");
     }
+    if (employee.historyStart && date < employee.historyStart) {
+      throw createHttpError(400, "Cannot mark attendance before the history was cleared!");
+    }
     if (employee.endDate && date > employee.endDate) {
       throw createHttpError(400, "Cannot mark attendance after the last working day!");
     }
@@ -576,8 +618,11 @@ const addWithdrawal = async (req, res, next) => {
       throw createHttpError(400, "Type must be advance or salary!");
     }
 
-    const exists = await Employee.exists({ _id: id });
-    if (!exists) throw createHttpError(404, "Employee not found!");
+    const employee = await Employee.findById(id, "historyStart").lean();
+    if (!employee) throw createHttpError(404, "Employee not found!");
+    if (employee.historyStart && date < employee.historyStart) {
+      throw createHttpError(400, "Cannot add a withdrawal before the history was cleared!");
+    }
 
     const record = await EmployeeWithdrawal.create({
       employee: id, amount: round2(amount), date, type, note,
@@ -626,6 +671,7 @@ module.exports = {
   addEmployee,
   updateEmployee,
   deleteEmployee,
+  clearEmployeeHistory,
   deleteSalaryEntry,
   markAttendance,
   addWithdrawal,

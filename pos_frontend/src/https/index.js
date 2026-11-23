@@ -121,6 +121,9 @@ export const updateEmployee = ({ employeeId, ...data }) =>
   api.put(`/api/employee/${employeeId}`, data);
 export const deleteEmployee = (employeeId) =>
   api.delete(`/api/employee/${employeeId}`);
+// Wipes attendance + withdrawals; salary counting restarts from asOf
+export const clearEmployeeHistory = ({ employeeId, asOf }) =>
+  api.delete(`/api/employee/${employeeId}/history`, { params: { asOf } });
 export const downloadEmployeePayslip = ({ employeeId, month, asOf }) =>
   api.get(`/api/employee/${employeeId}/payslip`, {
     params: { month, asOf },

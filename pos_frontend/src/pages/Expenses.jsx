@@ -7,7 +7,7 @@ import {
   deleteExpenseRecord,
   exportExpenseRecord,
 } from "../https";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Modal from "../components/shared/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { setClearSearchExpensesList } from "../redux/slices/expensesSlice";
@@ -60,35 +60,33 @@ const Expenses = () => {
   });
 
   const exportRecordMutation = useMutation({
-    mutationFn: (type) => exportExpenseRecord(type), // should return JSON with fileUrl
-    onSuccess: (response) => {
-      const fileUrl = response?.data?.fileUrl;
-      if (!fileUrl) {
-        enqueueSnackbar("Exported but no file URL returned.", {
-          variant: "warning",
-        });
-        return;
-      }
-
-      const fullUrl = fileUrl.startsWith("/")
-        ? `${import.meta.env.VITE_API_URL}${fileUrl}`
-        : fileUrl;
-
-      // Trigger download
+    mutationFn: (type) => exportExpenseRecord(type), // returns the .xlsx as a blob
+    onSuccess: (response, type) => {
+      const url = window.URL.createObjectURL(
+        new Blob([response.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        })
+      );
       const link = document.createElement("a");
-      link.href = fullUrl;
-      link.setAttribute("download", "");
+      link.href = url;
+      link.download = `${type}_expenses_report_${new Date().toLocaleDateString("en-CA")}.xlsx`;
       document.body.appendChild(link);
       link.click();
       link.remove();
+      window.URL.revokeObjectURL(url);
 
       enqueueSnackbar("Record exported successfully!", { variant: "success" });
-      refetch();
     },
-    onError: (error) => {
-      const errorMessage =
-        error?.response?.data?.message || error?.message || "Unknown error";
-      enqueueSnackbar(errorMessage, { variant: "error" });
+    onError: async (error) => {
+      // Blob responses hide the JSON error message — read it back out
+      let message = error?.message || "Failed to export expenses!";
+      try {
+        const text = await error?.response?.data?.text?.();
+        message = JSON.parse(text).message || message;
+      } catch {
+        // keep the generic message
+      }
+      enqueueSnackbar(message, { variant: "error" });
     },
   });
 
@@ -109,6 +107,32 @@ const Expenses = () => {
       itemDate.getDate() === today.getDate()
     );
   });
+
+  const totalAmount = displayRecords.reduce(
+    (sum, item) => sum + (Number(item?.amount) || 0),
+    0
+  );
+  const isSearching = searchRecords && searchRecords.length > 0;
+
+  // Close the export menu when clicking anywhere outside it
+  const exportRef = useRef(null);
+  useEffect(() => {
+    if (!exportOpen) return;
+    const handleOutside = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setExportOpen(false);
+      }
+    };
+    const handleEscape = (e) => e.key === "Escape" && setExportOpen(false);
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("touchstart", handleOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("touchstart", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [exportOpen]);
 
   const columns = [
     {
@@ -179,12 +203,13 @@ const Expenses = () => {
           </button>
 
           {/* Export Dropdown */}
-          <div className="relative flex-1 sm:flex-none">
+          <div ref={exportRef} className="relative flex-1 sm:flex-none">
             <button
               onClick={() => setExportOpen((prev) => !prev)}
+              disabled={exportRecordMutation.isPending}
               className="w-full bg-gradient-to-r from-[#f6b100] to-[#e5a400] hover:from-[#e5a400] hover:to-[#d49400] text-[#1a1a1a] font-bold text-xs sm:text-sm px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-xl shadow-lg hover:shadow-2xl hover:scale-102 transition-all duration-200 cursor-pointer"
             >
-              Export Expense
+              {exportRecordMutation.isPending ? "Exporting..." : "Export Expense"}
             </button>
 
             {/* Dropdown Menu */}
@@ -202,6 +227,12 @@ const Expenses = () => {
                 >
                   This Week
                 </button>
+                <button
+                  onClick={() => handleExport("month")}
+                  className="block w-full px-4 py-2 text-left text-xs sm:text-sm text-fg hover:bg-strong cursor-pointer"
+                >
+                  This Month
+                </button>
               </div>
             )}
           </div>
@@ -209,6 +240,21 @@ const Expenses = () => {
       </div>
 
       <div className="flex-1 px-2 sm:px-10 pb-20 md:pb-4 overflow-y-auto min-h-0">
+        {/* Total expenses summary */}
+        <div className="mt-3 sm:mt-4 mb-1 flex items-center justify-between gap-3 bg-[#f6b100]/10 border border-[#f6b100]/30 rounded-xl px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-accent/80">
+              {isSearching ? "Total · Search Results" : "Today's Total Expenses"}
+            </p>
+            <p className="text-[11px] sm:text-xs text-fg-dim mt-0.5">
+              {displayRecords.length} {displayRecords.length === 1 ? "record" : "records"}
+            </p>
+          </div>
+          <p className="text-xl sm:text-2xl font-extrabold text-fg whitespace-nowrap">
+            Rs. {totalAmount.toLocaleString()}
+          </p>
+        </div>
+
         <CommonTable
           data={displayRecords}
           columns={columns}

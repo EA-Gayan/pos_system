@@ -4,30 +4,40 @@ const Product = require("../models/productModel");
 const generateExpensesReportService = require("../services/generateExpensesReport");
 const generateIncomeReportService = require("../services/generateIncomeReport");
 
+const REPORT_LABELS = { today: "Today", week: "Week", month: "Month" };
+const reportLabel = (type) => REPORT_LABELS[type] || REPORT_LABELS.today;
+
+// Date range for a report: today, this week (Mon–Sun) or this calendar month
+const getReportRange = (type) => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const d = now.getDate();
+
+  if (type === "month") {
+    return {
+      startDate: new Date(y, m, 1),
+      endDate: new Date(y, m + 1, 0, 23, 59, 59, 999), // last day of month
+    };
+  }
+  if (type === "week") {
+    const monday = d - ((now.getDay() + 6) % 7);
+    return {
+      startDate: new Date(y, m, monday),
+      endDate: new Date(y, m, monday + 6, 23, 59, 59, 999),
+    };
+  }
+  return {
+    startDate: new Date(y, m, d),
+    endDate: new Date(y, m, d, 23, 59, 59, 999),
+  };
+};
+
 const generateIncomeReport = async (req, res, next) => {
   try {
     const { type } = req.params;
 
-    const now = new Date();
-    let startDate, endDate;
-
-    if (type === "week") {
-      const day = now.getDay();
-      const diffToMonday = (day + 6) % 7;
-      startDate = new Date(now);
-      startDate.setDate(now.getDate() - diffToMonday);
-      startDate.setHours(0, 0, 0, 0);
-
-      endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 6);
-      endDate.setHours(23, 59, 59, 999);
-    } else {
-      startDate = new Date();
-      startDate.setHours(0, 0, 0, 0);
-
-      endDate = new Date();
-      endDate.setHours(23, 59, 59, 999);
-    }
+    const { startDate, endDate } = getReportRange(type);
 
     const orders = await Order.find({
       orderDate: { $gte: startDate, $lte: endDate },
@@ -67,8 +77,7 @@ const generateIncomeReport = async (req, res, next) => {
       }
     }
 
-    const fileName =
-      type === "week" ? "week_orders_report.xlsx" : "today_orders_report.xlsx";
+    const fileName = `${reportLabel(type).toLowerCase()}_orders_report.xlsx`;
 
     let grandTotal = 0;
     const productSummary = {};
@@ -95,7 +104,7 @@ const generateIncomeReport = async (req, res, next) => {
 
     // Generate Excel buffer (not file)
     const buffer = await generateIncomeReportService(
-      type === "week" ? "Week Orders" : "Today Orders",
+      `${reportLabel(type)} Orders`,
       productSummary,
       grandTotal,
       type,
@@ -121,26 +130,7 @@ const generateExpensesReport = async (req, res, next) => {
   try {
     const { type } = req.params;
 
-    const now = new Date();
-    let startDate, endDate;
-
-    if (type === "week") {
-      const day = now.getDay();
-      const diffToMonday = (day + 6) % 7;
-      startDate = new Date(now);
-      startDate.setDate(now.getDate() - diffToMonday);
-      startDate.setHours(0, 0, 0, 0);
-
-      endDate = new Date(startDate);
-      endDate.setDate(startDate.getDate() + 6);
-      endDate.setHours(23, 59, 59, 999);
-    } else {
-      startDate = new Date();
-      startDate.setHours(0, 0, 0, 0);
-
-      endDate = new Date();
-      endDate.setHours(23, 59, 59, 999);
-    }
+    const { startDate, endDate } = getReportRange(type);
 
     const expenses = await Expenses.find({
       createdAt: { $gte: startDate, $lte: endDate },
@@ -153,10 +143,7 @@ const generateExpensesReport = async (req, res, next) => {
       });
     }
 
-    const fileName =
-      type === "week"
-        ? "week_expenses_report.xlsx"
-        : "today_expenses_report.xlsx";
+    const fileName = `${reportLabel(type).toLowerCase()}_expenses_report.xlsx`;
 
     let grandTotal = 0;
     const expensesSummary = {};
@@ -178,7 +165,7 @@ const generateExpensesReport = async (req, res, next) => {
 
     // Generate Excel buffer (not file)
     const buffer = await generateExpensesReportService(
-      type === "week" ? "Week Expenses" : "Today Expenses",
+      `${reportLabel(type)} Expenses`,
       expensesSummary,
       grandTotal
     );
