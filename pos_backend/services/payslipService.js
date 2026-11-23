@@ -73,7 +73,7 @@ const generatePayslip = (details, period) =>
     const ms = details.monthSummary;
     const prev = details.previousSummary;
     const periodTo = [period.end, period.asOf, details.endDate].filter(Boolean).sort()[0];
-    const periodFrom = [period.start, details.joinDate].sort().pop();
+    const periodFrom = [period.start, details.joinDate, details.historyStart].filter(Boolean).sort().pop();
     const isPartial = period.end > period.asOf;
 
     let y = M;

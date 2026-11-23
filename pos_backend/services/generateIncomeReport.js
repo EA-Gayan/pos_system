@@ -10,7 +10,7 @@ const generateIncomeReportService = async (
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet(reportName);
 
-  if (type === "week") {
+  if (type === "week" || type === "month") {
     // Side-by-Side Day Blocks Layout
     // Each Day uses 4 columns: [Date, Item, Qty, Income]
     // Days are placed horizontally: Day1 | Day2 | Day3 ...
