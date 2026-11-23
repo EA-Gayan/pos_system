@@ -12,7 +12,7 @@ module.exports = async function incomeCleanup() {
     ]);
 
     console.log(
-      `[CLEANUP] Completed - Deleted ${expenseCount} expenses and ${orderCount} orders older than 1 week`
+      `[CLEANUP] Completed - Deleted ${expenseCount} expenses and ${orderCount} orders from before this month`
     );
 
     return { expenseCount, orderCount };

@@ -7,9 +7,10 @@ import {
   deleteExpenseRecord,
   exportExpenseRecord,
 } from "../https";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../components/shared/Modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setClearSearchExpensesList } from "../redux/slices/expensesSlice";
 import ConfirmationPopup from "../components/shared/ConfirmationPopup";
 
 const Expenses = () => {
@@ -18,6 +19,14 @@ const Expenses = () => {
   const [exportOpen, setExportOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setClearSearchExpensesList());
+    return () => {
+      dispatch(setClearSearchExpensesList());
+    };
+  }, [dispatch]);
 
   const {
     data: recordsData,
@@ -25,7 +34,7 @@ const Expenses = () => {
     isFetching,
   } = useQuery({
     queryKey: ["records"],
-    queryFn: getExpenseRecords,
+    queryFn: () => getExpenseRecords({ date: "today" }),
     onError: () => {
       enqueueSnackbar("Failed to fetch records!", { variant: "error" });
     },
@@ -86,8 +95,20 @@ const Expenses = () => {
   const records = recordsData?.data?.data ?? [];
   const searchRecords = useSelector((state) => state.expenses.searchList);
 
-  const displayRecords =
+  const rawList =
     searchRecords && searchRecords.length > 0 ? searchRecords : records;
+
+  // Filter to current day's expenses only
+  const displayRecords = rawList.filter((item) => {
+    if (!item?.createdAt) return true;
+    const itemDate = new Date(item.createdAt);
+    const today = new Date();
+    return (
+      itemDate.getFullYear() === today.getFullYear() &&
+      itemDate.getMonth() === today.getMonth() &&
+      itemDate.getDate() === today.getDate()
+    );
+  });
 
   const columns = [
     {

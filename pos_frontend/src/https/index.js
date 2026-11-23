@@ -77,14 +77,17 @@ export const getTodaySessionSales = () =>
   api.get("/api/dashboard/session-sales");
 
 // Expenses Record Endpoints
-export const getExpenseRecords = () => api.get("/api/expenses");
+export const getExpenseRecords = (params) => {
+  const cleanParams = params && !params.queryKey ? params : undefined;
+  return api.get("/api/expenses", { params: cleanParams });
+};
 export const addExpenseRecord = (data) => api.post("/api/expenses", data);
 export const deleteExpenseRecord = (recordId) =>
   api.delete(`/api/expenses/delete/${recordId}`);
 export const updateExpenseRecord = ({ recordId, ...recordData }) =>
   api.put(`/api/expenses/${recordId}`, recordData);
-export const searchExpenseRecord = (query) =>
-  api.get(`/api/expenses/search`, { params: { query } });
+export const searchExpenseRecord = (query, params) =>
+  api.get(`/api/expenses/search`, { params: { query, ...params } });
 export const exportExpenseRecord = async (type) => {
   const response = await api.get(`/api/report/expenses/${type}`, {
     responseType: "blob", //This tells axios to expect binary data

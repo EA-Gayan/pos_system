@@ -16,6 +16,21 @@ const serverToday = () => {
 const readDate = (value) =>
   typeof value === "string" && DATE_RE.test(value) ? value : serverToday();
 
+const getDateRange = (date) => {
+  if (date === "all") return null;
+  if (typeof date === "string" && DATE_RE.test(date)) {
+    const [y, m, d] = date.split("-").map(Number);
+    const startOfDay = new Date(y, m - 1, d, 0, 0, 0, 0);
+    const endOfDay = new Date(y, m - 1, d, 23, 59, 59, 999);
+    return { $gte: startOfDay, $lte: endOfDay };
+  }
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  return { $gte: startOfDay, $lte: endOfDay };
+};
+
 const ensureObjectId = (id, label) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw createHttpError(400, `Invalid ${label} ID!`);
@@ -131,17 +146,14 @@ const addExpenseRecord = async (req, res, next) => {
     }
 
     // Same category on the same day adds to the existing record
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    const dateRange = getDateRange(req.body.date) || getDateRange();
 
     const existingRecord = await Expenses.findOne({
       ...(input.category
         ? { category: input.category }
         : { description: input.description, category: null }),
       employee: null,
-      createdAt: { $gte: startOfDay, $lte: endOfDay },
+      createdAt: dateRange,
     });
 
     if (existingRecord) {
@@ -168,10 +180,16 @@ const addExpenseRecord = async (req, res, next) => {
   }
 };
 
-// get the expense records
+// get the expense records (defaults to current day)
 const getExpenseRecords = async (req, res, next) => {
   try {
-    const records = await Expenses.find().sort({ createdAt: 1 });
+    const filter = {};
+    const dateRange = getDateRange(req.query.date);
+    if (dateRange) {
+      filter.createdAt = dateRange;
+    }
+
+    const records = await Expenses.find(filter).sort({ createdAt: 1 });
     res.status(200).json({
       success: true,
       message: "Records retrieved successfully",
@@ -248,7 +266,7 @@ const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // search the expense record
 const searchByExpensesRecord = async (req, res, next) => {
   try {
-    const { query } = req.query;
+    const { query, date } = req.query;
 
     if (!query || query.trim() === "") {
       return next(createHttpError(400, "Search query is required!"));
@@ -263,6 +281,11 @@ const searchByExpensesRecord = async (req, res, next) => {
       // English or Sinhala label, case-insensitive
       const regex = new RegExp(escapeRegex(trimmedQuery), "i");
       filter = { $or: [{ description: regex }, { descriptionSi: regex }] };
+    }
+
+    const dateRange = getDateRange(date);
+    if (dateRange) {
+      filter.createdAt = dateRange;
     }
 
     const records = await Expenses.find(filter).sort({ createdAt: -1 });
